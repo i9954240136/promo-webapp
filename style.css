@@ -1,0 +1,24 @@
+body { font-family: sans-serif; background: var(--tg-theme-bg-color, #fff); color: var(--tg-theme-text-color, #000); margin: 0; padding: 10px; }
+.container { max-width: 600px; margin: 0 auto; }
+header { text-align: center; margin-bottom: 15px; }
+input { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ccc; box-sizing: border-box; }
+
+/* Категории */
+.categories { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 10px; }
+.cat-btn { background: #eee; border: none; padding: 8px 16px; border-radius: 20px; white-space: nowrap; cursor: pointer; }
+.cat-btn.active { background: var(--tg-theme-button-color, #2481cc); color: #fff; }
+
+/* Карточки */
+.offer-card { background: #f9f9f9; padding: 12px; border-radius: 12px; margin-bottom: 10px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+.brand-name { font-weight: bold; }
+.brand-desc { font-size: 12px; opacity: 0.7; }
+
+/* Модальное окно */
+.modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 100; }
+.modal.hidden { display: none; }
+.modal-content { background: var(--tg-theme-bg-color, #fff); padding: 20px; border-radius: 16px; width: 90%; max-width: 350px; text-align: center; position: relative; }
+.close { position: absolute; top: 10px; right: 15px; font-size: 24px; cursor: pointer; }
+.code-box { background: #eee; padding: 15px; font-family: monospace; font-size: 20px; margin: 15px 0; border-radius: 8px; letter-spacing: 2px; user-select: all; }
+.btn { background: var(--tg-theme-button-color, #2481cc); color: #fff; border: none; padding: 12px 24px; border-radius: 8px; font-size: 16px; cursor: pointer; width: 100%; }
+.bonus { color: green; font-weight: bold; margin-top: 10px; }
+.ad-banner { margin-top: 20px; padding: 10px; border: 1px dashed #ccc; text-align: center; color: #999; }
