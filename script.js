@@ -3,7 +3,7 @@ tg.expand();
 
 // === ПОДКЛЮЧЕНИЕ К SUPABASE ===
 const SUPABASE_URL = 'https://yfvvsbcvrwvahmceutvi.supabase.co';
-const SUPABASE_ANON_KEY = 'YOUR_ANON_KEY'; // Замените на ваш ключ!
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlmdnZzYmN2cnd2YWhtY2V1dHZpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE0OTIxNjgsImV4cCI6MjA4NzA2ODE2OH0.ZVR8Hf9INeheMM1-sSQBKqng3xklVCWZxNKDe6j0iIQ';
 
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
@@ -180,3 +180,4 @@ document.getElementById('modal').onclick = function(e) {
 
 // Загрузка при старте
 loadData();
+
