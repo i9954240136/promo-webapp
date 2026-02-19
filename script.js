@@ -59,25 +59,60 @@ window.filterOffers = function(catId, btnEl) {
 
 // Модальное окно
 function openModal(offer) {
+    const activeCodes = offer.codes.filter(c => !c.expires || new Date(c.expires) > new Date());
+    if (activeCodes.length === 0) return;
+    
+    const currentCode = activeCodes[0];
+    
     document.getElementById('mBrand').innerText = offer.brand;
-    document.getElementById('mCode').innerText = offer.code;
-    document.getElementById('mBonus').innerText = offer.bonus || '';
+    document.getElementById('mCode').innerText = currentCode.code;
+    document.getElementById('mBonus').innerText = currentCode.bonus || '';
+    
+    // Добавляем блок с дополнительной информацией
+    const additionalInfoDiv = document.getElementById('mAdditional');
+    if (offer.additional_info) {
+        additionalInfoDiv.innerHTML = `
+            <div class="additional-section">
+                <button class="additional-toggle" onclick="toggleAdditional()">
+                    📋 Дополнительные условия
+                    <span class="toggle-icon">▼</span>
+                </button>
+                <div class="additional-content" id="additionalContent">
+                    ${offer.additional_info}
+                </div>
+            </div>
+        `;
+        additionalInfoDiv.style.display = 'block';
+    } else {
+        additionalInfoDiv.style.display = 'none';
+    }
+    
     modal.classList.remove('hidden');
     
     document.getElementById('copyBtn').onclick = () => {
-        navigator.clipboard.writeText(offer.code);
+        navigator.clipboard.writeText(currentCode.code);
         tg.showPopup({ message: '✅ Код скопирован!' });
     };
 }
 
-document.querySelector('.close').onclick = () => modal.classList.add('hidden');
-search.oninput = (e) => {
-    const active = document.querySelector('.cat-btn.active');
-    // Простой хак для перезапуска фильтрации по текущей категории
-    if(active && active.innerText !== '🗂 Все') active.click(); 
-    else filterOffers('all', active);
+// Функция для сворачивания/разворачивания
+window.toggleAdditional = function() {
+    const content = document.getElementById('additionalContent');
+    const toggle = document.querySelector('.additional-toggle');
+    const icon = toggle.querySelector('.toggle-icon');
+    
+    if (content.style.display === 'none' || !content.style.display) {
+        content.style.display = 'block';
+        icon.style.transform = 'rotate(180deg)';
+        toggle.classList.add('active');
+    } else {
+        content.style.display = 'none';
+        icon.style.transform = 'rotate(0deg)';
+        toggle.classList.remove('active');
+    }
 };
 
 // Старт
 renderCats();
+
 filterOffers('all');
