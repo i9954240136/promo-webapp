@@ -5,8 +5,9 @@ tg.expand();
 const SUPABASE_URL = 'https://yfvvsbcvrwvahmceutvi.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlmdnZzYmN2cnd2YWhtY2V1dHZpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE0OTIxNjgsImV4cCI6MjA4NzA2ODE2OH0.ZVR8Hf9INeheMM1-sSQBKqng3xklVCWZxNKDe6j0iIQ';
 
-// ✅ ИСПРАВЛЕНО: переменная называется supabase (как в остальном коде)
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+// ✅ ИСПРАВЛЕНО: сохраняем библиотеку и создаём клиент с другим именем
+const supabaseLib = window.supabase;
+const supabaseClient = supabaseLib.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 let allCategories = [];
 let allOffers = [];
@@ -16,7 +17,7 @@ let currentOffer = null;
 // === ЗАГРУЗКА ДАННЫХ ===
 async function loadData() {
     try {
-        const { data: categories, error: catError } = await supabase
+        const {  categories, error: catError } = await supabaseClient
             .from('categories')
             .select('*')
             .order('name');
@@ -24,7 +25,7 @@ async function loadData() {
         if (catError) throw catError;
         allCategories = categories || [];
         
-        const { data: offers, error: offerError } = await supabase
+        const {  offers, error: offerError } = await supabaseClient
             .from('offers')
             .select('*')
             .eq('is_active', true);
@@ -32,7 +33,7 @@ async function loadData() {
         if (offerError) throw offerError;
         allOffers = offers || [];
         
-        const { data: codes, error: codeError } = await supabase
+        const {  codes, error: codeError } = await supabaseClient
             .from('promo_codes')
             .select('*')
             .eq('is_verified', true);
