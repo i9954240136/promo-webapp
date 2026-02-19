@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Promo Catalog</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -14,24 +15,35 @@
             <input type="search" id="searchInput" placeholder="🔍 Найти бренд...">
         </header>
         
-        <nav class="categories" id="categoriesList"></nav>
+        <nav class="categories" id="categoriesList">
+            <button class="cat-btn active" onclick="filterOffers('all', this)">🗂 Все</button>
+        </nav>
         
-        <main id="offersContainer" class="offers-grid"></main>
+        <main id="offersContainer" class="offers-grid">
+            <p style="text-align: center; padding: 20px;">Загрузка...</p>
+        </main>
         
-        <!-- Блок для рекламы -->
         <div id="adBanner" class="ad-banner">
             <div class="ad-placeholder">🪧 Реклама</div>
         </div>
     </div>
 
-    <!-- Модальное окно кода -->
+    <!-- Модальное окно -->
     <div id="modal" class="modal hidden">
         <div class="modal-content">
-            <span class="close">&times;</span>
+            <span class="close" onclick="closeModal()">&times;</span>
             <h3 id="mBrand">Brand</h3>
             <div class="code-box" id="mCode">CODE</div>
-            <button id="copyBtn" class="btn">📋 Скопировать</button>
+            <button id="copyBtn" class="btn" onclick="copyCode()">📋 Скопировать</button>
             <p id="mBonus" class="bonus"></p>
+            
+            <div id="additionalSection" class="additional-section" style="display: none;">
+                <button class="additional-toggle" onclick="toggleAdditional()">
+                    📋 Дополнительные условия
+                    <span class="toggle-icon">▼</span>
+                </button>
+                <div class="additional-content" id="additionalContent"></div>
+            </div>
         </div>
     </div>
 
