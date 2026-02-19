@@ -5,71 +5,73 @@ tg.expand();
 const SUPABASE_URL = 'https://yfvvsbcvrwvahmceutvi.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlmdnZzYmN2cnd2YWhtY2V1dHZpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE0OTIxNjgsImV4cCI6MjA4NzA2ODE2OH0.ZVR8Hf9INeheMM1-sSQBKqng3xklVCWZxNKDe6j0iIQ';
 
-// ✅ ИСПРАВЛЕНО: сохраняем библиотеку и создаём клиент с другим именем
-const supabaseLib = window.supabase;
-const supabaseClient = supabaseLib.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+// Заголовки для запросов
+const HEADERS = {
+    'apikey': SUPABASE_ANON_KEY,
+    'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
+    'Content-Type': 'application/json',
+    'Prefer': 'return=representation'
+};
 
 let allCategories = [];
 let allOffers = [];
 let allPromoCodes = [];
 let currentOffer = null;
 
+// === ВСПОМОГАТЕЛЬНАЯ ФУНКЦИЯ ===
+async function supabaseFetch(table, options = {}) {
+    const url = `${SUPABASE_URL}/rest/v1/${table}`;
+    const response = await fetch(url, {
+        ...options,
+        headers: { ...HEADERS, ...options.headers }
+    });
+    
+    if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    }
+    
+    return await response.json();
+}
+
 // === ЗАГРУЗКА ДАННЫХ ===
 async function loadData() {
     try {
-        console.log('Начало загрузки данных...');
+        console.log('🔄 Начало загрузки данных...');
         
-        const {  categories, error: catError } = await supabaseClient
-            .from('categories')
-            .select('*')
-            .order('name');
+        // Загружаем категории
+        allCategories = await supabaseFetch('categories', {
+            method: 'GET'
+        });
+        allCategories.sort((a, b) => a.name.localeCompare(b.name));
+        console.log('✅ Категории загружены:', allCategories.length);
         
-        if (catError) {
-            console.error('Ошибка категорий:', catError);
-            throw catError;
-        }
-        allCategories = categories || [];
-        console.log('Категории загружены:', allCategories.length);
+        // Загружаем оферы
+        const offersUrl = `${SUPABASE_URL}/rest/v1/offers?is_active=eq.true`;
+        const offersResponse = await fetch(offersUrl, { headers: HEADERS });
+        allOffers = await offersResponse.json();
+        console.log('✅ Оферы загружены:', allOffers.length);
         
-        const {  offers, error: offerError } = await supabaseClient
-            .from('offers')
-            .select('*')
-            .eq('is_active', true);
+        // Загружаем промокоды
+        const codesUrl = `${SUPABASE_URL}/rest/v1/promo_codes?is_verified=eq.true`;
+        const codesResponse = await fetch(codesUrl, { headers: HEADERS });
+        allPromoCodes = await codesResponse.json();
+        console.log('✅ Промокоды загружены:', allPromoCodes.length);
         
-        if (offerError) {
-            console.error('Ошибка оферов:', offerError);
-            throw offerError;
-        }
-        allOffers = offers || [];
-        console.log('Оферы загружены:', allOffers.length);
-        
-        const {  codes, error: codeError } = await supabaseClient
-            .from('promo_codes')
-            .select('*')
-            .eq('is_verified', true);
-        
-        if (codeError) {
-            console.error('Ошибка промокодов:', codeError);
-            throw codeError;
-        }
-        allPromoCodes = codes || [];
-        console.log('Промокоды загружены:', allPromoCodes.length);
-        
-        console.log('ВСЕГО ЗАГРУЖЕНО:', {
+        console.log('🎉 ВСЕГО ЗАГРУЖЕНО:', {
             categories: allCategories.length,
             offers: allOffers.length,
             codes: allPromoCodes.length
         });
         
         renderCategories();
-        filterOffers('all', null); // ✅ ИСПРАВЛЕНО: была renderOffers
+        filterOffers('all', null);
         
     } catch (error) {
-        console.error('ОШИБКА ЗАГРУЗКИ:', error);
+        console.error('❌ ОШИБКА ЗАГРУЗКИ:', error);
         document.getElementById('offersContainer').innerHTML = 
             `<p style="text-align: center; color: red; padding: 20px;">
                 Ошибка загрузки данных<br>
-                <small>${error.message || 'Проверьте консоль'}</small>
+                <small>${error.message}</small>
             </p>`;
     }
 }
