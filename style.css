@@ -1,45 +1,216 @@
-body { font-family: sans-serif; background: var(--tg-theme-bg-color, #fff); color: var(--tg-theme-text-color, #000); margin: 0; padding: 10px; }
-.container { max-width: 600px; margin: 0 auto; }
-header { text-align: center; margin-bottom: 15px; }
-input { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ccc; box-sizing: border-box; }
+/* === ОСНОВНЫЕ СТИЛИ === */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background: var(--tg-theme-bg-color, #f5f5f5);
+    color: var(--tg-theme-text-color, #000000);
+    margin: 0;
+    padding: 10px;
+    min-height: 100vh;
+}
 
-/* Категории */
-.categories { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 10px; }
-.cat-btn { background: #eee; border: none; padding: 8px 16px; border-radius: 20px; white-space: nowrap; cursor: pointer; }
-.cat-btn.active { background: var(--tg-theme-button-color, #2481cc); color: #fff; }
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+}
 
-/* Карточки */
-.offer-card { background: #f9f9f9; padding: 12px; border-radius: 12px; margin-bottom: 10px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
-.brand-name { font-weight: bold; }
-.brand-desc { font-size: 12px; opacity: 0.7; }
+/* === ШАПКА === */
+header h1 {
+    text-align: center;
+    margin: 10px 0;
+    color: var(--tg-theme-text-color, #000);
+    font-size: 24px;
+}
 
-/* Модальное окно */
-.modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 100; }
-.modal.hidden { display: none; }
-.modal-content { background: var(--tg-theme-bg-color, #fff); padding: 20px; border-radius: 16px; width: 90%; max-width: 350px; text-align: center; position: relative; }
-.close { position: absolute; top: 10px; right: 15px; font-size: 24px; cursor: pointer; }
-.code-box { background: #eee; padding: 15px; font-family: monospace; font-size: 20px; margin: 15px 0; border-radius: 8px; letter-spacing: 2px; user-select: all; }
-.btn { background: var(--tg-theme-button-color, #2481cc); color: #fff; border: none; padding: 12px 24px; border-radius: 8px; font-size: 16px; cursor: pointer; width: 100%; }
-.bonus { color: green; font-weight: bold; margin-top: 10px; }
+#searchInput {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    font-size: 16px;
+    box-sizing: border-box;
+    background: var(--tg-theme-secondary-bg-color, #fff);
+    color: var(--tg-theme-text-color, #000);
+}
 
-.ad-banner { margin-top: 20px; padding: 10px; border: 1px dashed #ccc; text-align: center; color: #999; }
+/* === КАТЕГОРИИ === */
+.categories {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding: 15px 0;
+    margin-bottom: 10px;
+}
 
-/* Дополнительные условия */
-.additional-section {
+.cat-btn {
+    padding: 10px 18px;
+    border: none;
+    border-radius: 20px;
+    background: var(--tg-theme-secondary-bg-color, #e0e0e0);
+    color: var(--tg-theme-text-color, #000);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.3s ease;
+}
+
+.cat-btn.active {
+    background: var(--tg-theme-button-color, #2481cc);
+    color: var(--tg-theme-button-text-color, #fff);
+}
+
+/* === КАРТОЧКИ ОФЕРОВ === */
+.offers-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.offer-card {
+    background: var(--tg-theme-secondary-bg-color, #ffffff);
+    border-radius: 12px;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.offer-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.brand-name {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--tg-theme-text-color, #000);
+    margin-bottom: 5px;
+}
+
+.brand-desc {
+    font-size: 14px;
+    color: var(--tg-theme-hint-color, #666);
+    line-height: 1.4;
+}
+
+/* === МОДАЛЬНОЕ ОКНО === */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 20px;
+}
+
+.modal.hidden {
+    display: none;
+}
+
+.modal-content {
+    background: var(--tg-theme-bg-color, #fff);
+    border-radius: 16px;
+    padding: 25px;
+    max-width: 400px;
+    width: 100%;
+    position: relative;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+.close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 28px;
+    cursor: pointer;
+    color: var(--tg-theme-hint-color, #999);
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background 0.2s;
+}
+
+.close:hover {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+#mBrand {
+    font-size: 22px;
+    font-weight: 700;
+    margin: 0 0 20px 0;
+    color: var(--tg-theme-text-color, #000);
+    text-align: center;
+}
+
+.code-box {
+    background: var(--tg-theme-button-color, #2481cc);
+    color: var(--tg-theme-button-text-color, #fff);
+    padding: 15px;
+    border-radius: 10px;
+    font-size: 24px;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 15px;
+    letter-spacing: 2px;
+    font-family: 'Courier New', monospace;
+}
+
+.btn {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 10px;
+    background: var(--tg-theme-button-color, #2481cc);
+    color: var(--tg-theme-button-text-color, #fff);
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-bottom: 15px;
+    transition: opacity 0.2s;
+}
+
+.btn:hover {
+    opacity: 0.9;
+}
+
+.bonus {
+    font-size: 16px;
+    color: var(--tg-theme-text-color, #28a745);
+    text-align: center;
     margin: 15px 0;
-    border-top: 1px solid #e0e0e0;
+    font-weight: 600;
+    line-height: 1.5;
+}
+
+/* === ДОПОЛНИТЕЛЬНЫЕ УСЛОВИЯ === */
+.additional-section {
+    margin-top: 20px;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
     padding-top: 15px;
 }
 
 .additional-toggle {
     width: 100%;
-    background: #f5f5f5;
-    border: none;
     padding: 12px 15px;
+    border: none;
     border-radius: 8px;
+    background: var(--tg-theme-secondary-bg-color, #f5f5f5);
+    color: var(--tg-theme-text-color, #000);
     font-size: 14px;
     font-weight: 600;
-    color: var(--tg-theme-text-color, #000);
     cursor: pointer;
     display: flex;
     justify-content: space-between;
@@ -47,13 +218,9 @@ input { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ccc; 
     transition: all 0.3s ease;
 }
 
-.additional-toggle:hover {
-    background: #e8e8e8;
-}
-
 .additional-toggle.active {
     background: var(--tg-theme-button-color, #2481cc);
-    color: #fff;
+    color: var(--tg-theme-button-text-color, #fff);
 }
 
 .toggle-icon {
@@ -62,13 +229,13 @@ input { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ccc; 
 }
 
 .additional-content {
-    margin-top: 10px;
-    padding: 12px;
-    background: #fafafa;
+    margin-top: 12px;
+    padding: 15px;
+    background: var(--tg-theme-bg-color, #fafafa);
     border-radius: 8px;
     font-size: 13px;
-    line-height: 1.5;
-    color: var(--tg-theme-hint-color, #666);
+    line-height: 1.6;
+    color: var(--tg-theme-hint-color, #555);
     display: none;
     animation: slideDown 0.3s ease;
 }
@@ -81,5 +248,43 @@ input { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ccc; 
     to {
         opacity: 1;
         transform: translateY(0);
+    }
+}
+
+/* === РЕКЛАМНЫЙ БАННЕР === */
+.ad-banner {
+    border: 2px dashed rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    margin-top: 20px;
+}
+
+.ad-placeholder {
+    color: var(--tg-theme-hint-color, #999);
+    font-size: 14px;
+}
+
+/* === АДАПТИВНОСТЬ === */
+@media (max-width: 480px) {
+    body {
+        padding: 8px;
+    }
+    
+    header h1 {
+        font-size: 20px;
+    }
+    
+    .brand-name {
+        font-size: 16px;
+    }
+    
+    .brand-desc {
+        font-size: 13px;
+    }
+    
+    .code-box {
+        font-size: 20px;
+        padding: 12px;
     }
 }
