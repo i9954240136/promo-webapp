@@ -17,43 +17,60 @@ let currentOffer = null;
 // === ЗАГРУЗКА ДАННЫХ ===
 async function loadData() {
     try {
+        console.log('Начало загрузки данных...');
+        
         const {  categories, error: catError } = await supabaseClient
             .from('categories')
             .select('*')
             .order('name');
         
-        if (catError) throw catError;
+        if (catError) {
+            console.error('Ошибка категорий:', catError);
+            throw catError;
+        }
         allCategories = categories || [];
+        console.log('Категории загружены:', allCategories.length);
         
         const {  offers, error: offerError } = await supabaseClient
             .from('offers')
             .select('*')
             .eq('is_active', true);
         
-        if (offerError) throw offerError;
+        if (offerError) {
+            console.error('Ошибка оферов:', offerError);
+            throw offerError;
+        }
         allOffers = offers || [];
+        console.log('Оферы загружены:', allOffers.length);
         
         const {  codes, error: codeError } = await supabaseClient
             .from('promo_codes')
             .select('*')
             .eq('is_verified', true);
         
-        if (codeError) throw codeError;
+        if (codeError) {
+            console.error('Ошибка промокодов:', codeError);
+            throw codeError;
+        }
         allPromoCodes = codes || [];
+        console.log('Промокоды загружены:', allPromoCodes.length);
         
-        console.log('Загружено:', {
+        console.log('ВСЕГО ЗАГРУЖЕНО:', {
             categories: allCategories.length,
             offers: allOffers.length,
             codes: allPromoCodes.length
         });
         
         renderCategories();
-        renderOffers('all');
+        filterOffers('all', null); // ✅ ИСПРАВЛЕНО: была renderOffers
         
     } catch (error) {
-        console.error('Ошибка загрузки:', error);
+        console.error('ОШИБКА ЗАГРУЗКИ:', error);
         document.getElementById('offersContainer').innerHTML = 
-            '<p style="text-align: center; color: red;">Ошибка загрузки данных</p>';
+            `<p style="text-align: center; color: red; padding: 20px;">
+                Ошибка загрузки данных<br>
+                <small>${error.message || 'Проверьте консоль'}</small>
+            </p>`;
     }
 }
 
