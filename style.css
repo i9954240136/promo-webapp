@@ -21,4 +21,65 @@ input { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ccc; 
 .code-box { background: #eee; padding: 15px; font-family: monospace; font-size: 20px; margin: 15px 0; border-radius: 8px; letter-spacing: 2px; user-select: all; }
 .btn { background: var(--tg-theme-button-color, #2481cc); color: #fff; border: none; padding: 12px 24px; border-radius: 8px; font-size: 16px; cursor: pointer; width: 100%; }
 .bonus { color: green; font-weight: bold; margin-top: 10px; }
+
 .ad-banner { margin-top: 20px; padding: 10px; border: 1px dashed #ccc; text-align: center; color: #999; }
+
+/* Дополнительные условия */
+.additional-section {
+    margin: 15px 0;
+    border-top: 1px solid #e0e0e0;
+    padding-top: 15px;
+}
+
+.additional-toggle {
+    width: 100%;
+    background: #f5f5f5;
+    border: none;
+    padding: 12px 15px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--tg-theme-text-color, #000);
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s ease;
+}
+
+.additional-toggle:hover {
+    background: #e8e8e8;
+}
+
+.additional-toggle.active {
+    background: var(--tg-theme-button-color, #2481cc);
+    color: #fff;
+}
+
+.toggle-icon {
+    transition: transform 0.3s ease;
+    font-size: 12px;
+}
+
+.additional-content {
+    margin-top: 10px;
+    padding: 12px;
+    background: #fafafa;
+    border-radius: 8px;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--tg-theme-hint-color, #666);
+    display: none;
+    animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
