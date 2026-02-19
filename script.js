@@ -5,10 +5,8 @@ tg.expand();
 const SUPABASE_URL = 'https://yfvvsbcvrwvahmceutvi.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlmdnZzYmN2cnd2YWhtY2V1dHZpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE0OTIxNjgsImV4cCI6MjA4NzA2ODE2OH0.ZVR8Hf9INeheMM1-sSQBKqng3xklVCWZxNKDe6j0iIQ';
 
-const supabaseClient = window.supabase.createClient(
-    'https://yfvvsbcvrwvahmceutvi.supabase.co',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlmdnZzYmN2cnd2YWhtY2V1dHZpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE0OTIxNjgsImV4cCI6MjA4NzA2ODE2OH0.ZVR8Hf9INeheMM1-sSQBKqng3xklVCWZxNKDe6j0iIQ'
-);
+// ✅ ИСПРАВЛЕНО: переменная называется supabase (как в остальном коде)
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 let allCategories = [];
 let allOffers = [];
@@ -18,7 +16,6 @@ let currentOffer = null;
 // === ЗАГРУЗКА ДАННЫХ ===
 async function loadData() {
     try {
-        // Загружаем категории
         const { data: categories, error: catError } = await supabase
             .from('categories')
             .select('*')
@@ -27,7 +24,6 @@ async function loadData() {
         if (catError) throw catError;
         allCategories = categories || [];
         
-        // Загружаем оферы
         const { data: offers, error: offerError } = await supabase
             .from('offers')
             .select('*')
@@ -36,7 +32,6 @@ async function loadData() {
         if (offerError) throw offerError;
         allOffers = offers || [];
         
-        // Загружаем промокоды
         const { data: codes, error: codeError } = await supabase
             .from('promo_codes')
             .select('*')
@@ -124,7 +119,6 @@ window.openModal = function(offer, codes) {
     document.getElementById('mCode').innerText = codes[0].code_text || 'AUTO';
     document.getElementById('mBonus').innerText = codes[0].bonus_info || '';
     
-    // Дополнительные условия
     const additionalSection = document.getElementById('additionalSection');
     const additionalContent = document.getElementById('additionalContent');
     
@@ -183,5 +177,3 @@ document.getElementById('modal').onclick = function(e) {
 
 // Загрузка при старте
 loadData();
-
-
