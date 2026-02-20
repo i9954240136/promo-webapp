@@ -374,3 +374,80 @@ header h1 {
         font-size: 20px;
     }
 }
+
+/* Улучшенные промокоды */
+.promo-code-item {
+    background: #f0f0f0;
+    color: #000000;
+    padding: 15px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid #e0e0e0;
+    position: relative;
+    overflow: hidden;
+}
+
+.promo-code-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    transition: left 0.5s;
+}
+
+.promo-code-item:hover::before {
+    left: 100%;
+}
+
+.promo-code-item:hover {
+    background: #e8e8e8;
+    border-color: #2481cc;
+    transform: translateX(5px);
+    box-shadow: 0 4px 12px rgba(36, 129, 204, 0.2);
+}
+
+.promo-code-item:active {
+    transform: scale(0.98);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.code-text {
+    font-size: 22px;
+    font-weight: 700;
+    text-align: center;
+    letter-spacing: 2px;
+    font-family: 'Courier New', monospace;
+    color: #000000;
+    margin-bottom: 5px;
+}
+
+.code-bonus {
+    font-size: 14px;
+    text-align: center;
+    color: #28a745;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.code-hint {
+    font-size: 12px;
+    text-align: center;
+    color: #999999;
+    margin-top: 8px;
+    opacity: 0.7;
+}
+
+.modal-hint {
+    text-align: center;
+    padding: 10px;
+    background: #f9f9f9;
+    border-radius: 8px;
+    font-size: 13px;
+    color: #666666;
+    margin-top: 10px;
+    border: 1px dashed #cccccc;
+}
