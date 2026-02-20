@@ -230,8 +230,6 @@ header h1 {
 .promo-code-item:active {
     transform: scale(0.98);
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-    background: #4CAF50;
-    color: #fff;
 }
 
 .code-text {
@@ -244,12 +242,46 @@ header h1 {
     margin-bottom: 5px;
 }
 
+/* Стили для ссылок */
+.code-link {
+    font-size: 16px;
+    word-break: break-all;
+    color: #2481cc;
+    text-decoration: underline;
+}
+
 .code-bonus {
     font-size: 14px;
     text-align: center;
     color: #28a745;
     font-weight: 600;
     margin-bottom: 8px;
+}
+
+/* Кнопка действия (скопировать/перейти) */
+.code-action-btn {
+    margin-top: 10px;
+    padding: 10px 15px;
+    background: #2481cc;
+    color: #ffffff;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 14px;
+    border: none;
+    width: 100%;
+}
+
+.code-action-btn:hover {
+    background: #1a68a8;
+    transform: translateY(-2px);
+}
+
+.code-action-btn:active {
+    transform: translateY(0);
+    background: #0f5287;
 }
 
 .code-hint {
@@ -379,6 +411,7 @@ header h1 {
     padding: 20px;
     text-align: center;
     margin-top: 20px;
+    min-height: 100px;
 }
 
 .ad-placeholder {
@@ -405,7 +438,7 @@ header h1 {
     }
     
     .code-text {
-        font-size: 20px;
+        font-size: 18px;
     }
     
     .modal-content {
