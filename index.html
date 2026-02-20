@@ -6,7 +6,7 @@
     <title>Promo Catalog</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <link rel="stylesheet" href="style.css?v=2">
+    <link rel="stylesheet" href="style.css?v=3">
 </head>
 <body>
     <div class="container">
@@ -23,9 +23,9 @@
             <p style="text-align: center; padding: 20px;">Загрузка...</p>
         </main>
         
-        <!-- AdsGram Banner Container -->
+        <!-- Временная заглушка для рекламы -->
         <div id="adBanner" class="ad-banner">
-            <div id="adsgram-banner" data-block-id="int-23378"></div>
+            <div class="ad-placeholder">🪧 Реклама</div>
         </div>
     </div>
 
@@ -34,8 +34,6 @@
         <div class="modal-content">
             <span class="close" onclick="closeModal()">&times;</span>
             <h3 id="mBrand">Brand</h3>
-            
-            <!-- Контейнер для промокодов -->
             <div id="mCode"></div>
             
             <div id="additionalSection" class="additional-section" style="display: none;">
@@ -48,29 +46,6 @@
         </div>
     </div>
 
-    <!-- Сначала основной скрипт приложения -->
-    <script src="script.js?v=2"></script>
-    
-    <!-- Потом AdsGram (в самом конце) -->
-    <script type="text/javascript">
-        window.AdsGramInit = function() {
-            if (typeof AdsGram !== 'undefined') {
-                // Инициализация AdsGram
-            }
-        };
-        
-        // Загружаем AdsGram после основного приложения
-        setTimeout(function() {
-            var script = document.createElement('script');
-            script.async = true;
-            script.src = 'https://adsgram.ai/js/adsgram.js';
-            script.onload = function() {
-                if (typeof window.AdsGramInit === 'function') {
-                    window.AdsGramInit();
-                }
-            };
-            document.body.appendChild(script);
-        }, 1000); // Задержка 1 секунду для загрузки приложения
-    </script>
+    <script src="script.js?v=3"></script>
 </body>
 </html>
