@@ -23,8 +23,9 @@
             <p style="text-align: center; padding: 20px;">Загрузка...</p>
         </main>
         
+        <!-- AdsGram Banner Container -->
         <div id="adBanner" class="ad-banner">
-            <div class="ad-placeholder">🪧 Реклама</div>
+            <div id="adsgram-banner" data-block-id="int-23378"></div>
         </div>
     </div>
 
@@ -47,6 +48,16 @@
         </div>
     </div>
 
-    <script src="script.js?v=2"></script>
-</body>
-</html>
+    <!-- AdsGram Script -->
+    <script type="text/javascript">
+        window.AdsGram = window.AdsGram || [];
+        (function() {
+            var script = document.createElement('script');
+            script.async = true;
+            script.src = 'https://adsgram.ai/js/adsgram.js';
+            var firstScript = document.getElementsByTagName('script')[0];
+            firstScript.parentNode.insertBefore(script, firstScript);
+        })();
+    </script>
+
+    <script src="script.js
