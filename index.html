@@ -48,16 +48,29 @@
         </div>
     </div>
 
-    <!-- AdsGram Script -->
+    <!-- Сначала основной скрипт приложения -->
+    <script src="script.js?v=2"></script>
+    
+    <!-- Потом AdsGram (в самом конце) -->
     <script type="text/javascript">
-        window.AdsGram = window.AdsGram || [];
-        (function() {
+        window.AdsGramInit = function() {
+            if (typeof AdsGram !== 'undefined') {
+                // Инициализация AdsGram
+            }
+        };
+        
+        // Загружаем AdsGram после основного приложения
+        setTimeout(function() {
             var script = document.createElement('script');
             script.async = true;
             script.src = 'https://adsgram.ai/js/adsgram.js';
-            var firstScript = document.getElementsByTagName('script')[0];
-            firstScript.parentNode.insertBefore(script, firstScript);
-        })();
+            script.onload = function() {
+                if (typeof window.AdsGramInit === 'function') {
+                    window.AdsGramInit();
+                }
+            };
+            document.body.appendChild(script);
+        }, 1000); // Задержка 1 секунду для загрузки приложения
     </script>
-
-    <script src="script.js
+</body>
+</html>
