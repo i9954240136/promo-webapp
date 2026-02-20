@@ -153,8 +153,9 @@ window.openModal = function(offer, codes) {
         codeDiv.className = 'promo-code-item';
         
         if (isLink) {
-            // Элемент для ссылки
+            // Элемент для ссылки с бонусом
             codeDiv.innerHTML = `
+                <div class="link-header">🎁 Бонус доступен по ссылке:</div>
                 <div class="code-text code-link">${codeText}</div>
                 <div class="code-bonus">${bonusInfo}</div>
                 <div class="code-action-btn" onclick="openLink('${codeText}')">
@@ -167,7 +168,7 @@ window.openModal = function(offer, codes) {
                 <div class="code-text">${codeText}</div>
                 <div class="code-bonus">${bonusInfo}</div>
                 <div class="code-action-btn" onclick="copyPromoCode('${codeText}')">
-                    📋 Скопировать
+                    📋 Скопировать промокод
                 </div>
             `;
         }
