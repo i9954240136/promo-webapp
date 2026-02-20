@@ -242,6 +242,18 @@ header h1 {
     margin-bottom: 5px;
 }
 
+/* Заголовок для ссылок */
+.link-header {
+    font-size: 16px;
+    font-weight: 700;
+    text-align: center;
+    color: #2481cc;
+    margin-bottom: 10px;
+    padding: 8px;
+    background: rgba(36, 129, 204, 0.1);
+    border-radius: 8px;
+}
+
 /* Стили для ссылок */
 .code-link {
     font-size: 16px;
