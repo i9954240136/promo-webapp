@@ -23,9 +23,9 @@
             <p style="text-align: center; padding: 20px;">Загрузка...</p>
         </main>
         
-        <!-- Временная заглушка для рекламы -->
+        <!-- AdsGram Banner Container -->
         <div id="adBanner" class="ad-banner">
-            <div class="ad-placeholder">🪧 Реклама</div>
+            <div id="adsgram-banner" data-block-id="int-23378"></div>
         </div>
     </div>
 
@@ -46,6 +46,23 @@
         </div>
     </div>
 
+    <!-- Основной скрипт приложения -->
     <script src="script.js?v=3"></script>
+    
+    <!-- AdsGram Script (загружается после основного приложения) -->
+    <script type="text/javascript">
+        // Отложенная загрузка AdsGram
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                var script = document.createElement('script');
+                script.async = true;
+                script.src = 'https://adsgram.ai/js/adsgram.js';
+                script.onerror = function() {
+                    console.log('AdsGram не загрузился, но приложение работает');
+                };
+                document.body.appendChild(script);
+            }, 2000); // Задержка 2 секунды после загрузки страницы
+        });
+    </script>
 </body>
 </html>
