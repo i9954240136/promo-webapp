@@ -185,18 +185,54 @@ header h1 {
     text-align: center;
 }
 
-.code-box {
+#mCode {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.promo-code-item {
     background: #f0f0f0;
     color: #000000;
     padding: 15px;
     border-radius: 10px;
-    font-size: 24px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 2px solid #e0e0e0;
+}
+
+.promo-code-item:hover {
+    background: #e8e8e8;
+    border-color: #2481cc;
+    transform: scale(1.02);
+}
+
+.promo-code-item:active {
+    transform: scale(0.98);
+}
+
+.code-text {
+    font-size: 22px;
     font-weight: 700;
     text-align: center;
-    margin-bottom: 15px;
     letter-spacing: 2px;
     font-family: 'Courier New', monospace;
-    border: 2px solid #e0e0e0;
+    color: #000000;
+    margin-bottom: 5px;
+}
+
+.code-bonus {
+    font-size: 14px;
+    text-align: center;
+    color: #28a745;
+    font-weight: 600;
+}
+
+.code-divider {
+    height: 1px;
+    background: #e0e0e0;
+    margin: 5px 0;
 }
 
 .btn {
@@ -326,9 +362,8 @@ header h1 {
         font-size: 13px;
     }
     
-    .code-box {
+    .code-text {
         font-size: 20px;
-        padding: 12px;
     }
     
     .modal-content {
@@ -338,49 +373,4 @@ header h1 {
     #mBrand {
         font-size: 20px;
     }
-}
-
-/* === ТЁМНАЯ ТЕМА (опционально) === */
-@media (prefers-color-scheme: dark) {
-    /* Можно раскомментировать, если хотите тёмную тему */
-    /*
-    body {
-        background: #1a1a1a;
-        color: #ffffff;
-    }
-    
-    .offer-card {
-        background: #2a2a2a;
-        border-color: #3a3a3a;
-    }
-    
-    .brand-name {
-        color: #ffffff;
-    }
-    
-    .brand-desc {
-        color: #aaaaaa;
-    }
-    
-    .modal-content {
-        background: #2a2a2a;
-        color: #ffffff;
-    }
-    
-    .code-box {
-        background: #3a3a3a;
-        color: #ffffff;
-        border-color: #4a4a4a;
-    }
-    
-    .additional-toggle {
-        background: #3a3a3a;
-        color: #ffffff;
-    }
-    
-    .additional-content {
-        background: #2a2a2a;
-        color: #cccccc;
-    }
-    */
 }
