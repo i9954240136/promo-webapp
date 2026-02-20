@@ -131,7 +131,7 @@ window.filterOffers = function(catId, btnEl) {
     });
 };
 
-// === МОДАЛЬНОЕ ОКНО (УЛУЧШЕННАЯ ВЕРСИЯ) ===
+// === МОДАЛЬНОЕ ОКНО (С УМНОЙ ОБРАБОТКОЙ ССЫЛОК) ===
 window.openModal = function(offer, codes) {
     currentOffer = { offer, codes };
     
@@ -143,33 +143,42 @@ window.openModal = function(offer, codes) {
     
     // Добавляем все промокоды
     codes.forEach((code, index) => {
+        const codeText = code.code_text || 'AUTO';
+        const bonusInfo = code.bonus_info || '';
+        
+        // Проверяем, является ли code_text ссылкой
+        const isLink = codeText.startsWith('http://') || codeText.startsWith('https://');
+        
         const codeDiv = document.createElement('div');
         codeDiv.className = 'promo-code-item';
-        codeDiv.innerHTML = `
-            <div class="code-text">${code.code_text || 'AUTO'}</div>
-            <div class="code-bonus">${code.bonus_info || ''}</div>
-            <div class="code-hint">📋 Нажмите для копирования</div>
-        `;
-        codeDiv.onclick = () => {
-            navigator.clipboard.writeText(code.code_text || 'AUTO');
-            
-            // Визуальная обратная связь
-            codeDiv.style.background = '#4CAF50';
-            codeDiv.style.color = '#fff';
-            setTimeout(() => {
-                codeDiv.style.background = '#f0f0f0';
-                codeDiv.style.color = '#000';
-            }, 500);
-            
-            tg.showPopup({ message: `✅ ${code.code_text || 'AUTO'} скопирован!` });
-        };
+        
+        if (isLink) {
+            // Элемент для ссылки
+            codeDiv.innerHTML = `
+                <div class="code-text code-link">${codeText}</div>
+                <div class="code-bonus">${bonusInfo}</div>
+                <div class="code-action-btn" onclick="openLink('${codeText}')">
+                    🔗 Перейти по ссылке
+                </div>
+            `;
+        } else {
+            // Элемент для промокода
+            codeDiv.innerHTML = `
+                <div class="code-text">${codeText}</div>
+                <div class="code-bonus">${bonusInfo}</div>
+                <div class="code-action-btn" onclick="copyPromoCode('${codeText}')">
+                    📋 Скопировать
+                </div>
+            `;
+        }
+        
         codesContainer.appendChild(codeDiv);
     });
     
     // Добавляем подсказку внизу
     const hintDiv = document.createElement('div');
     hintDiv.className = 'modal-hint';
-    hintDiv.innerHTML = '💡 Нажмите на любой промокод, чтобы скопировать';
+    hintDiv.innerHTML = '💡 Нажмите на кнопку, чтобы скопировать или перейти';
     codesContainer.appendChild(hintDiv);
     
     // Дополнительные условия
@@ -184,6 +193,24 @@ window.openModal = function(offer, codes) {
     }
     
     document.getElementById('modal').classList.remove('hidden');
+};
+
+// === ФУНКЦИЯ ДЛЯ КОПИРОВАНИЯ ПРОМОКОДА ===
+window.copyPromoCode = function(code) {
+    navigator.clipboard.writeText(code);
+    
+    // Визуальная обратная связь
+    tg.showPopup({ 
+        title: '✅ Успешно!',
+        message: `Промокод "${code}" скопирован!`,
+        buttons: [{id: 'ok', type: 'ok'}]
+    });
+};
+
+// === ФУНКЦИЯ ДЛЯ ОТКРЫТИЯ ССЫЛКИ ===
+window.openLink = function(url) {
+    // Открываем ссылку в браузере
+    tg.openLink(url);
 };
 
 window.closeModal = function() {
