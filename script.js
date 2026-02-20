@@ -131,14 +131,44 @@ window.filterOffers = function(catId, btnEl) {
     });
 };
 
-// === МОДАЛЬНОЕ ОКНО ===
+// === МОДАЛЬНОЕ ОКНО (ПОКАЗЫВАЕТ ВСЕ ПРОМОКОДЫ) ===
 window.openModal = function(offer, codes) {
     currentOffer = { offer, codes };
     
     document.getElementById('mBrand').innerText = offer.brand_name;
-    document.getElementById('mCode').innerText = codes[0].code_text || 'AUTO';
-    document.getElementById('mBonus').innerText = codes[0].bonus_info || '';
     
+    // Создаём список всех промокодов
+    const codesContainer = document.getElementById('mCode');
+    const bonusContainer = document.getElementById('mBonus');
+    
+    // Очищаем старые данные
+    codesContainer.innerHTML = '';
+    bonusContainer.innerHTML = '';
+    
+    // Добавляем все промокоды
+    codes.forEach((code, index) => {
+        // Промокод
+        const codeDiv = document.createElement('div');
+        codeDiv.className = 'promo-code-item';
+        codeDiv.innerHTML = `
+            <div class="code-text">${code.code_text || 'AUTO'}</div>
+            <div class="code-bonus">${code.bonus_info || ''}</div>
+        `;
+        codeDiv.onclick = () => {
+            navigator.clipboard.writeText(code.code_text || 'AUTO');
+            tg.showPopup({ message: '✅ Код скопирован!' });
+        };
+        codesContainer.appendChild(codeDiv);
+        
+        // Разделитель
+        if (index < codes.length - 1) {
+            const divider = document.createElement('div');
+            divider.className = 'code-divider';
+            codesContainer.appendChild(divider);
+        }
+    });
+    
+    // Дополнительные условия
     const additionalSection = document.getElementById('additionalSection');
     const additionalContent = document.getElementById('additionalContent');
     
@@ -170,12 +200,6 @@ window.toggleAdditional = function() {
         icon.style.transform = 'rotate(0deg)';
         toggle.classList.remove('active');
     }
-};
-
-window.copyCode = function() {
-    const code = document.getElementById('mCode').innerText;
-    navigator.clipboard.writeText(code);
-    tg.showPopup({ message: '✅ Код скопирован!' });
 };
 
 // Поиск
