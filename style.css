@@ -270,6 +270,29 @@ header h1 {
     margin-bottom: 8px;
 }
 
+/* === ШТРИХ-КОДЫ === */
+.barcode-container {
+    background: #ffffff;
+    padding: 15px;
+    border-radius: 8px;
+    text-align: center;
+    margin: 10px 0;
+    border: 2px solid #e0e0e0;
+}
+
+.barcode-container svg {
+    max-width: 100%;
+    height: auto;
+}
+
+.code-hint {
+    font-size: 12px;
+    text-align: center;
+    color: #666666;
+    margin-top: 8px;
+    font-style: italic;
+}
+
 /* Кнопка действия (скопировать/перейти) */
 .code-action-btn {
     margin-top: 10px;
