@@ -131,23 +131,25 @@ window.filterOffers = function(catId, btnEl) {
     });
 };
 
-// === МОДАЛЬНОЕ ОКНО (С УМНОЙ ОБРАБОТКОЙ ССЫЛОК) ===
+// === МОДАЛЬНОЕ ОКНО (С ПОДДЕРЖКОЙ ШТРИХ-КОДОВ) ===
 window.openModal = function(offer, codes) {
     currentOffer = { offer, codes };
     
     document.getElementById('mBrand').innerText = offer.brand_name;
     
-    // Создаём список всех промокодов
     const codesContainer = document.getElementById('mCode');
     codesContainer.innerHTML = '';
     
-    // Добавляем все промокоды
     codes.forEach((code, index) => {
         const codeText = code.code_text || 'AUTO';
         const bonusInfo = code.bonus_info || '';
+        const barcode = code.barcode || null;
+        const barcodeType = code.barcode_type || 'EAN13';
         
         // Проверяем, является ли code_text ссылкой
         const isLink = codeText.startsWith('http://') || codeText.startsWith('https://');
+        // Проверяем, есть ли штрих-код
+        const hasBarcode = barcode && barcode.toString().trim().length > 0;
         
         const codeDiv = document.createElement('div');
         codeDiv.className = 'promo-code-item';
@@ -162,8 +164,42 @@ window.openModal = function(offer, codes) {
                     🔗 Перейти по ссылке
                 </div>
             `;
+        } else if (hasBarcode) {
+            // Элемент для штрих-кода
+            const barcodeId = `barcode-${index}-${Date.now()}`;
+            codeDiv.innerHTML = `
+                <div class="code-text">${codeText}</div>
+                <div class="code-bonus">${bonusInfo}</div>
+                <div class="barcode-container">
+                    <svg id="${barcodeId}"></svg>
+                </div>
+                <div class="code-hint">📱 Покажите штрих-код на кассе</div>
+                <div class="code-action-btn" onclick="copyPromoCode('${codeText}')">
+                    📋 Скопировать код
+                </div>
+            `;
+            
+            // Генерируем штрих-код после добавления в DOM
+            setTimeout(() => {
+                try {
+                    if (typeof JsBarcode !== 'undefined') {
+                        JsBarcode(`#${barcodeId}`, barcode, {
+                            format: barcodeType,
+                            width: 2,
+                            height: 50,
+                            displayValue: true,
+                            fontSize: 14,
+                            margin: 10,
+                            background: "#ffffff",
+                            lineColor: "#000000"
+                        });
+                    }
+                } catch (e) {
+                    console.error('Ошибка генерации штрих-кода:', e);
+                }
+            }, 100);
         } else {
-            // Элемент для промокода
+            // Элемент для обычного промокода
             codeDiv.innerHTML = `
                 <div class="code-text">${codeText}</div>
                 <div class="code-bonus">${bonusInfo}</div>
