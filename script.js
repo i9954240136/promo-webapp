@@ -3,22 +3,8 @@ const tg = window.Telegram.WebApp;
 tg.expand();
 tg.ready();
 
-// === ОТСЛЕЖИВАНИЕ ОТКРЫТИЯ MINI APP ===
+// === ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ ===
 const userId = tg.initDataUnsafe?.user?.id;
-
-if (userId) {
-    // Отправляем данные об открытии приложения
-    tg.sendData(JSON.stringify({
-        action: 'app_opened',
-        user_id: userId,
-        timestamp: new Date().toISOString()
-    }));
-    console.log('✅ Sent app_opened for User ID:', userId);
-}
-
-console.log('📱 Mini App opened, User ID:', userId);
-
-// === ПОДКЛЮЧЕНИЕ К SUPABASE ===
 const SUPABASE_URL = 'https://yfvvsbcvrwvahmceutvi.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlmdnZzYmN2cnd2YWhtY2V1dHZpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE0OTIxNjgsImV4cCI6MjA4NzA2ODE2OH0.ZVR8Hf9INeheMM1-sSQBKqng3xklVCWZxNKDe6j0iIQ';
 
@@ -34,6 +20,52 @@ let allCategories = [];
 let allOffers = [];
 let allPromoCodes = [];
 let currentOffer = null;
+
+// === ОТСЛЕЖИВАНИЕ ДЕЙСТВИЙ ===
+async function trackAction(action, data = {}) {
+    """Отправляет событие в аналитику"""
+    if (!userId) {
+        console.log('⚠️ No user_id, skipping tracking');
+        return;
+    }
+    
+    try {
+        const payload = {
+            user_id: userId,
+            action: action,
+            brand_name: data.brand || null,
+            promo_code: data.code || null,
+            metadata: {
+                ...data,
+                timestamp: new Date().toISOString(),
+                platform: navigator.platform,
+                userAgent: navigator.userAgent
+            }
+        };
+        
+        const response = await fetch(`${SUPABASE_URL}/rest/v1/analytics`, {
+            method: 'POST',
+            headers: HEADERS,
+            body: JSON.stringify(payload)
+        });
+        
+        if (response.ok) {
+            console.log(`✅ Tracked: ${action}`, data);
+        } else {
+            console.error('❌ Track failed:', response.status);
+        }
+    } catch (error) {
+        console.error('❌ Track error:', error);
+    }
+}
+
+// === ОТСЛЕЖИВАНИЕ ОТКРЫТИЯ MINI APP ===
+if (userId) {
+    trackAction('app_opened');
+    console.log('📱 Mini App opened, User ID:', userId);
+} else {
+    console.warn('⚠️ User ID not available');
+}
 
 // === ВСПОМОГАТЕЛЬНАЯ ФУНКЦИЯ ===
 async function supabaseFetch(table, options = {}) {
@@ -114,6 +146,11 @@ window.filterOffers = function(catId, btnEl) {
     
     const searchTerm = document.getElementById('searchInput').value.toLowerCase();
     
+    // Отслеживаем поиск
+    if (searchTerm.length > 0) {
+        trackAction('search', { query: searchTerm });
+    }
+    
     const filtered = allOffers.filter(offer => {
         const matchCat = catId === 'all' || offer.category_id === catId;
         const matchSearch = offer.brand_name.toLowerCase().includes(searchTerm);
@@ -148,20 +185,15 @@ window.filterOffers = function(catId, btnEl) {
     });
 };
 
-// === МОДАЛЬНОЕ ОКНО (С ОТСЛЕЖИВАНИЕМ И ШТРИХ-КОДАМИ) ===
+// === МОДАЛЬНОЕ ОКНО (С ОТСЛЕЖИВАНИЕМ) ===
 window.openModal = function(offer, codes) {
     currentOffer = { offer, codes };
     
     // === ОТСЛЕЖИВАНИЕ ПРОСМОТРА БРЕНДА ===
-    if (userId) {
-        tg.sendData(JSON.stringify({
-            action: 'brand_viewed',
-            user_id: userId,
-            brand: offer.brand_name,
-            timestamp: new Date().toISOString()
-        }));
-        console.log('✅ Sent brand_viewed:', offer.brand_name);
-    }
+    trackAction('brand_viewed', { 
+        brand: offer.brand_name,
+        offer_id: offer.id
+    });
     
     document.getElementById('mBrand').innerText = offer.brand_name;
     
@@ -256,15 +288,11 @@ window.openModal = function(offer, codes) {
 window.copyPromoCode = function(code) {
     navigator.clipboard.writeText(code);
     
-    // Отслеживание копирования
-    if (userId) {
-        tg.sendData(JSON.stringify({
-            action: 'promo_copied',
-            user_id: userId,
-            code: code,
-            timestamp: new Date().toISOString()
-        }));
-    }
+    // === ОТСЛЕЖИВАНИЕ КОПИРОВАНИЯ ===
+    trackAction('promo_copied', { 
+        code: code,
+        brand: currentOffer?.offer?.brand_name
+    });
     
     tg.showPopup({ 
         title: '✅ Успешно!',
@@ -275,6 +303,12 @@ window.copyPromoCode = function(code) {
 
 // === ФУНКЦИЯ ДЛЯ ОТКРЫТИЯ ССЫЛКИ ===
 window.openLink = function(url) {
+    // === ОТСЛЕЖИВАНИЕ КЛИКА ПО ССЫЛКЕ ===
+    trackAction('link_clicked', { 
+        url: url,
+        brand: currentOffer?.offer?.brand_name
+    });
+    
     tg.openLink(url);
 };
 
