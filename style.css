@@ -278,6 +278,13 @@ header h1 {
     text-align: center;
     margin: 10px 0;
     border: 2px solid #e0e0e0;
+    transition: max-height 0.3s ease;
+    max-height: 100px;
+    overflow: hidden;
+}
+
+.barcode-container.barcode-expanded {
+    max-height: 300px;
 }
 
 .barcode-container svg {
@@ -319,12 +326,13 @@ header h1 {
     background: #0f5287;
 }
 
-.code-hint {
-    font-size: 12px;
-    text-align: center;
-    color: #999999;
-    margin-top: 8px;
-    opacity: 0.7;
+/* Кнопка увеличения штрих-кода */
+.barcode-expand-btn {
+    background: #2481cc;
+}
+
+.barcode-expand-btn:hover {
+    background: #1a68a8;
 }
 
 .modal-hint {
