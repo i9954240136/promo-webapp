@@ -1,28 +1,22 @@
 // === ИНИЦИАЛИЗАЦИЯ TELEGRAM WEBAPP ===
 const tg = window.Telegram.WebApp;
 tg.expand();
-
-// === ОТПРАВКА ДАННЫХ ОБ ОТКРЫТИИ MINI APP ===
 tg.ready();
 
-// Получаем User ID
+// === ОТСЛЕЖИВАНИЕ ОТКРЫТИЯ MINI APP ===
 const userId = tg.initDataUnsafe?.user?.id;
 
 if (userId) {
-    // Отправляем данные боту
+    // Отправляем данные об открытии приложения
     tg.sendData(JSON.stringify({
         action: 'app_opened',
         user_id: userId,
         timestamp: new Date().toISOString()
     }));
-    console.log('✅ Data sent to bot, User ID:', userId);
-} else {
-    console.warn('⚠️ User ID not available - возможно, открыто вне Telegram');
-    console.log('initDataUnsafe:', tg.initDataUnsafe);
+    console.log('✅ Sent app_opened for User ID:', userId);
 }
 
-console.log('📱 Mini App opened');
-console.log('User ID from initData:', userId);
+console.log('📱 Mini App opened, User ID:', userId);
 
 // === ПОДКЛЮЧЕНИЕ К SUPABASE ===
 const SUPABASE_URL = 'https://yfvvsbcvrwvahmceutvi.supabase.co';
@@ -154,9 +148,20 @@ window.filterOffers = function(catId, btnEl) {
     });
 };
 
-// === МОДАЛЬНОЕ ОКНО (С ПОДДЕРЖКОЙ ШТРИХ-КОДОВ) ===
+// === МОДАЛЬНОЕ ОКНО (С ОТСЛЕЖИВАНИЕМ И ШТРИХ-КОДАМИ) ===
 window.openModal = function(offer, codes) {
     currentOffer = { offer, codes };
+    
+    // === ОТСЛЕЖИВАНИЕ ПРОСМОТРА БРЕНДА ===
+    if (userId) {
+        tg.sendData(JSON.stringify({
+            action: 'brand_viewed',
+            user_id: userId,
+            brand: offer.brand_name,
+            timestamp: new Date().toISOString()
+        }));
+        console.log('✅ Sent brand_viewed:', offer.brand_name);
+    }
     
     document.getElementById('mBrand').innerText = offer.brand_name;
     
@@ -169,16 +174,13 @@ window.openModal = function(offer, codes) {
         const barcode = code.barcode || null;
         const barcodeType = code.barcode_type || 'EAN13';
         
-        // Проверяем, является ли code_text ссылкой
         const isLink = codeText.startsWith('http://') || codeText.startsWith('https://');
-        // Проверяем, есть ли штрих-код
         const hasBarcode = barcode && barcode.toString().trim().length > 0;
         
         const codeDiv = document.createElement('div');
         codeDiv.className = 'promo-code-item';
         
         if (isLink) {
-            // Элемент для ссылки с бонусом
             codeDiv.innerHTML = `
                 <div class="link-header">🎁 Бонус доступен по ссылке:</div>
                 <div class="code-text code-link">${codeText}</div>
@@ -188,7 +190,6 @@ window.openModal = function(offer, codes) {
                 </div>
             `;
         } else if (hasBarcode) {
-            // Элемент для штрих-кода
             const barcodeId = `barcode-${index}-${Date.now()}`;
             codeDiv.innerHTML = `
                 <div class="code-text">${codeText}</div>
@@ -202,7 +203,6 @@ window.openModal = function(offer, codes) {
                 </div>
             `;
             
-            // Генерируем штрих-код после добавления в DOM
             setTimeout(() => {
                 try {
                     if (typeof JsBarcode !== 'undefined') {
@@ -222,7 +222,6 @@ window.openModal = function(offer, codes) {
                 }
             }, 100);
         } else {
-            // Элемент для обычного промокода
             codeDiv.innerHTML = `
                 <div class="code-text">${codeText}</div>
                 <div class="code-bonus">${bonusInfo}</div>
@@ -235,13 +234,11 @@ window.openModal = function(offer, codes) {
         codesContainer.appendChild(codeDiv);
     });
     
-    // Добавляем подсказку внизу
     const hintDiv = document.createElement('div');
     hintDiv.className = 'modal-hint';
     hintDiv.innerHTML = '💡 Нажмите на кнопку, чтобы скопировать или перейти';
     codesContainer.appendChild(hintDiv);
     
-    // Дополнительные условия
     const additionalSection = document.getElementById('additionalSection');
     const additionalContent = document.getElementById('additionalContent');
     
@@ -259,7 +256,16 @@ window.openModal = function(offer, codes) {
 window.copyPromoCode = function(code) {
     navigator.clipboard.writeText(code);
     
-    // Визуальная обратная связь
+    // Отслеживание копирования
+    if (userId) {
+        tg.sendData(JSON.stringify({
+            action: 'promo_copied',
+            user_id: userId,
+            code: code,
+            timestamp: new Date().toISOString()
+        }));
+    }
+    
     tg.showPopup({ 
         title: '✅ Успешно!',
         message: `Промокод "${code}" скопирован!`,
@@ -269,7 +275,6 @@ window.copyPromoCode = function(code) {
 
 // === ФУНКЦИЯ ДЛЯ ОТКРЫТИЯ ССЫЛКИ ===
 window.openLink = function(url) {
-    // Открываем ссылку в браузере
     tg.openLink(url);
 };
 
