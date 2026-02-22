@@ -1,25 +1,25 @@
 // === ИНИЦИАЛИЗАЦИЯ TELEGRAM WEBAPP ===
-const tg = window.Telegram.WebApp;
+var tg = window.Telegram.WebApp;
 tg.expand();
 tg.ready();
 
 // === ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ ===
-const userId = tg.initDataUnsafe?.user?.id;
-const SUPABASE_URL = 'https://yfvvsbcvrwvahmceutvi.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlmdnZzYmN2cnd2YWhtY2V1dHZpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE0OTIxNjgsImV4cCI6MjA4NzA2ODE2OH0.ZVR8Hf9INeheMM1-sSQBKqng3xklVCWZxNKDe6j0iIQ';
+var userId = tg.initDataUnsafe?.user?.id;
+var SUPABASE_URL = 'https://yfvvsbcvrwvahmceutvi.supabase.co';
+var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlmdnZzYmN2cnd2YWhtY2V1dHZpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE0OTIxNjgsImV4cCI6MjA4NzA2ODE2OH0.ZVR8Hf9INeheMM1-sSQBKqng3xklVCWZxNKDe6j0iIQ';
 
 // Заголовки для запросов
-const HEADERS = {
+var HEADERS = {
     'apikey': SUPABASE_ANON_KEY,
     'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
     'Content-Type': 'application/json',
     'Prefer': 'return=representation'
 };
 
-let allCategories = [];
-let allOffers = [];
-let allPromoCodes = [];
-let currentOffer = null;
+var allCategories = [];
+var allOffers = [];
+var allPromoCodes = [];
+var currentOffer = null;
 
 // === ОТСЛЕЖИВАНИЕ ДЕЙСТВИЙ ===
 async function trackAction(action, data) {
@@ -29,7 +29,7 @@ async function trackAction(action, data) {
     }
     
     try {
-        const payload = {
+        var payload = {
             user_id: userId,
             action: action,
             brand_name: data?.brand || null,
@@ -40,7 +40,7 @@ async function trackAction(action, data) {
             }
         };
         
-        const response = await fetch(SUPABASE_URL + '/rest/v1/analytics', {
+        var response = await fetch(SUPABASE_URL + '/rest/v1/analytics', {
             method: 'POST',
             headers: HEADERS,
             body: JSON.stringify(payload)
@@ -66,8 +66,8 @@ if (userId) {
 
 // === ВСПОМОГАТЕЛЬНАЯ ФУНКЦИЯ ===
 async function supabaseFetch(table, options) {
-    const url = SUPABASE_URL + '/rest/v1/' + table;
-    const response = await fetch(url, Object.assign({}, options, {
+    var url = SUPABASE_URL + '/rest/v1/' + table;
+    var response = await fetch(url, Object.assign({}, options, {
         headers: Object.assign({}, HEADERS, options?.headers || {})
     }));
     
@@ -182,7 +182,7 @@ window.filterOffers = function(catId, btnEl) {
     });
 };
 
-// === МОДАЛЬНОЕ ОКНО (С ОТСЛЕЖИВАНИЕМ) ===
+// === МОДАЛЬНОЕ ОКНО (С УВЕЛИЧЕНИЕМ ШТРИХ-КОДА) ===
 window.openModal = function(offer, codes) {
     currentOffer = { offer: offer, codes: codes };
     
@@ -218,18 +218,22 @@ window.openModal = function(offer, codes) {
                     '🔗 Перейти по ссылке' +
                 '</div>';
         } else if (hasBarcode) {
+            // === ШТРИХ-КОД — КНОПКА УВЕЛИЧЕНИЯ ===
             var barcodeId = 'barcode-' + index + '-' + Date.now();
+            var barcodeImageId = 'barcode-img-' + index;
+            
             codeDiv.innerHTML = 
                 '<div class="code-text">' + codeText + '</div>' +
                 '<div class="code-bonus">' + bonusInfo + '</div>' +
-                '<div class="barcode-container">' +
+                '<div class="barcode-container" id="' + barcodeImageId + '">' +
                     '<svg id="' + barcodeId + '"></svg>' +
                 '</div>' +
                 '<div class="code-hint">📱 Покажите штрих-код на кассе</div>' +
-                '<div class="code-action-btn" onclick="copyPromoCode(\'' + codeText + '\')">' +
-                    '📋 Скопировать код' +
+                '<div class="code-action-btn barcode-expand-btn" onclick="expandBarcode(\'' + barcodeImageId + '\', \'' + barcodeId + '\', \'' + barcode + '\', \'' + barcodeType + '\')">' +
+                    '📱 Показать штрих-код' +
                 '</div>';
             
+            // Генерируем штрих-код
             setTimeout(function() {
                 try {
                     if (typeof JsBarcode !== 'undefined') {
@@ -249,6 +253,7 @@ window.openModal = function(offer, codes) {
                 }
             }, 100);
         } else {
+            // === ОБЫЧНЫЙ ПРОМОКОД — КНОПКА КОПИРОВАНИЯ ===
             codeDiv.innerHTML = 
                 '<div class="code-text">' + codeText + '</div>' +
                 '<div class="code-bonus">' + bonusInfo + '</div>' +
@@ -262,7 +267,7 @@ window.openModal = function(offer, codes) {
     
     var hintDiv = document.createElement('div');
     hintDiv.className = 'modal-hint';
-    hintDiv.innerHTML = '💡 Нажмите на кнопку, чтобы скопировать или перейти';
+    hintDiv.innerHTML = '💡 Нажмите на кнопку, чтобы скопировать или увеличить штрих-код';
     codesContainer.appendChild(hintDiv);
     
     var additionalSection = document.getElementById('additionalSection');
@@ -293,6 +298,53 @@ window.copyPromoCode = function(code) {
         message: 'Промокод "' + code + '" скопирован!',
         buttons: [{id: 'ok', type: 'ok'}]
     });
+};
+
+// === ФУНКЦИЯ УВЕЛИЧЕНИЯ ШТРИХ-КОДА ===
+window.expandBarcode = function(containerId, svgId, barcode, barcodeType) {
+    var container = document.getElementById(containerId);
+    var svg = document.getElementById(svgId);
+    
+    // Проверяем, уже увеличен или нет
+    var isExpanded = container.classList.contains('barcode-expanded');
+    
+    if (isExpanded) {
+        // Сворачиваем
+        container.classList.remove('barcode-expanded');
+        container.style.maxHeight = '100px';
+        
+        // Регенерируем маленький штрих-код
+        setTimeout(function() {
+            if (typeof JsBarcode !== 'undefined') {
+                JsBarcode('#' + svgId, barcode, {
+                    format: barcodeType,
+                    width: 2,
+                    height: 50,
+                    displayValue: true,
+                    fontSize: 14,
+                    margin: 10
+                });
+            }
+        }, 100);
+    } else {
+        // Разворачиваем
+        container.classList.add('barcode-expanded');
+        container.style.maxHeight = '300px';
+        
+        // Регенерируем большой штрих-код
+        setTimeout(function() {
+            if (typeof JsBarcode !== 'undefined') {
+                JsBarcode('#' + svgId, barcode, {
+                    format: barcodeType,
+                    width: 4,
+                    height: 100,
+                    displayValue: true,
+                    fontSize: 18,
+                    margin: 15
+                });
+            }
+        }, 100);
+    }
 };
 
 // === ФУНКЦИЯ ДЛЯ ОТКРЫТИЯ ССЫЛКИ ===
