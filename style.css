@@ -326,10 +326,11 @@ header h1 {
     border-bottom: 1px dashed rgba(0, 212, 255, 0.5);
 }
 
+/* === ПОДПИСЬ ПОД ПРОМОКОДОМ (ИЗМЕНЁН ЦВЕТ) === */
 .code-bonus {
     font-size: 14px;
     text-align: center;
-    color: #00d4ff;  /* Было: #00ff88 */
+    color: #00d4ff;  /* Изменено с #00ff88 */
     font-weight: 600;
     margin-bottom: 10px;
     text-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
@@ -486,6 +487,46 @@ header h1 {
     border-radius: 10px;
 }
 
+/* === КАСТОМНЫЕ УВЕДОМЛЕНИЯ === */
+.custom-notification {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-100px);
+    background: rgba(22, 33, 62, 0.95);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(0, 212, 255, 0.3);
+    border-radius: 16px;
+    padding: 18px 24px;
+    z-index: 10000;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5),
+                0 0 20px rgba(0, 212, 255, 0.3);
+    transition: transform 0.3s ease;
+    min-width: 280px;
+    max-width: 90%;
+}
+
+.custom-notification.show {
+    transform: translateX(-50%) translateY(0);
+}
+
+.notification-content {
+    text-align: center;
+}
+
+.notification-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #00d4ff;
+    margin-bottom: 6px;
+}
+
+.notification-message {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.9);
+    line-height: 1.4;
+}
+
 /* === АДАПТИВНОСТЬ === */
 @media (max-width: 480px) {
     body {
@@ -516,4 +557,3 @@ header h1 {
         font-size: 22px;
     }
 }
-
