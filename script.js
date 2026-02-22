@@ -283,7 +283,7 @@ window.openModal = function(offer, codes) {
     document.getElementById('modal').classList.remove('hidden');
 };
 
-// === ФУНКЦИЯ ДЛЯ КОПИРОВАНИЯ ПРОМОКОДА ===
+// === ФУНКЦИЯ ДЛЯ КОПИРОВАНИЯ ПРОМОКОДА (С КАСТОМНЫМ УВЕДОМЛЕНИЕМ) ===
 window.copyPromoCode = function(code) {
     navigator.clipboard.writeText(code);
     
@@ -293,11 +293,8 @@ window.copyPromoCode = function(code) {
         brand: currentOffer?.offer?.brand_name
     });
     
-    tg.showPopup({ 
-        title: '✅ Успешно!',
-        message: 'Промокод "' + code + '" скопирован!',
-        buttons: [{id: 'ok', type: 'ok'}]
-    });
+    // === КАСТОМНОЕ УВЕДОМЛЕНИЕ (вместо tg.showPopup) ===
+    showCustomNotification('✅ Успешно!', 'Промокод "' + code + '" скопирован!');
 };
 
 // === ФУНКЦИЯ УВЕЛИЧЕНИЯ ШТРИХ-КОДА ===
@@ -345,6 +342,34 @@ window.expandBarcode = function(containerId, svgId, barcode, barcodeType) {
             }
         }, 100);
     }
+};
+
+// === КАСТОМНОЕ УВЕДОМЛЕНИЕ ===
+window.showCustomNotification = function(title, message) {
+    // Создаём элемент уведомления
+    var notification = document.createElement('div');
+    notification.className = 'custom-notification';
+    notification.innerHTML = 
+        '<div class="notification-content">' +
+            '<div class="notification-title">' + title + '</div>' +
+            '<div class="notification-message">' + message + '</div>' +
+        '</div>';
+    
+    // Добавляем на страницу
+    document.body.appendChild(notification);
+    
+    // Анимация появления
+    setTimeout(function() {
+        notification.classList.add('show');
+    }, 10);
+    
+    // Убираем через 3 секунды
+    setTimeout(function() {
+        notification.classList.remove('show');
+        setTimeout(function() {
+            notification.remove();
+        }, 300);
+    }, 3000);
 };
 
 // === ФУНКЦИЯ ДЛЯ ОТКРЫТИЯ ССЫЛКИ ===
