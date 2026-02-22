@@ -1,6 +1,14 @@
 const tg = window.Telegram.WebApp;
 tg.expand();
 
+// === ОТПРАВЛЯЕМ ДАННЫЕ ОБ ОТКРЫТИИ MINI APP ===
+tg.ready();
+tg.sendData(JSON.stringify({
+    action: 'app_opened',
+    user_id: tg.initDataUnsafe.user?.id,
+    timestamp: new Date().toISOString()
+}));
+
 // === ПОДКЛЮЧЕНИЕ К SUPABASE ===
 const SUPABASE_URL = 'https://yfvvsbcvrwvahmceutvi.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlmdnZzYmN2cnd2YWhtY2V1dHZpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE0OTIxNjgsImV4cCI6MjA4NzA2ODE2OH0.ZVR8Hf9INeheMM1-sSQBKqng3xklVCWZxNKDe6j0iIQ';
