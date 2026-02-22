@@ -1,3 +1,14 @@
+console.log('📱 Mini App opened');
+console.log('User ID:', tg.initDataUnsafe.user?.id);
+
+tg.sendData(JSON.stringify({
+    action: 'app_opened',
+    user_id: tg.initDataUnsafe.user?.id,
+    timestamp: new Date().toISOString()
+}));
+
+console.log('✅ Data sent to bot');
+
 const tg = window.Telegram.WebApp;
 tg.expand();
 
@@ -297,3 +308,4 @@ document.getElementById('modal').onclick = function(e) {
 
 // Загрузка при старте
 loadData();
+
