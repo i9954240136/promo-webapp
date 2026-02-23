@@ -179,43 +179,43 @@ function updateUITexts() {
     var searchInput = document.getElementById('searchInput');
     if (searchInput) searchInput.placeholder = t.searchPlaceholder;
     
-    // Вкладки
+    // Вкладки - используем textContent вместо innerHTML
     var tabBtns = document.querySelectorAll('.tab-btn');
     tabBtns.forEach(function(btn) {
         if (btn.dataset.tab === 'catalog') {
-            btn.innerHTML = '📚 ' + t.catalog;
+            btn.textContent = '📚 ' + t.catalog;
         } else if (btn.dataset.tab === 'favorites') {
-            btn.innerHTML = '⭐ ' + t.favorites;
+            btn.textContent = '⭐ ' + t.favorites;
         } else if (btn.dataset.tab === 'settings') {
-            btn.innerHTML = '⚙️';
+            btn.textContent = '⚙️';
         }
     });
     
     // Фильтры
     var filterLabels = document.querySelectorAll('.filter-group label');
-    if (filterLabels[0]) filterLabels[0].innerHTML = '📂 ' + t.categories + ':';
-    if (filterLabels[1]) filterLabels[1].innerHTML = '💰 ' + t.discount + ':';
-    if (filterLabels[2]) filterLabels[2].innerHTML = '📊 ' + t.sort + ':';
+    if (filterLabels[0]) filterLabels[0].textContent = '📂 ' + t.categories + ':';
+    if (filterLabels[1]) filterLabels[1].textContent = '💰 ' + t.discount + ':';
+    if (filterLabels[2]) filterLabels[2].textContent = '📊 ' + t.sort + ':';
     
     // Кнопки
     var applyBtn = document.querySelector('.apply-filters-btn');
     if (applyBtn) applyBtn.textContent = t.applyFilters;
     
-    // Настройки
+    // Настройки - НЕ перезаписываем label с переключателем!
     var settingLabels = document.querySelectorAll('.setting-item label');
-    if (settingLabels[0]) settingLabels[0].innerHTML = '🌐 ' + t.language;
-    if (settingLabels[1]) settingLabels[1].innerHTML = '🔔 ' + t.notifications;
+    if (settingLabels[0]) settingLabels[0].firstChild.textContent = ' ' + t.language + ' ';
+    if (settingLabels[1]) settingLabels[1].firstChild.textContent = ' ' + t.notifications + ' ';
     
     var clearBtn = document.querySelector('.clear-history-btn');
     if (clearBtn) clearBtn.textContent = t.clearHistory;
     
     // Кнопки в модалке
     var shareBtn = document.querySelector('.share-btn');
-    if (shareBtn) shareBtn.innerHTML = t.share;
+    if (shareBtn) shareBtn.textContent = t.share;
     
     var additionalToggle = document.querySelector('.additional-toggle');
     if (additionalToggle) {
-        additionalToggle.innerHTML = t.additionalConditions + ' <span class="toggle-icon">▼</span>';
+        additionalToggle.firstChild.textContent = t.additionalConditions + ' ';
     }
     
     // Перерисовываем категории
@@ -904,4 +904,5 @@ if (document.readyState === 'loading') {
     tg.expand();
     loadData();
 }
+
 
