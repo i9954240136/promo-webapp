@@ -394,18 +394,13 @@ body::after {
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #888888 !important; /* СЕРЫЙ ЦВЕТ */
-}
-
-.favorite-toggle:hover {
-    background: rgba(255, 255, 255, 0.1);
-    transform: scale(1.1);
+    color: #888888 !important; /* СЕРЫЙ ЦВЕТ С !important */
 }
 
 .favorite-toggle.active {
     background: linear-gradient(135deg, #00b4db, #11998e);
     border-color: rgba(0, 180, 219, 0.5);
-    color: #ffffff !important;
+    color: #ffffff !important; /* БЕЛЫЙ С !important */
 }
 
 .card-actions span {
@@ -1065,6 +1060,7 @@ input:checked + .slider:before {
         padding: 12px 15px;
     }
 }
+
 
 
 
