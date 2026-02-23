@@ -174,6 +174,54 @@ async function supabaseFetch(table, options) {
     return await response.json();
 }
 
+// === ОБНОВЛЕНИЕ ТЕКСТОВ ИНТЕРФЕЙСА ===
+function updateUITexts() {
+    var searchInput = document.getElementById('searchInput');
+    if (searchInput) searchInput.placeholder = t.searchPlaceholder;
+    
+    // Вкладки
+    var tabBtns = document.querySelectorAll('.tab-btn');
+    tabBtns.forEach(function(btn) {
+        if (btn.dataset.tab === 'catalog') {
+            btn.innerHTML = '📚 ' + t.catalog;
+        } else if (btn.dataset.tab === 'favorites') {
+            btn.innerHTML = '⭐ ' + t.favorites;
+        } else if (btn.dataset.tab === 'settings') {
+            btn.innerHTML = '⚙️';
+        }
+    });
+    
+    // Фильтры
+    var filterLabels = document.querySelectorAll('.filter-group label');
+    if (filterLabels[0]) filterLabels[0].innerHTML = '📂 ' + t.categories + ':';
+    if (filterLabels[1]) filterLabels[1].innerHTML = '💰 ' + t.discount + ':';
+    if (filterLabels[2]) filterLabels[2].innerHTML = '📊 ' + t.sort + ':';
+    
+    // Кнопки
+    var applyBtn = document.querySelector('.apply-filters-btn');
+    if (applyBtn) applyBtn.textContent = t.applyFilters;
+    
+    // Настройки
+    var settingLabels = document.querySelectorAll('.setting-item label');
+    if (settingLabels[0]) settingLabels[0].innerHTML = '🌐 ' + t.language;
+    if (settingLabels[1]) settingLabels[1].innerHTML = '🔔 ' + t.notifications;
+    
+    var clearBtn = document.querySelector('.clear-history-btn');
+    if (clearBtn) clearBtn.textContent = t.clearHistory;
+    
+    // Кнопки в модалке
+    var shareBtn = document.querySelector('.share-btn');
+    if (shareBtn) shareBtn.innerHTML = t.share;
+    
+    var additionalToggle = document.querySelector('.additional-toggle');
+    if (additionalToggle) {
+        additionalToggle.innerHTML = t.additionalConditions + ' <span class="toggle-icon">▼</span>';
+    }
+    
+    // Перерисовываем категории
+    renderCategories();
+}
+
 // === ЗАГРУЗКА ДАННЫХ ===
 async function loadData() {
     try {
@@ -261,8 +309,10 @@ async function loadUserSettings() {
             if (settings && settings.length > 0) {
                 userLanguage = settings[0].language || 'ru';
                 t = translations[userLanguage];
-                document.getElementById('languageSelect').value = userLanguage;
-                document.getElementById('notificationsToggle').checked = settings[0].notifications_enabled !== false;
+                var langSelect = document.getElementById('languageSelect');
+                var notifToggle = document.getElementById('notificationsToggle');
+                if (langSelect) langSelect.value = userLanguage;
+                if (notifToggle) notifToggle.checked = settings[0].notifications_enabled !== false;
                 updateUITexts();
             }
         }
@@ -306,6 +356,7 @@ async function saveUserSettings() {
 // === ЗАПОЛНЕНИЕ ФИЛЬТРА КАТЕГОРИЙ ===
 function populateCategoryFilter() {
     var select = document.getElementById('categoryFilter');
+    if (!select) return;
     select.innerHTML = '<option value="all">' + t.allCategories + '</option>';
     allCategories.forEach(function(cat) {
         var option = document.createElement('option');
@@ -313,39 +364,6 @@ function populateCategoryFilter() {
         option.textContent = (cat.icon_emoji || '📦') + ' ' + cat.name;
         select.appendChild(option);
     });
-}
-
-// === ОБНОВЛЕНИЕ ТЕКСТОВ ИНТЕРФЕЙСА ===
-function updateUITexts() {
-    document.getElementById('searchInput').placeholder = t.searchPlaceholder;
-    var tabBtns = document.querySelectorAll('.tab-btn');
-    tabBtns.forEach(function(btn) {
-        if (btn.dataset.tab === 'catalog') {
-            btn.innerHTML = '📚 ' + t.catalog;
-        } else if (btn.dataset.tab === 'favorites') {
-            btn.innerHTML = '⭐ ' + t.favorites;
-        } else if (btn.dataset.tab === 'settings') {
-            btn.innerHTML = '⚙️';
-        }
-    });
-    var filterLabels = document.querySelectorAll('.filter-group label');
-    if (filterLabels[0]) filterLabels[0].innerHTML = '📂 ' + t.categories + ':';
-    if (filterLabels[1]) filterLabels[1].innerHTML = '💰 ' + t.discount + ':';
-    if (filterLabels[2]) filterLabels[2].innerHTML = '📊 ' + t.sort + ':';
-    var applyBtn = document.querySelector('.apply-filters-btn');
-    if (applyBtn) applyBtn.textContent = t.applyFilters;
-    var settingLabels = document.querySelectorAll('.setting-item label');
-    if (settingLabels[0]) settingLabels[0].innerHTML = '🌐 ' + t.language;
-    if (settingLabels[1]) settingLabels[1].innerHTML = '🔔 ' + t.notifications;
-    var clearBtn = document.querySelector('.clear-history-btn');
-    if (clearBtn) clearBtn.textContent = t.clearHistory;
-    var shareBtn = document.querySelector('.share-btn');
-    if (shareBtn) shareBtn.innerHTML = t.share;
-    var additionalToggle = document.querySelector('.additional-toggle');
-    if (additionalToggle) {
-        additionalToggle.innerHTML = t.additionalConditions + ' <span class="toggle-icon">▼</span>';
-    }
-    renderCategories();
 }
 
 // === ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК ===
@@ -416,6 +434,7 @@ function renderFavorites() {
 // === ОТРИСОВКА КАТЕГОРИЙ ===
 function renderCategories() {
     var container = document.getElementById('categoriesList');
+    if (!container) return;
     container.innerHTML = '<button class="cat-btn active" onclick="filterOffers(\'all\', this)">🗂 ' + t.allCategories + '</button>';
     allCategories.forEach(function(cat) {
         var btn = document.createElement('button');
@@ -483,6 +502,7 @@ async function saveSearchToHistory(query) {
 // === ОТОБРАЖЕНИЕ НЕДАВНИХ ПОИСКОВ ===
 function displayRecentSearches() {
     var container = document.getElementById('recentSearches');
+    if (!container) return;
     if (recentSearches.length === 0) {
         container.classList.add('hidden');
         return;
@@ -517,7 +537,7 @@ window.clearSearchHistory = async function() {
 // === ПЕРЕКЛЮЧЕНИЕ ФИЛЬТРОВ ===
 window.toggleFilters = function() {
     var panel = document.getElementById('filtersPanel');
-    panel.classList.toggle('hidden');
+    if (panel) panel.classList.toggle('hidden');
 };
 
 // === ПРИМЕНЕНИЕ ФИЛЬТРОВ ===
@@ -609,16 +629,17 @@ window.toggleFavoriteFromModal = function() {
 // === ОБНОВЛЕНИЕ КНОПКИ ИЗБРАННОГО ===
 function updateFavoriteButton(isFavorite) {
     var btn = document.querySelector('.favorite-btn');
+    if (!btn) return;
     var icon = btn.querySelector('.favorite-icon');
     var text = btn.querySelector('.favorite-text');
     if (isFavorite) {
         btn.classList.add('active');
-        icon.textContent = '⭐';
-        text.textContent = t.removeFromFavorites;
+        if (icon) icon.textContent = '⭐';
+        if (text) text.textContent = t.removeFromFavorites;
     } else {
         btn.classList.remove('active');
-        icon.textContent = '☆';
-        text.textContent = t.addToFavorites;
+        if (icon) icon.textContent = '☆';
+        if (text) text.textContent = t.addToFavorites;
     }
 }
 
@@ -626,8 +647,10 @@ function updateFavoriteButton(isFavorite) {
 window.openModal = function(offer, codes) {
     currentOffer = { offer: offer, codes: codes };
     trackAction('brand_viewed', { brand: offer.brand_name, offer_id: offer.id });
-    document.getElementById('mBrand').innerText = offer.brand_name;
+    var mBrand = document.getElementById('mBrand');
+    if (mBrand) mBrand.innerText = offer.brand_name;
     var codesContainer = document.getElementById('mCode');
+    if (!codesContainer) return;
     codesContainer.innerHTML = '';
     codes.forEach(function(code, index) {
         var codeText = code.code_text || 'AUTO';
@@ -677,11 +700,12 @@ window.openModal = function(offer, codes) {
     var additionalContent = document.getElementById('additionalContent');
     if (offer.additional_info) {
         additionalContent.innerHTML = offer.additional_info.replace(/\n/g, '<br>');
-        additionalSection.style.display = 'block';
+        if (additionalSection) additionalSection.style.display = 'block';
     } else {
-        additionalSection.style.display = 'none';
+        if (additionalSection) additionalSection.style.display = 'none';
     }
-    document.getElementById('modal').classList.remove('hidden');
+    var modal = document.getElementById('modal');
+    if (modal) modal.classList.remove('hidden');
 };
 
 // === КОПИРОВАНИЕ ПРОМОКОДА ===
@@ -695,12 +719,13 @@ window.copyPromoCode = function(code) {
 window.expandBarcode = function(containerId, svgId, barcode, barcodeType) {
     var container = document.getElementById(containerId);
     var svg = document.getElementById(svgId);
+    if (!container) return;
     var isExpanded = container.classList.contains('barcode-expanded');
     if (isExpanded) {
         container.classList.remove('barcode-expanded');
         container.style.maxHeight = '100px';
         setTimeout(function() {
-            if (typeof JsBarcode !== 'undefined') {
+            if (typeof JsBarcode !== 'undefined' && svg) {
                 JsBarcode('#' + svgId, barcode, {
                     format: barcodeType,
                     width: 2,
@@ -715,7 +740,7 @@ window.expandBarcode = function(containerId, svgId, barcode, barcodeType) {
         container.classList.add('barcode-expanded');
         container.style.maxHeight = '300px';
         setTimeout(function() {
-            if (typeof JsBarcode !== 'undefined') {
+            if (typeof JsBarcode !== 'undefined' && svg) {
                 JsBarcode('#' + svgId, barcode, {
                     format: barcodeType,
                     width: 4,
@@ -786,29 +811,30 @@ window.openLink = function(url) {
 
 // === ЗАКРЫТЬ МОДАЛЬНОЕ ОКНО ===
 window.closeModal = function() {
-    document.getElementById('modal').classList.add('hidden');
+    var modal = document.getElementById('modal');
+    if (modal) modal.classList.add('hidden');
 };
 
 // === ДОПОЛНИТЕЛЬНЫЕ УСЛОВИЯ ===
 window.toggleAdditional = function() {
     var content = document.getElementById('additionalContent');
     var toggle = document.querySelector('.additional-toggle');
-    var icon = toggle.querySelector('.toggle-icon');
+    var icon = toggle ? toggle.querySelector('.toggle-icon') : null;
     if (content.style.display === 'none' || !content.style.display) {
         content.style.display = 'block';
-        icon.style.transform = 'rotate(180deg)';
-        toggle.classList.add('active');
+        if (icon) icon.style.transform = 'rotate(180deg)';
+        if (toggle) toggle.classList.add('active');
     } else {
         content.style.display = 'none';
-        icon.style.transform = 'rotate(0deg)';
-        toggle.classList.remove('active');
+        if (icon) icon.style.transform = 'rotate(0deg)';
+        if (toggle) toggle.classList.remove('active');
     }
 };
 
 // === НАСТРОЙКИ ===
 window.toggleSettings = function() {
     var modal = document.getElementById('settingsModal');
-    modal.classList.toggle('hidden');
+    if (modal) modal.classList.toggle('hidden');
 };
 
 // === СМЕНА ЯЗЫКА ===
@@ -821,21 +847,27 @@ window.changeLanguage = function(lang) {
 };
 
 // === ПОИСК ===
-document.getElementById('searchInput').oninput = function() {
-    var active = document.querySelector('.cat-btn.active');
-    if (active && active.innerText.indexOf('🗂') === -1) {
-        var catName = active.innerText.split(' ')[1];
-        var cat = allCategories.find(function(c) { return c.name.indexOf(catName) !== -1; });
-        if (cat) filterOffers(cat.id, active);
-    } else {
-        filterOffers('all', active);
-    }
-};
+var searchInput = document.getElementById('searchInput');
+if (searchInput) {
+    searchInput.oninput = function() {
+        var active = document.querySelector('.cat-btn.active');
+        if (active && active.innerText.indexOf('🗂') === -1) {
+            var catName = active.innerText.split(' ')[1];
+            var cat = allCategories.find(function(c) { return c.name.indexOf(catName) !== -1; });
+            if (cat) filterOffers(cat.id, active);
+        } else {
+            filterOffers('all', active);
+        }
+    };
+}
 
 // === ЗАКРЫТИЕ ПО КЛИКУ ВНЕ МОДАЛКИ ===
-document.getElementById('modal').onclick = function(e) {
-    if (e.target === this) closeModal();
-};
+var modal = document.getElementById('modal');
+if (modal) {
+    modal.onclick = function(e) {
+        if (e.target === this) closeModal();
+    };
+}
 
 // === ОТСЛЕЖИВАНИЕ ОТКРЫТИЯ MINI APP ===
 if (userId) {
