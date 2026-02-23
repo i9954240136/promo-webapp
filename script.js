@@ -958,7 +958,7 @@ window.openModal = function(offer, codes) {
     var additionalContent = document.getElementById('additionalContent');
     
     if (offer.additional_info) {
-        additionalContent.innerHTML = offer.additional_info.replace(/\n/g, '<br>');
+        additionalContent.innerHTML = offer.additional_info.replace(/\n/g, '<br>');  // ✅
         additionalSection.style.display = 'block';
     } else {
         additionalSection.style.display = 'none';
@@ -1228,6 +1228,7 @@ if (document.readyState === 'loading') {
     tg.expand();
     loadData();
 }
+
 
 
 
