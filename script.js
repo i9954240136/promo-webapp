@@ -981,12 +981,30 @@ window.exportToPDF = function() {
     showCustomNotification('📤', 'PDF сохранён');
 };
 
-// === ПОДЕЛИТЬСЯ ===
+// === ПОДЕЛИТЬСЯ (с промокодами) ===
 window.shareOffer = function() {
     if (!currentOffer) return;
     
     var offer = currentOffer.offer;
-    var shareText = '🎁 ' + offer.brand_name + '\n\n' + (offer.description || '') + '\n\nОткрыто в Promo Bot';
+    var codes = currentOffer.codes;
+    
+    // Формируем текст со всеми промокодами
+    var shareText = '🎁 ' + offer.brand_name + '\n\n';
+    
+    if (offer.description) {
+        shareText += offer.description + '\n\n';
+    }
+    
+    shareText += '📋 Промокоды:\n';
+    codes.forEach(function(code, i) {
+        shareText += (i + 1) + '. ' + code.code_text;
+        if (code.bonus_info) {
+            shareText += ' - ' + code.bonus_info;
+        }
+        shareText += '\n';
+    });
+    
+    shareText += '\nОткрыто в Promo Bot';
     
     if (navigator.share) {
         navigator.share({
@@ -998,7 +1016,7 @@ window.shareOffer = function() {
         });
     } else {
         navigator.clipboard.writeText(shareText);
-        showCustomNotification('🔗', 'Ссылка скопирована');
+        showCustomNotification('🔗', 'Текст скопирован');
     }
 };
 
@@ -1084,3 +1102,4 @@ if (tg.ready) {
     tg.ready();
     loadData();
 }
+
