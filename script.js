@@ -858,8 +858,18 @@ window.toggleSettings = function() {
 window.changeLanguage = function(lang) {
     userLanguage = lang;
     t = translations[lang];
+    
+    // Обновляем тексты интерфейса
     updateUITexts();
-    saveUserSettings();
+    
+    // СРАЗУ сохраняем настройки
+    saveUserSettings().then(function() {
+        console.log('✅ Настройки сохранены');
+    }).catch(function(err) {
+        console.error('❌ Ошибка сохранения:', err);
+    });
+    
+    // Отслеживаем событие
     trackAction('language_changed', { language: lang });
 };
 
@@ -904,5 +914,6 @@ if (document.readyState === 'loading') {
     tg.expand();
     loadData();
 }
+
 
 
