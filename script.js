@@ -393,32 +393,49 @@ window.switchTab = function(tabName) {
 function renderFavorites() {
     var container = document.getElementById('offersContainer');
     var emptyState = document.getElementById('emptyFavorites');
+    
     if (!container) {
         console.error('❌ Контейнер не найден');
         return;
     }
+    
+    console.log('📋 renderFavorites вызвана. Избранное:', userFavorites.length);
+    console.log('Все оферы:', allOffers.length);
+    
     if (userFavorites.length === 0) {
         container.innerHTML = '';
         if (emptyState) emptyState.classList.remove('hidden');
         return;
     }
+    
     if (emptyState) emptyState.classList.add('hidden');
     container.innerHTML = '';
+    
+    // Фильтруем оферы по избранным
     var favoriteOfferIds = userFavorites.map(function(f) { return f.offer_id; });
+    console.log('ID избранных оферов:', favoriteOfferIds);
+    
     var favoriteOffers = allOffers.filter(function(o) {
         return favoriteOfferIds.indexOf(o.id) !== -1;
     });
+    
+    console.log('Найдено избранных оферов:', favoriteOffers.length);
+    
     if (favoriteOffers.length === 0) {
         if (emptyState) emptyState.classList.remove('hidden');
         return;
     }
+    
     favoriteOffers.forEach(function(offer) {
         var offerCodes = allPromoCodes.filter(function(c) { return c.offer_id === offer.id; });
         var activeCodes = offerCodes.filter(function(c) {
             return !c.expires_at || new Date(c.expires_at) > new Date();
         });
+        
         if (activeCodes.length === 0) return;
+        
         var isFavorite = userFavorites.some(function(f) { return f.offer_id === offer.id; });
+        
         var card = document.createElement('div');
         card.className = 'offer-card';
         card.innerHTML = '<div><div class="brand-name">' + offer.brand_name + '</div><div class="brand-desc">' + (offer.description || '') + '</div></div><div class="card-actions"><button class="favorite-toggle ' + (isFavorite ? 'active' : '') + '" onclick="toggleFavorite(event, ' + offer.id + ')">⭐</button><span>➡️</span></div>';
@@ -887,3 +904,4 @@ if (document.readyState === 'loading') {
     tg.expand();
     loadData();
 }
+
