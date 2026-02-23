@@ -133,30 +133,7 @@ var translations = {
 
 var t = translations[userLanguage];
 
-var translations = {
-    ru: {
-        // ... существующие строки ...
-        share: '🔗 Поделиться',
-        additionalConditions: '📋 Дополнительные условия',
-        // ...
-    },
-    en: {
-        // ... существующие строки ...
-        share: '🔗 Share',
-        additionalConditions: '📋 Additional conditions',
-        // ...
-    },
-    de: {
-        // ... существующие строки ...
-        share: '🔗 Teilen',
-        additionalConditions: '📋 Zusätzliche Bedingungen',
-        // ...
-    }
-};
-
 // === ОБНОВЛЕНИЕ ТЕКСТОВ ИНТЕРФЕЙСА ===
-function updateUITexts() {
-    document.getElementById('searchInput').placeholder = t.searchPlaceholder;
     
     // Вкладки
     var tabBtns = document.querySelectorAll('.tab-btn');
@@ -188,9 +165,6 @@ function updateUITexts() {
     // Перерисовываем категории
     renderCategories();
 }
-
-function updateUITexts() {
-    document.getElementById('searchInput').placeholder = t.searchPlaceholder;
     
     // Вкладки
     var tabBtns = document.querySelectorAll('.tab-btn');
@@ -1254,4 +1228,5 @@ if (document.readyState === 'loading') {
     tg.expand();
     loadData();
 }
+
 
