@@ -1,6 +1,5 @@
-/* === GLASSMORPHISM MODERN DARK THEME (FINAL VERSION) === */
+/* === GLASSMORPHISM MODERN DARK THEME (FIXED) === */
 
-/* Фон с градиентом (приглушённый) */
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     background: linear-gradient(135deg, #0a0f14 0%, #101a1f 50%, #152529 100%);
@@ -13,7 +12,6 @@ body {
     overflow-x: hidden;
 }
 
-/* Декоративные размытые круги на фоне */
 body::before,
 body::after {
     content: '';
@@ -53,41 +51,13 @@ body::after {
 }
 
 .header-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
     margin-bottom: 15px;
-}
-
-.header-top h1 {
-    margin: 0;
-    font-size: 28px;
-    font-weight: 700;
-    color: #ffffff;
-    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-}
-
-.settings-btn {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
-    padding: 10px 15px;
-    font-size: 20px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    backdrop-filter: blur(10px);
-}
-
-.settings-btn:hover {
-    background: rgba(255, 255, 255, 0.1);
-    transform: rotate(90deg);
 }
 
 /* === ВКЛАДКИ === */
 .tabs {
     display: flex;
     gap: 10px;
-    margin-bottom: 15px;
 }
 
 .tab-btn {
@@ -113,6 +83,11 @@ body::after {
     background: linear-gradient(135deg, #00b4db, #11998e);
     border-color: rgba(0, 180, 219, 0.5);
     box-shadow: 0 5px 20px rgba(0, 180, 219, 0.4);
+}
+
+.settings-tab {
+    max-width: 60px;
+    flex: 0 0 60px;
 }
 
 /* === ПОИСК === */
@@ -153,14 +128,13 @@ body::after {
     background: rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(10px);
     color: #ffffff;
-    font-size: 18px;
+    font-size: 22px;
     cursor: pointer;
     transition: all 0.3s ease;
 }
 
 .filter-btn:hover {
     background: rgba(255, 255, 255, 0.1);
-    transform: rotate(180deg);
 }
 
 /* === ПАНЕЛЬ ФИЛЬТРОВ === */
@@ -237,7 +211,7 @@ body::after {
     box-shadow: 0 8px 25px rgba(0, 180, 219, 0.5);
 }
 
-/* === НЕДАВНИЕ ПОИСКИ === */
+/* === НЕДАВНИЕ ПОИСКИ (2 строки со скроллом) === */
 .recent-searches {
     background: rgba(255, 255, 255, 0.03);
     backdrop-filter: blur(10px);
@@ -245,10 +219,26 @@ body::after {
     border-radius: 16px;
     padding: 15px;
     margin-bottom: 15px;
+    max-height: 100px;
+    overflow-y: auto;
 }
 
 .recent-searches.hidden {
     display: none;
+}
+
+.recent-searches::-webkit-scrollbar {
+    width: 6px;
+}
+
+.recent-searches::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+}
+
+.recent-searches::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #00b4db, #11998e);
+    border-radius: 10px;
 }
 
 .recent-title {
@@ -256,6 +246,10 @@ body::after {
     color: rgba(255, 255, 255, 0.6);
     margin-bottom: 10px;
     font-weight: 600;
+    position: sticky;
+    top: 0;
+    background: #0a0f14;
+    padding-bottom: 5px;
 }
 
 .recent-item {
@@ -400,6 +394,7 @@ body::after {
     display: flex;
     align-items: center;
     justify-content: center;
+    color: #888888; /* СЕРЫЙ ЦВЕТ */
 }
 
 .favorite-toggle:hover {
@@ -410,6 +405,7 @@ body::after {
 .favorite-toggle.active {
     background: linear-gradient(135deg, #00b4db, #11998e);
     border-color: rgba(0, 180, 219, 0.5);
+    color: #ffffff;
 }
 
 .card-actions span {
@@ -792,17 +788,6 @@ body::after {
     box-shadow: 0 8px 25px rgba(0, 180, 219, 0.4);
 }
 
-.export-btn {
-    background: rgba(255, 255, 255, 0.05);
-    color: #ffffff;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.export-btn:hover {
-    background: rgba(255, 255, 255, 0.1);
-    transform: translateY(-2px);
-}
-
 .share-btn {
     background: rgba(255, 255, 255, 0.05);
     color: #ffffff;
@@ -894,10 +879,11 @@ body::after {
 }
 
 .setting-item label {
-    display: block;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     font-size: 15px;
     color: rgba(255, 255, 255, 0.9);
-    margin-bottom: 10px;
     font-weight: 600;
 }
 
@@ -910,6 +896,7 @@ body::after {
     color: #ffffff;
     font-size: 14px;
     cursor: pointer;
+    margin-top: 10px;
 }
 
 .setting-item select option {
@@ -941,7 +928,6 @@ body::after {
     display: inline-block;
     width: 50px;
     height: 28px;
-    float: right;
 }
 
 .switch input {
