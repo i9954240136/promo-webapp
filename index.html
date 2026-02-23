@@ -10,26 +10,82 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.0/dist/JsBarcode.all.min.js"></script>
-    <link rel="stylesheet" href="style.css?v=5">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <link rel="stylesheet" href="style.css?v=6">
 </head>
 <body>
     <div class="container">
-        <header>
-            <h1>Каталог Скидок</h1>
-            <input type="search" id="searchInput" placeholder="🔍 Найти бренд...">
+        <!-- Шапка с навигацией -->
+        <header class="main-header">
+            <div class="header-top">
+                <h1>Каталог Скидок</h1>
+                <button class="settings-btn" onclick="toggleSettings()">⚙️</button>
+            </div>
+            
+            <!-- Вкладки -->
+            <div class="tabs">
+                <button class="tab-btn active" onclick="switchTab('catalog')" data-tab="catalog">
+                    📚 Каталог
+                </button>
+                <button class="tab-btn" onclick="switchTab('favorites')" data-tab="favorites">
+                    ⭐ Избранное
+                </button>
+            </div>
+            
+            <!-- Поиск -->
+            <div class="search-container">
+                <input type="search" id="searchInput" placeholder="🔍 Найти бренд...">
+                <button class="filter-btn" onclick="toggleFilters()">🔽</button>
+            </div>
+            
+            <!-- Фильтры (скрыты по умолчанию) -->
+            <div id="filtersPanel" class="filters-panel hidden">
+                <div class="filter-group">
+                    <label>📂 Категория:</label>
+                    <select id="categoryFilter">
+                        <option value="all">Все категории</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label>💰 Мин. скидка:</label>
+                    <select id="discountFilter">
+                        <option value="0">Любая</option>
+                        <option value="500">от 500 ₽</option>
+                        <option value="1000">от 1000 ₽</option>
+                        <option value="3000">от 3000 ₽</option>
+                        <option value="5000">от 5000 ₽</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label>📊 Сортировка:</label>
+                    <select id="sortFilter">
+                        <option value="popularity">По популярности</option>
+                        <option value="alphabet">По алфавиту</option>
+                        <option value="discount">По размеру скидки</option>
+                        <option value="newest">По дате добавления</option>
+                    </select>
+                </div>
+                
+                <button class="apply-filters-btn" onclick="applyFilters()">Применить</button>
+            </div>
+            
+            <!-- Недавние поиски -->
+            <div id="recentSearches" class="recent-searches hidden"></div>
         </header>
         
-        <nav class="categories" id="categoriesList">
-            <button class="cat-btn active" onclick="filterOffers('all', this)">🗂 Все</button>
-        </nav>
-        
+        <!-- Основной контент -->
         <main id="offersContainer" class="offers-grid">
             <p style="text-align: center; padding: 20px;">Загрузка...</p>
         </main>
         
-        <!-- AdsGram Banner Container -->
-        <div id="adBanner" class="ad-banner">
-            <div id="adsgram-banner" data-block-id="int-23378"></div>
+        <!-- Пустое состояние для избранного -->
+        <div id="emptyFavorites" class="empty-state hidden">
+            <div class="empty-icon">⭐</div>
+            <h3>В избранном пока пусто</h3>
+            <p>Добавляйте бренды в избранное, чтобы быстро находить их</p>
+            <button class="go-catalog-btn" onclick="switchTab('catalog')">Перейти в каталог</button>
         </div>
     </div>
 
@@ -39,6 +95,21 @@
             <span class="close" onclick="closeModal()">&times;</span>
             <h3 id="mBrand">Brand</h3>
             <div id="mCode"></div>
+            
+            <div class="offer-actions">
+                <button class="action-btn favorite-btn" onclick="toggleFavoriteFromModal()">
+                    <span class="favorite-icon">⭐</span>
+                    <span class="favorite-text">В избранное</span>
+                </button>
+                
+                <button class="action-btn export-btn" onclick="exportToPDF()">
+                    📤 Экспорт PDF
+                </button>
+                
+                <button class="action-btn share-btn" onclick="shareOffer()">
+                    🔗 Поделиться
+                </button>
+            </div>
             
             <div id="additionalSection" class="additional-section" style="display: none;">
                 <button class="additional-toggle" onclick="toggleAdditional()">
@@ -50,6 +121,37 @@
         </div>
     </div>
 
-    <script src="script.js?v=4"></script>
+    <!-- Настройки -->
+    <div id="settingsModal" class="modal hidden">
+        <div class="modal-content settings-content">
+            <span class="close" onclick="toggleSettings()">&times;</span>
+            <h3>⚙️ Настройки</h3>
+            
+            <div class="setting-item">
+                <label>🌐 Язык:</label>
+                <select id="languageSelect" onchange="changeLanguage(this.value)">
+                    <option value="ru">🇷🇺 Русский</option>
+                    <option value="en">🇬🇧 English</option>
+                    <option value="de">🇩🇪 Deutsch</option>
+                </select>
+            </div>
+            
+            <div class="setting-item">
+                <label>🔔 Уведомления:</label>
+                <label class="switch">
+                    <input type="checkbox" id="notificationsToggle" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+            
+            <div class="setting-item">
+                <button class="clear-history-btn" onclick="clearSearchHistory()">
+                    🗑️ Очистить историю поиска
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js?v=6"></script>
 </body>
 </html>
