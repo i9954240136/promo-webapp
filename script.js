@@ -133,6 +133,41 @@ var translations = {
 
 var t = translations[userLanguage];
 
+// === ОБНОВЛЕНИЕ ТЕКСТОВ ИНТЕРФЕЙСА ===
+function updateUITexts() {
+    document.getElementById('searchInput').placeholder = t.searchPlaceholder;
+    
+    // Вкладки
+    var tabBtns = document.querySelectorAll('.tab-btn');
+    tabBtns.forEach(function(btn) {
+        if (btn.dataset.tab === 'catalog') {
+            btn.textContent = t.catalog;
+        } else if (btn.dataset.tab === 'favorites') {
+            btn.textContent = t.favorites;
+        }
+    });
+    
+    // Фильтры
+    var filterLabels = document.querySelectorAll('.filter-group label');
+    if (filterLabels[0]) filterLabels[0].textContent = t.categories + ':';
+    if (filterLabels[1]) filterLabels[1].textContent = t.discount + ':';
+    if (filterLabels[2]) filterLabels[2].textContent = t.sort + ':';
+    
+    // Кнопки
+    var applyBtn = document.querySelector('.apply-filters-btn');
+    if (applyBtn) applyBtn.textContent = t.applyFilters;
+    
+    // Настройки
+    var settingLabels = document.querySelectorAll('.setting-item label span');
+    if (settingLabels[0]) settingLabels[0].textContent = t.language + ':';
+    
+    var clearBtn = document.querySelector('.clear-history-btn');
+    if (clearBtn) clearBtn.textContent = t.clearHistory;
+    
+    // Перерисовываем категории
+    renderCategories();
+}
+
 // === ОТСЛЕЖИВАНИЕ ДЕЙСТВИЙ ===
 async function trackAction(action, data) {
     if (!userId) {
@@ -1062,8 +1097,14 @@ window.toggleSettings = function() {
 window.changeLanguage = function(lang) {
     userLanguage = lang;
     t = translations[lang];
+    
+    // Обновляем тексты интерфейса
     updateUITexts();
+    
+    // Сохраняем настройки
     saveUserSettings();
+    
+    // Отслеживаем событие
     trackAction('language_changed', { language: lang });
 };
 
@@ -1102,4 +1143,5 @@ if (tg.ready) {
     tg.ready();
     loadData();
 }
+
 
