@@ -874,6 +874,7 @@ window.toggleSettings = function() {
 
 // === СМЕНА ЯЗЫКА ===
 window.changeLanguage = function(lang) {
+    console.log('🔄 Смена языка:', lang);
     userLanguage = lang;
     t = translations[lang];
     
@@ -882,7 +883,7 @@ window.changeLanguage = function(lang) {
     
     // СРАЗУ сохраняем настройки
     saveUserSettings().then(function() {
-        console.log('✅ Настройки сохранены');
+        console.log('✅ Язык сохранён:', lang);
     }).catch(function(err) {
         console.error('❌ Ошибка сохранения:', err);
     });
@@ -932,6 +933,7 @@ if (document.readyState === 'loading') {
     tg.expand();
     loadData();
 }
+
 
 
 
