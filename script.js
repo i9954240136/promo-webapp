@@ -179,7 +179,7 @@ function updateUITexts() {
     var searchInput = document.getElementById('searchInput');
     if (searchInput) searchInput.placeholder = t.searchPlaceholder;
     
-    // Вкладки - используем textContent вместо innerHTML
+    // Вкладки - используем textContent
     var tabBtns = document.querySelectorAll('.tab-btn');
     tabBtns.forEach(function(btn) {
         if (btn.dataset.tab === 'catalog') {
@@ -197,22 +197,25 @@ function updateUITexts() {
     if (filterLabels[1]) filterLabels[1].textContent = '💰 ' + t.discount + ':';
     if (filterLabels[2]) filterLabels[2].textContent = '📊 ' + t.sort + ':';
     
-    // Кнопки
+    // Кнопка применения фильтров
     var applyBtn = document.querySelector('.apply-filters-btn');
     if (applyBtn) applyBtn.textContent = t.applyFilters;
     
-    // Настройки - НЕ перезаписываем label с переключателем!
-    var settingLabels = document.querySelectorAll('.setting-item label');
-    if (settingLabels[0]) settingLabels[0].firstChild.textContent = ' ' + t.language + ' ';
-    if (settingLabels[1]) settingLabels[1].firstChild.textContent = ' ' + t.notifications + ' ';
+    // Настройки - НЕ трогаем label с переключателем!
+    var langLabel = document.querySelector('.setting-item label');
+    if (langLabel && langLabel.querySelector('select')) {
+        langLabel.firstChild.textContent = ' ' + t.language + ' ';
+    }
     
+    // Кнопка очистки истории
     var clearBtn = document.querySelector('.clear-history-btn');
     if (clearBtn) clearBtn.textContent = t.clearHistory;
     
-    // Кнопки в модалке
+    // Кнопка "Поделиться" в модалке
     var shareBtn = document.querySelector('.share-btn');
     if (shareBtn) shareBtn.textContent = t.share;
     
+    // Дополнительные условия
     var additionalToggle = document.querySelector('.additional-toggle');
     if (additionalToggle) {
         additionalToggle.firstChild.textContent = t.additionalConditions + ' ';
@@ -924,6 +927,7 @@ if (document.readyState === 'loading') {
     tg.expand();
     loadData();
 }
+
 
 
 
