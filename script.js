@@ -1228,7 +1228,3 @@ if (document.readyState === 'loading') {
     tg.expand();
     loadData();
 }
-
-
-
-
