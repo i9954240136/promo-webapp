@@ -1207,18 +1207,7 @@ if (userId) {
     console.warn('⚠️ User ID not available');
 }
 
-// === ЗАГРУЗКА ПРИ СТАРТЕ ===
-document.addEventListener('DOMContentLoaded', function() {
-    loadData();
-});
-
-// Для Telegram WebApp
-if (tg.ready) {
-    tg.ready();
-    loadData();
-}
-
-// === ИНИЦИАЛИЗАЦИЯ ПРИ ЗАГРУЗКЕ СТРАНИЦЫ ===
+// === ИНИЦИАЛИЗАЦИЯ ПРИ ЗАГРУЗКЕ ===
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', function() {
         tg.expand();
