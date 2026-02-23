@@ -1098,7 +1098,7 @@ window.shareOffer = function() {
     var codes = currentOffer.codes;
     
     // Формируем текст со всеми промокодами
-    var shareText = '🎁 ' + offer.brand_name + '\n\n';
+    var shareText = '🎁 ' + offer.brand_name + '\n\n';  // ✅
     
     if (offer.description) {
         shareText += offer.description + '\n\n';
@@ -1228,5 +1228,6 @@ if (document.readyState === 'loading') {
     tg.expand();
     loadData();
 }
+
 
 
