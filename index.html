@@ -10,32 +10,31 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.0/dist/JsBarcode.all.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <link rel="stylesheet" href="style.css?v=6">
+    <link rel="stylesheet" href="style.css?v=7">
 </head>
 <body>
     <div class="container">
         <!-- Шапка с навигацией -->
         <header class="main-header">
             <div class="header-top">
-                <h1>Каталог Скидок</h1>
-                <button class="settings-btn" onclick="toggleSettings()">⚙️</button>
-            </div>
-            
-            <!-- Вкладки -->
-            <div class="tabs">
-                <button class="tab-btn active" onclick="switchTab('catalog')" data-tab="catalog">
-                    📚 Каталог
-                </button>
-                <button class="tab-btn" onclick="switchTab('favorites')" data-tab="favorites">
-                    ⭐ Избранное
-                </button>
+                <!-- Вкладки -->
+                <div class="tabs">
+                    <button class="tab-btn active" onclick="switchTab('catalog')" data-tab="catalog">
+                        📚 Каталог
+                    </button>
+                    <button class="tab-btn" onclick="switchTab('favorites')" data-tab="favorites">
+                        ⭐ Избранное
+                    </button>
+                    <button class="tab-btn settings-tab" onclick="toggleSettings()" data-tab="settings">
+                        ⚙️
+                    </button>
+                </div>
             </div>
             
             <!-- Поиск -->
             <div class="search-container">
                 <input type="search" id="searchInput" placeholder="🔍 Найти бренд...">
-                <button class="filter-btn" onclick="toggleFilters()">🔽</button>
+                <button class="filter-btn" onclick="toggleFilters()">≡</button>
             </div>
             
             <!-- Фильтры (скрыты по умолчанию) -->
@@ -102,10 +101,6 @@
                     <span class="favorite-text">В избранное</span>
                 </button>
                 
-                <button class="action-btn export-btn" onclick="exportToPDF()">
-                    📤 Экспорт PDF
-                </button>
-                
                 <button class="action-btn share-btn" onclick="shareOffer()">
                     🔗 Поделиться
                 </button>
@@ -137,10 +132,12 @@
             </div>
             
             <div class="setting-item">
-                <label>🔔 Уведомления:</label>
-                <label class="switch">
-                    <input type="checkbox" id="notificationsToggle" checked>
-                    <span class="slider"></span>
+                <label>
+                    <span>🔔 Уведомления</span>
+                    <label class="switch">
+                        <input type="checkbox" id="notificationsToggle" checked>
+                        <span class="slider"></span>
+                    </label>
                 </label>
             </div>
             
@@ -152,6 +149,6 @@
         </div>
     </div>
 
-    <script src="script.js?v=6"></script>
+    <script src="script.js?v=7"></script>
 </body>
 </html>
