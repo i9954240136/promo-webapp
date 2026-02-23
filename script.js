@@ -303,17 +303,27 @@ async function loadSearchHistory() {
 // === ЗАГРУЗКА НАСТРОЕК ПОЛЬЗОВАТЕЛЯ ===
 async function loadUserSettings() {
     try {
-        var response = await fetch(SUPABASE_URL + '/rest/v1/user_settings?user_id=eq.' + userId, { headers: HEADERS });
+        var response = await fetch(
+            SUPABASE_URL + '/rest/v1/user_settings?user_id=eq.' + userId,
+            { headers: HEADERS }
+        );
         if (response.ok) {
             var settings = await response.json();
             if (settings && settings.length > 0) {
                 userLanguage = settings[0].language || 'ru';
                 t = translations[userLanguage];
+                
+                // Обновляем UI элементы
                 var langSelect = document.getElementById('languageSelect');
                 var notifToggle = document.getElementById('notificationsToggle');
+                
                 if (langSelect) langSelect.value = userLanguage;
                 if (notifToggle) notifToggle.checked = settings[0].notifications_enabled !== false;
+                
+                // Обновляем тексты интерфейса
                 updateUITexts();
+                
+                console.log('✅ Настройки загружены:', userLanguage);
             }
         }
     } catch (error) {
@@ -914,6 +924,7 @@ if (document.readyState === 'loading') {
     tg.expand();
     loadData();
 }
+
 
 
 
