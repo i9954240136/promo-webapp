@@ -1075,4 +1075,12 @@ if (userId) {
 }
 
 // === ЗАГРУЗКА ПРИ СТАРТЕ ===
-loadData();
+document.addEventListener('DOMContentLoaded', function() {
+    loadData();
+});
+
+// Для Telegram WebApp
+if (tg.ready) {
+    tg.ready();
+    loadData();
+}
