@@ -306,12 +306,14 @@ async function loadSearchHistory() {
 // === ЗАГРУЗКА НАСТРОЕК ПОЛЬЗОВАТЕЛЯ ===
 async function loadUserSettings() {
     try {
+        console.log('📥 Загрузка настроек для пользователя:', userId);
         var response = await fetch(
             SUPABASE_URL + '/rest/v1/user_settings?user_id=eq.' + userId,
             { headers: HEADERS }
         );
         if (response.ok) {
             var settings = await response.json();
+            console.log('📋 Получены настройки:', settings);
             if (settings && settings.length > 0) {
                 userLanguage = settings[0].language || 'ru';
                 t = translations[userLanguage];
@@ -320,14 +322,22 @@ async function loadUserSettings() {
                 var langSelect = document.getElementById('languageSelect');
                 var notifToggle = document.getElementById('notificationsToggle');
                 
-                if (langSelect) langSelect.value = userLanguage;
-                if (notifToggle) notifToggle.checked = settings[0].notifications_enabled !== false;
+                if (langSelect) {
+                    langSelect.value = userLanguage;
+                    console.log('✅ Язык установлен:', userLanguage);
+                }
+                if (notifToggle) {
+                    notifToggle.checked = settings[0].notifications_enabled !== false;
+                    console.log('✅ Уведомления:', notifToggle.checked);
+                }
                 
                 // Обновляем тексты интерфейса
                 updateUITexts();
-                
-                console.log('✅ Настройки загружены:', userLanguage);
+            } else {
+                console.log('ℹ️ Настройки не найдены, используем по умолчанию');
             }
+        } else {
+            console.error('❌ Ошибка загрузки настроек:', response.status);
         }
     } catch (error) {
         console.error('❌ Ошибка загрузки настроек:', error);
@@ -933,6 +943,7 @@ if (document.readyState === 'loading') {
     tg.expand();
     loadData();
 }
+
 
 
 
