@@ -412,8 +412,9 @@ function renderFavorites() {
         return;
     }
     
-    console.log('📋 renderFavorites вызвана. Избранное:', userFavorites.length);
-    console.log('Все оферы:', allOffers.length);
+    console.log('📋 renderFavorites вызвана');
+    console.log('Избранное:', userFavorites);
+    console.log('Все оферы:', allOffers);
     
     if (userFavorites.length === 0) {
         container.innerHTML = '';
@@ -425,11 +426,15 @@ function renderFavorites() {
     container.innerHTML = '';
     
     // Фильтруем оферы по избранным
-    var favoriteOfferIds = userFavorites.map(function(f) { return f.offer_id; });
-    console.log('ID избранных оферов:', favoriteOfferIds);
+    var favoriteOfferIds = userFavorites.map(function(f) { 
+        console.log('Favorite ID:', f.offer_id);
+        return f.offer_id; 
+    });
     
     var favoriteOffers = allOffers.filter(function(o) {
-        return favoriteOfferIds.indexOf(o.id) !== -1;
+        var isFav = favoriteOfferIds.indexOf(o.id) !== -1;
+        if (isFav) console.log('Найдено избранное:', o.brand_name);
+        return isFav;
     });
     
     console.log('Найдено избранных оферов:', favoriteOffers.length);
@@ -927,6 +932,7 @@ if (document.readyState === 'loading') {
     tg.expand();
     loadData();
 }
+
 
 
 
