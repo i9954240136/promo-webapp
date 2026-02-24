@@ -10,7 +10,7 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.0/dist/JsBarcode.all.min.js"></script>
-    <link rel="stylesheet" href="style.css?v=9">
+    <link rel="stylesheet" href="style.css?v=10">
 </head>
 <body>
     <div class="container">
@@ -37,7 +37,7 @@
                 <button class="filter-btn" onclick="toggleFilters()">≡</button>
             </div>
             
-            <!-- Выбор категорий (новая строка) -->
+            <!-- Выбор категорий -->
             <div class="category-select-container">
                 <button class="category-select-btn" onclick="toggleCategoryModal()">
                     <span id="selectedCategoriesText">Все категории</span>
@@ -49,7 +49,7 @@
             <div id="filtersPanel" class="filters-panel hidden">
                 <div class="filter-group">
                     <label>Мин. скидка:</label>
-                    <select id="discountFilter" class="glass-select">
+                    <select id="discountFilter">
                         <option value="0">Любая</option>
                         <option value="500">от 500 ₽</option>
                         <option value="1000">от 1000 ₽</option>
@@ -60,7 +60,7 @@
                 
                 <div class="filter-group">
                     <label>Сортировка:</label>
-                    <select id="sortFilter" class="glass-select">
+                    <select id="sortFilter">
                         <option value="popularity">По популярности</option>
                         <option value="alphabet">По алфавиту</option>
                         <option value="discount">По размеру скидки</option>
@@ -71,7 +71,7 @@
                 <button class="apply-filters-btn" onclick="applyFilters()">Применить</button>
             </div>
             
-            <!-- Недавние поиски (показывается только при активном поиске) -->
+            <!-- Недавние поиски -->
             <div id="recentSearches" class="recent-searches hidden"></div>
         </header>
         
@@ -101,10 +101,10 @@
         </div>
     </div>
 
-    <!-- Модальное окно офера -->
-    <div id="modal" class="modal hidden">
+    <!-- Модальное окно офера (полноэкранное) -->
+    <div id="modal" class="modal offer-modal hidden">
         <div class="modal-content offer-modal-content">
-            <!-- Sticky header -->
+            <!-- Sticky header (уменьшенный) -->
             <div class="modal-header">
                 <h3 id="mBrand">Brand</h3>
                 <span class="close" onclick="closeModal()">&times;</span>
@@ -140,7 +140,7 @@
             
             <div class="setting-item">
                 <label>Язык:</label>
-                <select id="languageSelect" class="glass-select" onchange="changeLanguage(this.value)">
+                <select id="languageSelect" onchange="changeLanguage(this.value)">
                     <option value="ru">🇷🇺 Русский</option>
                     <option value="en">🇬🇧 English</option>
                     <option value="de">🇩🇪 Deutsch</option>
@@ -149,7 +149,7 @@
             
             <div class="setting-item">
                 <label>Уведомления:</label>
-                <select id="notificationsSelect" class="glass-select" onchange="changeNotifications(this.value)">
+                <select id="notificationsSelect" onchange="changeNotifications(this.value)">
                     <option value="true">Включены</option>
                     <option value="false">Отключены</option>
                 </select>
@@ -163,6 +163,6 @@
         </div>
     </div>
 
-    <script src="script.js?v=9"></script>
+    <script src="script.js?v=10"></script>
 </body>
 </html>
