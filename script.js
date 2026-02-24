@@ -183,7 +183,6 @@ function updateUITexts() {
     var searchInput = document.getElementById('searchInput');
     if (searchInput) searchInput.placeholder = t.searchPlaceholder;
     
-    // Вкладки
     var tabBtns = document.querySelectorAll('.tab-btn');
     tabBtns.forEach(function(btn) {
         if (btn.dataset.tab === 'catalog') {
@@ -193,16 +192,13 @@ function updateUITexts() {
         }
     });
     
-    // Фильтры
     var filterLabels = document.querySelectorAll('.filter-group label');
     if (filterLabels[0]) filterLabels[0].textContent = t.discount + ':';
     if (filterLabels[1]) filterLabels[1].textContent = t.sort + ':';
     
-    // Кнопка применения
     var applyBtn = document.querySelector('.apply-filters-btn');
     if (applyBtn) applyBtn.textContent = t.applyFilters;
     
-    // Настройки
     var settingLabels = document.querySelectorAll('.setting-item label');
     if (settingLabels[0]) settingLabels[0].textContent = t.language + ':';
     if (settingLabels[1]) settingLabels[1].textContent = t.notifications + ':';
@@ -210,7 +206,6 @@ function updateUITexts() {
     var clearBtn = document.querySelector('.clear-history-btn');
     if (clearBtn) clearBtn.textContent = t.clearHistory;
     
-    // Кнопки в модалке
     var shareBtn = document.querySelector('.share-btn');
     if (shareBtn) shareBtn.textContent = t.share;
     
@@ -219,7 +214,6 @@ function updateUITexts() {
         additionalToggle.firstChild.textContent = t.additionalConditions + ' ';
     }
     
-    // Обновляем текст выбранных категорий
     updateSelectedCategoriesText();
 }
 
@@ -248,18 +242,15 @@ async function loadData() {
             return;
         }
         
-        // Загружаем категории
         allCategories = await supabaseFetch('categories', { method: 'GET' });
         allCategories.sort(function(a, b) { return a.name.localeCompare(b.name); });
         console.log('✅ Категории загружены:', allCategories.length);
         
-        // Загружаем оферы
         var offersUrl = SUPABASE_URL + '/rest/v1/offers?is_active=eq.true';
         var offersResponse = await fetch(offersUrl, { headers: HEADERS });
         allOffers = await offersResponse.json();
         console.log('✅ Оферы загружены:', allOffers.length);
         
-        // Загружаем промокоды
         var codesUrl = SUPABASE_URL + '/rest/v1/promo_codes?is_verified=eq.true';
         var codesResponse = await fetch(codesUrl, { headers: HEADERS });
         allPromoCodes = await codesResponse.json();
@@ -396,14 +387,13 @@ async function saveUserSettings() {
     }
 }
 
-// === ОТРИСОВКА СПИСКА КАТЕГОРИЙ (ДЛЯ МОДАЛКИ) ===
+// === ОТРИСОВКА СПИСКА КАТЕГОРИЙ ===
 function renderCategoryList() {
     var list = document.getElementById('categoryList');
     if (!list) return;
     
     list.innerHTML = '';
     
-    // Опция "Все категории"
     var allItem = document.createElement('div');
     allItem.className = 'category-item';
     allItem.innerHTML = '<input type="checkbox" id="cat-all" ' + (selectedCategories.length === 0 ? 'checked' : '') + '><label for="cat-all">' + t.allCategories + '</label>';
@@ -414,7 +404,6 @@ function renderCategoryList() {
     };
     list.appendChild(allItem);
     
-    // Категории
     allCategories.forEach(function(cat) {
         var item = document.createElement('div');
         item.className = 'category-item';
@@ -623,7 +612,6 @@ function displayRecentSearches() {
     var searchInput = document.getElementById('searchInput');
     if (!container) return;
     
-    // Показываем только если есть поиски И поле поиска активно
     if (recentSearches.length === 0 || (searchInput && searchInput.value === '' && document.activeElement !== searchInput)) {
         container.classList.add('hidden');
         return;
@@ -1008,16 +996,33 @@ window.changeNotifications = function(value) {
 
 // === ПОИСК ===
 var searchInput = document.getElementById('searchInput');
+var recentSearchesContainer = document.getElementById('recentSearches');
+
 if (searchInput) {
+    searchInput.onfocus = function() {
+        displayRecentSearches();
+    };
+    
     searchInput.oninput = function() {
         filterOffers();
         displayRecentSearches();
     };
     
-    searchInput.onfocus = function() {
-        displayRecentSearches();
+    searchInput.onblur = function() {
+        setTimeout(function() {
+            if (recentSearchesContainer) {
+                recentSearchesContainer.classList.add('hidden');
+            }
+        }, 200);
     };
 }
+
+// === СКРЫТИЕ НЕДАВНИХ ПОИСКОВ ПРИ СКРОЛЛЕ ===
+window.addEventListener('scroll', function() {
+    if (recentSearchesContainer && !recentSearchesContainer.classList.contains('hidden')) {
+        recentSearchesContainer.classList.add('hidden');
+    }
+});
 
 // === ЗАКРЫТИЕ ПО КЛИКУ ВНЕ МОДАЛКИ ===
 var modal = document.getElementById('modal');
