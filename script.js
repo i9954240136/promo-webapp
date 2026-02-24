@@ -12,6 +12,7 @@ var currentTab = 'catalog';
 var userLanguage = 'ru';
 var userFavorites = [];
 var recentSearches = [];
+var selectedCategories = [];
 
 // Заголовки для запросов
 var HEADERS = {
@@ -29,19 +30,18 @@ var allPromoCodes = [];
 var translations = {
     ru: {
         searchPlaceholder: '🔍 Найти бренд...',
-        catalog: '📚 Каталог',
-        favorites: '⭐ Избранное',
+        catalog: 'Каталог',
+        favorites: 'Избранное',
         emptyFavorites: 'В избранном пока пусто',
-        addToFavorites: 'В избранное',
-        removeFromFavorites: 'Удалить из избранного',
-        share: '🔗 Поделиться',
-        settings: '⚙️ Настройки',
-        language: '🌐 Язык',
-        notifications: '🔔 Уведомления',
-        clearHistory: '🗑️ Очистить историю',
-        categories: '📂 Категория',
-        discount: '💰 Мин. скидка',
-        sort: '📊 Сортировка',
+        addToFavorites: 'Добавить в избранное',
+        removeFromFavorites: 'В избранном',
+        share: 'Поделиться',
+        settings: 'Настройки',
+        language: 'Язык',
+        notifications: 'Уведомления',
+        clearHistory: 'Очистить историю поиска',
+        discount: 'Мин. скидка',
+        sort: 'Сортировка',
         applyFilters: 'Применить',
         allCategories: 'Все категории',
         anyDiscount: 'Любая',
@@ -51,30 +51,31 @@ var translations = {
         byDate: 'По дате добавления',
         loading: 'Загрузка...',
         notFound: 'Ничего не найдено',
-        showBarcode: '📱 Показать штрих-код',
-        copyCode: '📋 Скопировать промокод',
-        goToLink: '🔗 Перейти по ссылке',
-        showAtCheckout: '📱 Покажите штрих-код на кассе',
+        showBarcode: 'Показать штрих-код',
+        copyCode: 'Скопировать промокод',
+        goToLink: 'Перейти по ссылке',
+        showAtCheckout: 'Покажите штрих-код на кассе',
         copied: 'Успешно!',
         codeCopied: 'Промокод скопирован!',
-        additionalConditions: '📋 Дополнительные условия',
-        recentSearches: '🕐 Недавние поиски'
+        additionalConditions: 'Дополнительные условия',
+        recentSearches: 'Недавние поиски',
+        enabled: 'Включены',
+        disabled: 'Отключены'
     },
     en: {
         searchPlaceholder: '🔍 Find brand...',
-        catalog: '📚 Catalog',
-        favorites: '⭐ Favorites',
+        catalog: 'Catalog',
+        favorites: 'Favorites',
         emptyFavorites: 'No favorites yet',
         addToFavorites: 'Add to favorites',
-        removeFromFavorites: 'Remove from favorites',
-        share: '🔗 Share',
-        settings: '⚙️ Settings',
-        language: '🌐 Language',
-        notifications: '🔔 Notifications',
-        clearHistory: '🗑️ Clear history',
-        categories: '📂 Category',
-        discount: '💰 Min. discount',
-        sort: '📊 Sort by',
+        removeFromFavorites: 'In favorites',
+        share: 'Share',
+        settings: 'Settings',
+        language: 'Language',
+        notifications: 'Notifications',
+        clearHistory: 'Clear search history',
+        discount: 'Min. discount',
+        sort: 'Sort by',
         applyFilters: 'Apply',
         allCategories: 'All categories',
         anyDiscount: 'Any',
@@ -84,30 +85,31 @@ var translations = {
         byDate: 'By date added',
         loading: 'Loading...',
         notFound: 'Nothing found',
-        showBarcode: '📱 Show barcode',
-        copyCode: '📋 Copy promo code',
-        goToLink: '🔗 Go to link',
-        showAtCheckout: '📱 Show barcode at checkout',
+        showBarcode: 'Show barcode',
+        copyCode: 'Copy promo code',
+        goToLink: 'Go to link',
+        showAtCheckout: 'Show barcode at checkout',
         copied: 'Success!',
         codeCopied: 'Promo code copied!',
-        additionalConditions: '📋 Additional conditions',
-        recentSearches: '🕐 Recent searches'
+        additionalConditions: 'Additional conditions',
+        recentSearches: 'Recent searches',
+        enabled: 'Enabled',
+        disabled: 'Disabled'
     },
     de: {
         searchPlaceholder: '🔍 Marke finden...',
-        catalog: '📚 Katalog',
-        favorites: '⭐ Favoriten',
+        catalog: 'Katalog',
+        favorites: 'Favoriten',
         emptyFavorites: 'Noch keine Favoriten',
         addToFavorites: 'Zu Favoriten hinzufügen',
-        removeFromFavorites: 'Aus Favoriten entfernen',
-        share: '🔗 Teilen',
-        settings: '⚙️ Einstellungen',
-        language: '🌐 Sprache',
-        notifications: '🔔 Benachrichtigungen',
-        clearHistory: '🗑️ Verlauf löschen',
-        categories: '📂 Kategorie',
-        discount: '💰 Min. Rabatt',
-        sort: '📊 Sortieren nach',
+        removeFromFavorites: 'In Favoriten',
+        share: 'Teilen',
+        settings: 'Einstellungen',
+        language: 'Sprache',
+        notifications: 'Benachrichtigungen',
+        clearHistory: 'Verlauf löschen',
+        discount: 'Min. Rabatt',
+        sort: 'Sortieren nach',
         applyFilters: 'Anwenden',
         allCategories: 'Alle Kategorien',
         anyDiscount: 'Beliebig',
@@ -117,14 +119,16 @@ var translations = {
         byDate: 'Nach Datum',
         loading: 'Laden...',
         notFound: 'Nichts gefunden',
-        showBarcode: '📱 Barcode anzeigen',
-        copyCode: '📋 Code kopieren',
-        goToLink: '🔗 Zum Link',
-        showAtCheckout: '📱 Barcode an der Kasse zeigen',
+        showBarcode: 'Barcode anzeigen',
+        copyCode: 'Code kopieren',
+        goToLink: 'Zum Link',
+        showAtCheckout: 'Barcode an der Kasse zeigen',
         copied: 'Erfolg!',
         codeCopied: 'Code kopiert!',
-        additionalConditions: '📋 Zusätzliche Bedingungen',
-        recentSearches: '🕐 Letzte Suchen'
+        additionalConditions: 'Zusätzliche Bedingungen',
+        recentSearches: 'Letzte Suchen',
+        enabled: 'Aktiviert',
+        disabled: 'Deaktiviert'
     }
 };
 
@@ -179,32 +183,34 @@ function updateUITexts() {
     var searchInput = document.getElementById('searchInput');
     if (searchInput) searchInput.placeholder = t.searchPlaceholder;
     
+    // Вкладки
     var tabBtns = document.querySelectorAll('.tab-btn');
     tabBtns.forEach(function(btn) {
         if (btn.dataset.tab === 'catalog') {
-            btn.textContent = '📚 ' + t.catalog;
+            btn.textContent = t.catalog;
         } else if (btn.dataset.tab === 'favorites') {
-            btn.textContent = '⭐ ' + t.favorites;
-        } else if (btn.dataset.tab === 'settings') {
-            btn.textContent = '⚙️';
+            btn.textContent = t.favorites;
         }
     });
     
+    // Фильтры
     var filterLabels = document.querySelectorAll('.filter-group label');
-    if (filterLabels[0]) filterLabels[0].textContent = '📂 ' + t.categories + ':';
-    if (filterLabels[1]) filterLabels[1].textContent = '💰 ' + t.discount + ':';
-    if (filterLabels[2]) filterLabels[2].textContent = '📊 ' + t.sort + ':';
+    if (filterLabels[0]) filterLabels[0].textContent = t.discount + ':';
+    if (filterLabels[1]) filterLabels[1].textContent = t.sort + ':';
     
+    // Кнопка применения
     var applyBtn = document.querySelector('.apply-filters-btn');
     if (applyBtn) applyBtn.textContent = t.applyFilters;
     
+    // Настройки
     var settingLabels = document.querySelectorAll('.setting-item label');
-    if (settingLabels[0]) settingLabels[0].firstChild.textContent = ' ' + t.language + ' ';
-    if (settingLabels[1]) settingLabels[1].firstChild.textContent = ' ' + t.notifications + ' ';
+    if (settingLabels[0]) settingLabels[0].textContent = t.language + ':';
+    if (settingLabels[1]) settingLabels[1].textContent = t.notifications + ':';
     
     var clearBtn = document.querySelector('.clear-history-btn');
     if (clearBtn) clearBtn.textContent = t.clearHistory;
     
+    // Кнопки в модалке
     var shareBtn = document.querySelector('.share-btn');
     if (shareBtn) shareBtn.textContent = t.share;
     
@@ -213,7 +219,23 @@ function updateUITexts() {
         additionalToggle.firstChild.textContent = t.additionalConditions + ' ';
     }
     
-    renderCategories();
+    // Обновляем текст выбранных категорий
+    updateSelectedCategoriesText();
+}
+
+// === ОБНОВЛЕНИЕ ТЕКСТА ВЫБРАННЫХ КАТЕГОРИЙ ===
+function updateSelectedCategoriesText() {
+    var textElement = document.getElementById('selectedCategoriesText');
+    if (!textElement) return;
+    
+    if (selectedCategories.length === 0) {
+        textElement.textContent = t.allCategories;
+    } else if (selectedCategories.length === 1) {
+        var cat = allCategories.find(function(c) { return c.id === selectedCategories[0]; });
+        textElement.textContent = cat ? cat.name : t.allCategories;
+    } else {
+        textElement.textContent = selectedCategories.length + ' ' + (userLanguage === 'ru' ? 'категории' : 'categories');
+    }
 }
 
 // === ЗАГРУЗКА ДАННЫХ ===
@@ -225,18 +247,24 @@ async function loadData() {
             console.error('❌ Контейнер offersContainer не найден');
             return;
         }
+        
+        // Загружаем категории
         allCategories = await supabaseFetch('categories', { method: 'GET' });
         allCategories.sort(function(a, b) { return a.name.localeCompare(b.name); });
         console.log('✅ Категории загружены:', allCategories.length);
-        populateCategoryFilter();
+        
+        // Загружаем оферы
         var offersUrl = SUPABASE_URL + '/rest/v1/offers?is_active=eq.true';
         var offersResponse = await fetch(offersUrl, { headers: HEADERS });
         allOffers = await offersResponse.json();
         console.log('✅ Оферы загружены:', allOffers.length);
+        
+        // Загружаем промокоды
         var codesUrl = SUPABASE_URL + '/rest/v1/promo_codes?is_verified=eq.true';
         var codesResponse = await fetch(codesUrl, { headers: HEADERS });
         allPromoCodes = await codesResponse.json();
         console.log('✅ Промокоды загружены:', allPromoCodes.length);
+        
         if (userId) {
             await loadUserFavorites();
             console.log('✅ Избранное загружено:', userFavorites.length);
@@ -247,14 +275,17 @@ async function loadData() {
         if (userId) {
             await loadUserSettings();
         }
+        
         console.log('🎉 ВСЕГО ЗАГРУЖЕНО:', {
             categories: allCategories.length,
             offers: allOffers.length,
             codes: allPromoCodes.length
         });
+        
         currentTab = 'catalog';
-        renderCategories();
-        filterOffers('all', null);
+        renderCategoryList();
+        filterOffers();
+        
         var emptyFavorites = document.getElementById('emptyFavorites');
         if (emptyFavorites) {
             emptyFavorites.classList.add('hidden');
@@ -294,7 +325,7 @@ async function loadSearchHistory() {
     }
 }
 
-// === ЗАГРУЗКА НАСТРОЕК ПОЛЬЗОВАТЕЛЯ ===
+// === ЗАГРУЗКА НАСТРОЕК ===
 async function loadUserSettings() {
     try {
         console.log('📥 Загрузка настроек для пользователя:', userId);
@@ -305,16 +336,19 @@ async function loadUserSettings() {
             if (settings && settings.length > 0) {
                 userLanguage = settings[0].language || 'ru';
                 t = translations[userLanguage];
+                
                 var langSelect = document.getElementById('languageSelect');
-                var notifToggle = document.getElementById('notificationsToggle');
+                var notifSelect = document.getElementById('notificationsSelect');
+                
                 if (langSelect) {
                     langSelect.value = userLanguage;
                     console.log('✅ Язык установлен:', userLanguage);
                 }
-                if (notifToggle) {
-                    notifToggle.checked = settings[0].notifications_enabled !== false;
-                    console.log('✅ Уведомления:', notifToggle.checked);
+                if (notifSelect) {
+                    notifSelect.value = settings[0].notifications_enabled !== false ? 'true' : 'false';
+                    console.log('✅ Уведомления:', notifSelect.value);
                 }
+                
                 updateUITexts();
             } else {
                 console.log('ℹ️ Настройки не найдены, используем по умолчанию');
@@ -331,12 +365,14 @@ async function loadUserSettings() {
 async function saveUserSettings() {
     if (!userId) return;
     try {
+        var notifSelect = document.getElementById('notificationsSelect');
         var settings = {
             user_id: userId,
             language: userLanguage,
-            notifications_enabled: document.getElementById('notificationsToggle').checked,
+            notifications_enabled: notifSelect ? notifSelect.value === 'true' : true,
             updated_at: new Date().toISOString()
         };
+        
         var checkResponse = await fetch(SUPABASE_URL + '/rest/v1/user_settings?user_id=eq.' + userId, { headers: HEADERS });
         if (checkResponse.ok) {
             var existing = await checkResponse.json();
@@ -360,18 +396,80 @@ async function saveUserSettings() {
     }
 }
 
-// === ЗАПОЛНЕНИЕ ФИЛЬТРА КАТЕГОРИЙ ===
-function populateCategoryFilter() {
-    var select = document.getElementById('categoryFilter');
-    if (!select) return;
-    select.innerHTML = '<option value="all">' + t.allCategories + '</option>';
+// === ОТРИСОВКА СПИСКА КАТЕГОРИЙ (ДЛЯ МОДАЛКИ) ===
+function renderCategoryList() {
+    var list = document.getElementById('categoryList');
+    if (!list) return;
+    
+    list.innerHTML = '';
+    
+    // Опция "Все категории"
+    var allItem = document.createElement('div');
+    allItem.className = 'category-item';
+    allItem.innerHTML = '<input type="checkbox" id="cat-all" ' + (selectedCategories.length === 0 ? 'checked' : '') + '><label for="cat-all">' + t.allCategories + '</label>';
+    allItem.onclick = function(e) {
+        if (e.target.tagName !== 'LABEL') {
+            selectAllCategories();
+        }
+    };
+    list.appendChild(allItem);
+    
+    // Категории
     allCategories.forEach(function(cat) {
-        var option = document.createElement('option');
-        option.value = cat.id;
-        option.textContent = (cat.icon_emoji || '📦') + ' ' + cat.name;
-        select.appendChild(option);
+        var item = document.createElement('div');
+        item.className = 'category-item';
+        var isChecked = selectedCategories.indexOf(cat.id) !== -1;
+        item.innerHTML = '<input type="checkbox" id="cat-' + cat.id + '" ' + (isChecked ? 'checked' : '') + '><label for="cat-' + cat.id + '">' + cat.name + '</label>';
+        item.onclick = function(e) {
+            if (e.target.tagName !== 'LABEL') {
+                toggleCategory(cat.id);
+            }
+        };
+        list.appendChild(item);
     });
 }
+
+// === ВЫБРАТЬ ВСЕ КАТЕГОРИИ ===
+function selectAllCategories() {
+    selectedCategories = [];
+    updateSelectedCategoriesText();
+    renderCategoryList();
+}
+
+// === ПЕРЕКЛЮЧИТЬ КАТЕГОРИЮ ===
+function toggleCategory(categoryId) {
+    var index = selectedCategories.indexOf(categoryId);
+    if (index === -1) {
+        selectedCategories.push(categoryId);
+    } else {
+        selectedCategories.splice(index, 1);
+    }
+    updateSelectedCategoriesText();
+    renderCategoryList();
+}
+
+// === ПРИМЕНИТЬ ВЫБОР КАТЕГОРИЙ ===
+window.applyCategorySelection = function() {
+    toggleCategoryModal();
+    filterOffers();
+    trackAction('categories_selected', { count: selectedCategories.length });
+};
+
+// === ОТКРЫТЬ/ЗАКРЫТЬ МОДАЛКУ КАТЕГОРИЙ ===
+window.toggleCategoryModal = function() {
+    var modal = document.getElementById('categoryModal');
+    var btn = document.querySelector('.category-select-btn');
+    if (!modal) return;
+    
+    if (modal.classList.contains('hidden')) {
+        modal.classList.remove('hidden');
+        if (btn) btn.classList.add('active');
+        renderCategoryList();
+    } else {
+        modal.classList.add('hidden');
+        if (btn) btn.classList.remove('active');
+    }
+};
 
 // === ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК ===
 window.switchTab = function(tabName) {
@@ -382,8 +480,10 @@ window.switchTab = function(tabName) {
             btn.classList.add('active');
         }
     });
+    
     var offersContainer = document.getElementById('offersContainer');
     var emptyFavorites = document.getElementById('emptyFavorites');
+    
     if (tabName === 'favorites') {
         offersContainer.classList.add('hidden');
         if (emptyFavorites) emptyFavorites.classList.remove('hidden');
@@ -391,7 +491,7 @@ window.switchTab = function(tabName) {
     } else {
         offersContainer.classList.remove('hidden');
         if (emptyFavorites) emptyFavorites.classList.add('hidden');
-        filterOffers('all', document.querySelector('.cat-btn.active'));
+        filterOffers();
     }
     trackAction('tab_switched', { tab: tabName });
 };
@@ -404,36 +504,47 @@ function renderFavorites() {
         console.error('❌ Контейнер не найден');
         return;
     }
+    
     console.log('📋 renderFavorites вызвана. Избранное:', userFavorites.length);
+    
     if (userFavorites.length === 0) {
         container.innerHTML = '';
         if (emptyState) emptyState.classList.remove('hidden');
         return;
     }
+    
     if (emptyState) emptyState.classList.add('hidden');
     container.innerHTML = '';
+    
     var favoriteOfferIds = userFavorites.map(function(f) { return f.offer_id; });
     console.log('ID избранных оферов:', favoriteOfferIds);
+    
     var favoriteOffers = allOffers.filter(function(o) {
         return favoriteOfferIds.indexOf(o.id) !== -1;
     });
+    
     console.log('Найдено избранных оферов:', favoriteOffers.length);
+    
     if (favoriteOffers.length === 0) {
         if (emptyState) emptyState.classList.remove('hidden');
         return;
     }
+    
     favoriteOffers.forEach(function(offer) {
         var offerCodes = allPromoCodes.filter(function(c) { return c.offer_id === offer.id; });
         var activeCodes = offerCodes.filter(function(c) {
             return !c.expires_at || new Date(c.expires_at) > new Date();
         });
+        
         if (activeCodes.length === 0) return;
+        
         var isFavorite = userFavorites.some(function(f) { return f.offer_id === offer.id; });
+        
         var card = document.createElement('div');
         card.className = 'offer-card';
-        card.innerHTML = '<div><div class="brand-name">' + offer.brand_name + '</div><div class="brand-desc">' + (offer.description || '') + '</div></div><div class="card-actions"><button class="favorite-toggle ' + (isFavorite ? 'active' : '') + '" onclick="toggleFavorite(event, ' + offer.id + ')">⭐</button><span>➡️</span></div>';
+        card.innerHTML = '<div><div class="brand-name">' + offer.brand_name + '</div><div class="brand-desc">' + (offer.description || '') + '</div></div><div><span class="favorite-text-link ' + (isFavorite ? 'active' : '') + '" onclick="toggleFavoriteFromList(event, ' + offer.id + ')">' + (isFavorite ? t.removeFromFavorites : t.addToFavorites) + '</span></div>';
         card.onclick = function(e) {
-            if (!e.target.classList.contains('favorite-toggle')) {
+            if (!e.target.classList.contains('favorite-text-link')) {
                 openModal(offer, activeCodes);
             }
         };
@@ -441,59 +552,56 @@ function renderFavorites() {
     });
 }
 
-// === ОТРИСОВКА КАТЕГОРИЙ ===
-function renderCategories() {
-    var container = document.getElementById('categoriesList');
-    if (!container) return;
-    container.innerHTML = '<button class="cat-btn active" onclick="filterOffers(\'all\', this)">🗂 ' + t.allCategories + '</button>';
-    allCategories.forEach(function(cat) {
-        var btn = document.createElement('button');
-        btn.className = 'cat-btn';
-        btn.innerText = (cat.icon_emoji || '📦') + ' ' + cat.name;
-        btn.onclick = function(e) { filterOffers(cat.id, e.target); };
-        container.appendChild(btn);
-    });
-}
+// === ИЗБРАННОЕ ИЗ СПИСКА ===
+window.toggleFavoriteFromList = async function(event, offerId) {
+    event.stopPropagation();
+    await toggleFavorite(event, offerId);
+};
 
 // === ФИЛЬТРАЦИЯ ОФЕРОВ ===
-window.filterOffers = function(catId, btnEl) {
-    document.querySelectorAll('.cat-btn').forEach(function(b) { b.classList.remove('active'); });
-    if (btnEl) btnEl.classList.add('active');
+function filterOffers() {
     var searchTerm = document.getElementById('searchInput').value.toLowerCase();
+    
     if (searchTerm.length >= 2 && userId) {
         saveSearchToHistory(searchTerm);
     }
+    
     var filtered = allOffers.filter(function(offer) {
-        var matchCat = catId === 'all' || offer.category_id === catId;
+        var matchCat = selectedCategories.length === 0 || selectedCategories.indexOf(offer.category_id) !== -1;
         var matchSearch = offer.brand_name.toLowerCase().indexOf(searchTerm) !== -1 || (offer.description && offer.description.toLowerCase().indexOf(searchTerm) !== -1);
         return matchCat && matchSearch;
     });
+    
     var container = document.getElementById('offersContainer');
     if (filtered.length === 0) {
         container.innerHTML = '<p style="text-align: center; padding: 20px;">' + t.notFound + '</p>';
         return;
     }
+    
     container.innerHTML = '';
     filtered.forEach(function(offer) {
         var offerCodes = allPromoCodes.filter(function(c) { return c.offer_id === offer.id; });
         var activeCodes = offerCodes.filter(function(c) {
             return !c.expires_at || new Date(c.expires_at) > new Date();
         });
+        
         if (activeCodes.length === 0) return;
+        
         var isFavorite = userFavorites.some(function(f) { return f.offer_id === offer.id; });
+        
         var card = document.createElement('div');
         card.className = 'offer-card';
-        card.innerHTML = '<div><div class="brand-name">' + offer.brand_name + '</div><div class="brand-desc">' + (offer.description || '') + '</div></div><div class="card-actions"><button class="favorite-toggle ' + (isFavorite ? 'active' : '') + '" onclick="toggleFavorite(event, ' + offer.id + ')">⭐</button><span>➡️</span></div>';
+        card.innerHTML = '<div><div class="brand-name">' + offer.brand_name + '</div><div class="brand-desc">' + (offer.description || '') + '</div></div><div><span class="favorite-text-link ' + (isFavorite ? 'active' : '') + '" onclick="toggleFavoriteFromList(event, ' + offer.id + ')">' + (isFavorite ? t.removeFromFavorites : t.addToFavorites) + '</span></div>';
         card.onclick = function(e) {
-            if (!e.target.classList.contains('favorite-toggle')) {
+            if (!e.target.classList.contains('favorite-text-link')) {
                 openModal(offer, activeCodes);
             }
         };
         container.appendChild(card);
     });
-};
+}
 
-// === СОХРАНЕНИЕ ПОИСКА В ИСТОРИЮ ===
+// === СОХРАНЕНИЕ ПОИСКА ===
 async function saveSearchToHistory(query) {
     try {
         await fetch(SUPABASE_URL + '/rest/v1/search_history', {
@@ -512,26 +620,31 @@ async function saveSearchToHistory(query) {
 // === ОТОБРАЖЕНИЕ НЕДАВНИХ ПОИСКОВ ===
 function displayRecentSearches() {
     var container = document.getElementById('recentSearches');
+    var searchInput = document.getElementById('searchInput');
     if (!container) return;
-    if (recentSearches.length === 0) {
+    
+    // Показываем только если есть поиски И поле поиска активно
+    if (recentSearches.length === 0 || (searchInput && searchInput.value === '' && document.activeElement !== searchInput)) {
         container.classList.add('hidden');
         return;
     }
+    
     container.classList.remove('hidden');
     container.innerHTML = '<div class="recent-title">' + t.recentSearches + '</div>';
+    
     recentSearches.forEach(function(search) {
         var item = document.createElement('div');
         item.className = 'recent-item';
-        item.innerHTML = '🕐 ' + search.search_query;
+        item.textContent = search.search_query;
         item.onclick = function() {
-            document.getElementById('searchInput').value = search.search_query;
-            filterOffers('all', null);
+            searchInput.value = search.search_query;
+            filterOffers();
         };
         container.appendChild(item);
     });
 }
 
-// === ОЧИСТКА ИСТОРИИ ПОИСКА ===
+// === ОЧИСТКА ИСТОРИИ ===
 window.clearSearchHistory = async function() {
     if (!userId) return;
     try {
@@ -552,14 +665,15 @@ window.toggleFilters = function() {
 
 // === ПРИМЕНЕНИЕ ФИЛЬТРОВ ===
 window.applyFilters = function() {
-    var categoryId = document.getElementById('categoryFilter').value;
     var minDiscount = parseInt(document.getElementById('discountFilter').value);
     var sortBy = document.getElementById('sortFilter').value;
+    
     var filtered = allOffers.filter(function(offer) {
-        var matchCat = categoryId === 'all' || offer.category_id == categoryId;
+        var matchCat = selectedCategories.length === 0 || selectedCategories.indexOf(offer.category_id) !== -1;
         var matchDiscount = minDiscount === 0 || (offer.discount_amount && offer.discount_amount >= minDiscount);
         return matchCat && matchDiscount;
     });
+    
     filtered.sort(function(a, b) {
         if (sortBy === 'alphabet') {
             return a.brand_name.localeCompare(b.brand_name);
@@ -571,22 +685,27 @@ window.applyFilters = function() {
             return (b.views_count || 0) - (a.views_count || 0);
         }
     });
+    
     var container = document.getElementById('offersContainer');
     container.innerHTML = '';
+    
     filtered.forEach(function(offer) {
         var offerCodes = allPromoCodes.filter(function(c) { return c.offer_id === offer.id; });
         var activeCodes = offerCodes.filter(function(c) {
             return !c.expires_at || new Date(c.expires_at) > new Date();
         });
+        
         if (activeCodes.length === 0) return;
+        
         var card = document.createElement('div');
         card.className = 'offer-card';
         card.innerHTML = '<div><div class="brand-name">' + offer.brand_name + '</div><div class="brand-desc">' + (offer.description || '') + '</div></div><div>➡️</div>';
         card.onclick = function() { openModal(offer, activeCodes); };
         container.appendChild(card);
     });
+    
     document.getElementById('filtersPanel').classList.add('hidden');
-    trackAction('filters_applied', { category: categoryId, discount: minDiscount, sort: sortBy });
+    trackAction('filters_applied', { discount: minDiscount, sort: sortBy });
 };
 
 // === ИЗБРАННОЕ: ДОБАВИТЬ/УДАЛИТЬ ===
@@ -596,7 +715,9 @@ window.toggleFavorite = async function(event, offerId) {
         showCustomNotification('⚠️', 'Войдите в Telegram');
         return;
     }
+    
     var isFavorite = userFavorites.some(function(f) { return f.offer_id === offerId; });
+    
     try {
         if (isFavorite) {
             var fav = userFavorites.find(function(f) { return f.offer_id === offerId; });
@@ -614,11 +735,13 @@ window.toggleFavorite = async function(event, offerId) {
             userFavorites.push({ user_id: userId, offer_id: offerId });
             showCustomNotification('⭐', 'Добавлено в избранное');
         }
+        
         if (currentTab === 'favorites') {
             renderFavorites();
         } else {
-            filterOffers('all', document.querySelector('.cat-btn.active'));
+            filterOffers();
         }
+        
         trackAction('favorite_toggled', { offer_id: offerId, added: !isFavorite });
     } catch (error) {
         console.error('❌ Ошибка избранного:', error);
@@ -626,7 +749,7 @@ window.toggleFavorite = async function(event, offerId) {
     }
 };
 
-// === ИЗБРАННОЕ ИЗ МОДАЛЬНОГО ОКНА ===
+// === ИЗБРАННОЕ ИЗ МОДАЛКИ ===
 window.toggleFavoriteFromModal = function() {
     if (!currentOffer) return;
     var offerId = currentOffer.offer.id;
@@ -639,17 +762,16 @@ window.toggleFavoriteFromModal = function() {
 // === ОБНОВЛЕНИЕ КНОПКИ ИЗБРАННОГО ===
 function updateFavoriteButton(isFavorite) {
     var btn = document.querySelector('.favorite-btn');
-    if (!btn) return;
-    var icon = btn.querySelector('.favorite-icon');
-    var text = btn.querySelector('.favorite-text');
-    if (isFavorite) {
-        btn.classList.add('active');
-        if (icon) icon.textContent = '⭐';
-        if (text) text.textContent = t.removeFromFavorites;
-    } else {
-        btn.classList.remove('active');
-        if (icon) icon.textContent = '☆';
-        if (text) text.textContent = t.addToFavorites;
+    var text = btn ? btn.querySelector('.favorite-text') : null;
+    if (text) {
+        text.textContent = isFavorite ? t.removeFromFavorites : t.addToFavorites;
+    }
+    if (btn) {
+        if (isFavorite) {
+            btn.classList.add('active');
+        } else {
+            btn.classList.remove('active');
+        }
     }
 }
 
@@ -657,26 +779,33 @@ function updateFavoriteButton(isFavorite) {
 window.openModal = function(offer, codes) {
     currentOffer = { offer: offer, codes: codes };
     trackAction('brand_viewed', { brand: offer.brand_name, offer_id: offer.id });
+    
     var mBrand = document.getElementById('mBrand');
     if (mBrand) mBrand.innerText = offer.brand_name;
+    
     var codesContainer = document.getElementById('mCode');
     if (!codesContainer) return;
     codesContainer.innerHTML = '';
+    
     codes.forEach(function(code, index) {
         var codeText = code.code_text || 'AUTO';
         var bonusInfo = code.bonus_info || '';
         var barcode = code.barcode || null;
         var barcodeType = code.barcode_type || 'EAN13';
+        
         var isLink = codeText.indexOf('http://') === 0 || codeText.indexOf('https://') === 0;
         var hasBarcode = barcode && barcode.toString().trim().length > 0;
+        
         var codeDiv = document.createElement('div');
         codeDiv.className = 'promo-code-item';
+        
         if (isLink) {
-            codeDiv.innerHTML = '<div class="link-header">🎁 ' + (userLanguage === 'ru' ? 'Бонус по ссылке' : 'Bonus via link') + ':</div><div class="code-text code-link">' + codeText + '</div><div class="code-bonus">' + bonusInfo + '</div><div class="code-action-btn" onclick="openLink(\'' + codeText + '\')">' + t.goToLink + '</div>';
+            codeDiv.innerHTML = '<div class="link-header">Бонус по ссылке:</div><div class="code-text code-link">' + codeText + '</div><div class="code-bonus">' + bonusInfo + '</div><div class="code-action-btn" onclick="openLink(\'' + codeText + '\')">' + t.goToLink + '</div>';
         } else if (hasBarcode) {
             var barcodeId = 'barcode-' + index + '-' + Date.now();
             var barcodeImageId = 'barcode-img-' + index;
             codeDiv.innerHTML = '<div class="code-text">' + codeText + '</div><div class="code-bonus">' + bonusInfo + '</div><div class="barcode-container" id="' + barcodeImageId + '"><svg id="' + barcodeId + '"></svg></div><div class="code-hint">' + t.showAtCheckout + '</div><div class="code-action-btn barcode-expand-btn" onclick="expandBarcode(\'' + barcodeImageId + '\', \'' + barcodeId + '\', \'' + barcode + '\', \'' + barcodeType + '\')">' + t.showBarcode + '</div>';
+            
             setTimeout(function() {
                 try {
                     if (typeof JsBarcode !== 'undefined') {
@@ -698,14 +827,13 @@ window.openModal = function(offer, codes) {
         } else {
             codeDiv.innerHTML = '<div class="code-text">' + codeText + '</div><div class="code-bonus">' + bonusInfo + '</div><div class="code-action-btn" onclick="copyPromoCode(\'' + codeText + '\')">' + t.copyCode + '</div>';
         }
+        
         codesContainer.appendChild(codeDiv);
     });
+    
     var isFavorite = userFavorites.some(function(f) { return f.offer_id === offer.id; });
     updateFavoriteButton(isFavorite);
-    var hintDiv = document.createElement('div');
-    hintDiv.className = 'modal-hint';
-    hintDiv.innerHTML = '💡 ' + (userLanguage === 'ru' ? 'Нажмите на кнопку' : 'Tap the button');
-    codesContainer.appendChild(hintDiv);
+    
     var additionalSection = document.getElementById('additionalSection');
     var additionalContent = document.getElementById('additionalContent');
     if (offer.additional_info) {
@@ -714,6 +842,7 @@ window.openModal = function(offer, codes) {
     } else {
         if (additionalSection) additionalSection.style.display = 'none';
     }
+    
     var modal = document.getElementById('modal');
     if (modal) modal.classList.remove('hidden');
 };
@@ -730,7 +859,9 @@ window.expandBarcode = function(containerId, svgId, barcode, barcodeType) {
     var container = document.getElementById(containerId);
     var svg = document.getElementById(svgId);
     if (!container) return;
+    
     var isExpanded = container.classList.contains('barcode-expanded');
+    
     if (isExpanded) {
         container.classList.remove('barcode-expanded');
         container.style.maxHeight = '100px';
@@ -770,9 +901,11 @@ window.showCustomNotification = function(title, message) {
     notification.className = 'custom-notification';
     notification.innerHTML = '<div class="notification-content"><div class="notification-title">' + title + '</div><div class="notification-message">' + message + '</div></div>';
     document.body.appendChild(notification);
+    
     setTimeout(function() {
         notification.classList.add('show');
     }, 10);
+    
     setTimeout(function() {
         notification.classList.remove('show');
         setTimeout(function() {
@@ -784,13 +917,16 @@ window.showCustomNotification = function(title, message) {
 // === ПОДЕЛИТЬСЯ ===
 window.shareOffer = function() {
     if (!currentOffer) return;
+    
     var offer = currentOffer.offer;
     var codes = currentOffer.codes;
-    var shareText = '🎁 ' + offer.brand_name + '\n\n';
+    var shareText = offer.brand_name + '\n\n';
+    
     if (offer.description) {
         shareText += offer.description + '\n\n';
     }
-    shareText += '📋 Промокоды:\n';
+    
+    shareText += 'Промокоды:\n';
     codes.forEach(function(code, i) {
         shareText += (i + 1) + '. ' + code.code_text;
         if (code.bonus_info) {
@@ -798,7 +934,9 @@ window.shareOffer = function() {
         }
         shareText += '\n';
     });
+    
     shareText += '\nОткрыто в Promo Bot';
+    
     if (navigator.share) {
         navigator.share({
             title: offer.brand_name,
@@ -819,7 +957,7 @@ window.openLink = function(url) {
     tg.openLink(url);
 };
 
-// === ЗАКРЫТЬ МОДАЛЬНОЕ ОКНО ===
+// === ЗАКРЫТЬ МОДАЛКУ ===
 window.closeModal = function() {
     var modal = document.getElementById('modal');
     if (modal) modal.classList.add('hidden');
@@ -830,6 +968,7 @@ window.toggleAdditional = function() {
     var content = document.getElementById('additionalContent');
     var toggle = document.querySelector('.additional-toggle');
     var icon = toggle ? toggle.querySelector('.toggle-icon') : null;
+    
     if (content.style.display === 'none' || !content.style.display) {
         content.style.display = 'block';
         if (icon) icon.style.transform = 'rotate(180deg)';
@@ -861,18 +1000,22 @@ window.changeLanguage = function(lang) {
     trackAction('language_changed', { language: lang });
 };
 
+// === ИЗМЕНЕНИЕ УВЕДОМЛЕНИЙ ===
+window.changeNotifications = function(value) {
+    console.log('🔔 Уведомления:', value);
+    saveUserSettings();
+};
+
 // === ПОИСК ===
 var searchInput = document.getElementById('searchInput');
 if (searchInput) {
     searchInput.oninput = function() {
-        var active = document.querySelector('.cat-btn.active');
-        if (active && active.innerText.indexOf('🗂') === -1) {
-            var catName = active.innerText.split(' ')[1];
-            var cat = allCategories.find(function(c) { return c.name.indexOf(catName) !== -1; });
-            if (cat) filterOffers(cat.id, active);
-        } else {
-            filterOffers('all', active);
-        }
+        filterOffers();
+        displayRecentSearches();
+    };
+    
+    searchInput.onfocus = function() {
+        displayRecentSearches();
     };
 }
 
@@ -884,7 +1027,14 @@ if (modal) {
     };
 }
 
-// === ОТСЛЕЖИВАНИЕ ОТКРЫТИЯ MINI APP ===
+var categoryModal = document.getElementById('categoryModal');
+if (categoryModal) {
+    categoryModal.onclick = function(e) {
+        if (e.target === this) toggleCategoryModal();
+    };
+}
+
+// === ОТСЛЕЖИВАНИЕ ОТКРЫТИЯ ===
 if (userId) {
     trackAction('app_opened', {});
     console.log('📱 Mini App opened, User ID:', userId);
@@ -892,7 +1042,7 @@ if (userId) {
     console.warn('⚠️ User ID not available');
 }
 
-// === ИНИЦИАЛИЗАЦИЯ ПРИ ЗАГРУЗКЕ ===
+// === ИНИЦИАЛИЗАЦИЯ ===
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', function() {
         tg.expand();
