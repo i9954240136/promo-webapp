@@ -1,4 +1,4 @@
-/* === GLASSMORPHISM MODERN DARK THEME (FIXED) === */
+/* === GLASSMORPHISM MODERN DARK THEME (FINAL) === */
 
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
@@ -375,13 +375,14 @@ body::after {
     line-height: 1.4;
 }
 
-/* Действия карточки (избранное + стрелка) */
+/* === ДЕЙСТВИЯ КАРТОЧКИ (ИЗБРАННОЕ + СТРЕЛКА) === */
 .card-actions {
     display: flex;
     align-items: center;
     gap: 10px;
 }
 
+/* ⭐ ЗВЁЗДЫ (СЕРЫЕ ПО УМОЛЧАНИЮ) */
 .favorite-toggle {
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -394,13 +395,18 @@ body::after {
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #888888 !important; /* ОБЯЗАТЕЛЬНО !important */
+    color: #888888 !important; /* СЕРЫЙ ЦВЕТ С !important */
+}
+
+.favorite-toggle:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: scale(1.1);
 }
 
 .favorite-toggle.active {
     background: linear-gradient(135deg, #00b4db, #11998e);
     border-color: rgba(0, 180, 219, 0.5);
-    color: #ffffff !important; /* ОБЯЗАТЕЛЬНО !important */
+    color: #ffffff !important; /* БЕЛЫЙ С !important */
 }
 
 .card-actions span {
@@ -1060,8 +1066,3 @@ input:checked + .slider:before {
         padding: 12px 15px;
     }
 }
-
-
-
-
-
