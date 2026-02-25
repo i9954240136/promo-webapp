@@ -5,7 +5,7 @@ tg.ready();
 
 // === ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ ===
 var userId = tg.initDataUnsafe?.user?.id;
-var SUPABASE_URL = 'https://yfvvsbcvrwvahmceutvi.supabase.co'; // ✅ Убраны пробелы!
+var SUPABASE_URL = 'https://yfvvsbcvrwvahmceutvi.supabase.co';
 var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlmdnZzYmN2cnd2YWhtY2V1dHZpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE0OTIxNjgsImV4cCI6MjA4NzA2ODE2OH0.ZVR8Hf9INeheMM1-sSQBKqng3xklVCWZxNKDe6j0iIQ';
 var currentOffer = null;
 var currentTab = 'catalog';
@@ -124,7 +124,7 @@ var translations = {
         goToLink: 'Zum Link',
         showAtCheckout: 'Barcode an der Kasse zeigen',
         copied: 'Erfolg!',
-        codeCopied: 'Code копирован!',
+        codeCopied: 'Code kopiert!',
         additionalConditions: 'Zusätzliche Bedingungen',
         recentSearches: 'Letzte Suchen',
         enabled: 'Aktiviert',
@@ -134,7 +134,7 @@ var translations = {
 
 var t = translations[userLanguage];
 
-// === ОТСЛЕЖИВАНИЕ ДЕЙСТВИЙ (только если есть userId) ===
+// === ОТСЛЕЖИВАНИЕ ДЕЙСТВИЙ ===
 async function trackAction(action, data) {
     if (!userId) return;
     try {
@@ -284,10 +284,18 @@ async function loadData() {
 // === ЗАГРУЗКА ИЗБРАННОГО (ИЗ LOCALSTORAGE) ===
 async function loadUserFavorites() {
     try {
+        if (typeof localStorage === 'undefined') {
+            console.log('⚠️ localStorage недоступен');
+            userFavorites = [];
+            return;
+        }
+        
         var stored = localStorage.getItem('userFavorites');
-        if (stored) {
+        console.log('🔍 localStorage userFavorites:', stored);
+        
+        if (stored && stored !== 'null') {
             userFavorites = JSON.parse(stored);
-            console.log('✅ Избранное загружено из localStorage:', userFavorites.length);
+            console.log('✅ Избранное загружено:', userFavorites.length, 'оферов');
         } else {
             userFavorites = [];
             console.log('ℹ️ Избранное пустое');
@@ -298,7 +306,7 @@ async function loadUserFavorites() {
     }
 }
 
-// === ЗАГРУЗКА ИСТОРИИ ПОИСКА (только если есть userId) ===
+// === ЗАГРУЗКА ИСТОРИИ ПОИСКА ===
 async function loadSearchHistory() {
     if (!userId) return;
     try {
@@ -312,7 +320,7 @@ async function loadSearchHistory() {
     }
 }
 
-// === ЗАГРУЗКА НАСТРОЕК (только если есть userId) ===
+// === ЗАГРУЗКА НАСТРОЕК ===
 async function loadUserSettings() {
     if (!userId) return;
     try {
@@ -337,7 +345,7 @@ async function loadUserSettings() {
     }
 }
 
-// === СОХРАНЕНИЕ НАСТРОЕК (только если есть userId) ===
+// === СОХРАНЕНИЕ НАСТРОЕК ===
 async function saveUserSettings() {
     if (!userId) return;
     try {
@@ -469,6 +477,8 @@ function renderFavorites() {
     var emptyState = document.getElementById('emptyFavorites');
     if (!container) return;
     
+    console.log('📋 renderFavorites вызвана. Избранное в памяти:', userFavorites.length);
+    
     if (userFavorites.length === 0) {
         container.innerHTML = '';
         if (emptyState) emptyState.classList.remove('hidden');
@@ -479,9 +489,13 @@ function renderFavorites() {
     container.innerHTML = '';
     
     var favoriteOfferIds = userFavorites.map(function(f) { return f.offer_id; });
+    console.log('ID избранных оферов:', favoriteOfferIds);
+    
     var favoriteOffers = allOffers.filter(function(o) {
         return favoriteOfferIds.indexOf(o.id) !== -1;
     });
+    
+    console.log('Найдено избранных оферов:', favoriteOffers.length);
     
     if (favoriteOffers.length === 0) {
         if (emptyState) emptyState.classList.remove('hidden');
@@ -506,7 +520,7 @@ function renderFavorites() {
     });
 }
 
-// === ИЗБРАННОЕ ИЗ СПИСКА (синхронная версия) ===
+// === ИЗБРАННОЕ ИЗ СПИСКА ===
 window.toggleFavoriteFromList = function(event, offerId) {
     event.stopPropagation();
     toggleFavorite(event, offerId);
@@ -553,7 +567,7 @@ function filterOffers() {
     });
 }
 
-// === СОХРАНЕНИЕ ПОИСКА (только если есть userId) ===
+// === СОХРАНЕНИЕ ПОИСКА ===
 async function saveSearchToHistory(query) {
     if (!userId) return;
     try {
@@ -596,7 +610,7 @@ function displayRecentSearches() {
     });
 }
 
-// === ОЧИСТКА ИСТОРИИ (только если есть userId) ===
+// === ОЧИСТКА ИСТОРИИ ===
 window.clearSearchHistory = async function() {
     if (!userId) {
         recentSearches = [];
@@ -660,9 +674,12 @@ window.applyFilters = function() {
     trackAction('filters_applied', { discount: minDiscount, sort: sortBy });
 };
 
-// === ИЗБРАННОЕ: ДОБАВИТЬ/УДАЛИТЬ (ТОЛЬКО LOCALSTORAGE) ===
+// === ИЗБРАННОЕ: ДОБАВИТЬ/УДАЛИТЬ (С ОТЛАДКОЙ) ===
 window.toggleFavorite = function(event, offerId) {
     event.stopPropagation();
+    
+    console.log('⭐ toggleFavorite вызвана, offerId:', offerId);
+    console.log('⭐ userFavorites до:', userFavorites);
     
     var isFavorite = userFavorites.some(function(f) { return f.offer_id === offerId; });
     
@@ -676,22 +693,40 @@ window.toggleFavorite = function(event, offerId) {
         showCustomNotification('⭐', 'Добавлено в избранное');
     }
     
+    console.log('⭐ userFavorites после:', userFavorites);
+    
     // СОХРАНИТЬ В LOCALSTORAGE
     try {
-        localStorage.setItem('userFavorites', JSON.stringify(userFavorites));
-        console.log('💾 Сохранено в localStorage');
+        if (typeof localStorage !== 'undefined') {
+            localStorage.setItem('userFavorites', JSON.stringify(userFavorites));
+            console.log('💾 Сохранено в localStorage');
+            var check = localStorage.getItem('userFavorites');
+            console.log('💾 Проверка localStorage:', check);
+        }
     } catch (error) {
         console.error('❌ Ошибка сохранения:', error);
     }
     
     // Обновить отображение
     if (currentTab === 'favorites') {
+        console.log('🔄 Вызов renderFavorites()');
         renderFavorites();
     } else {
+        console.log('🔄 Вызов filterOffers()');
         filterOffers();
     }
     
     trackAction('favorite_toggled', { offer_id: offerId, added: !isFavorite });
+};
+
+// === ИЗБРАННОЕ ИЗ МОДАЛКИ ===
+window.toggleFavoriteFromModal = function() {
+    if (!currentOffer) return;
+    var offerId = currentOffer.offer.id;
+    var isFavorite = userFavorites.some(function(f) { return f.offer_id === offerId; });
+    var event = { stopPropagation: function() {} };
+    toggleFavorite(event, offerId);
+    updateFavoriteButton(isFavorite);
 };
 
 // === ОБНОВЛЕНИЕ КНОПКИ ИЗБРАННОГО ===
