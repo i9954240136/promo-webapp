@@ -1005,4 +1005,15 @@ if (document.readyState === 'loading') {
 } else {
     tg.expand();
     loadData();
+    // === ДИАГНОСТИКА ===
+console.log('=== ДИАГНОСТИКА ===');
+console.log('1. localStorage доступен:', typeof localStorage !== 'undefined');
+console.log('2. userFavorites:', userFavorites);
+console.log('3. allOffers:', allOffers.length);
+
+if (typeof localStorage !== 'undefined') {
+    localStorage.setItem('test_key', 'test_value');
+    console.log('4. test_key записан:', localStorage.getItem('test_key'));
 }
+}
+
