@@ -520,6 +520,68 @@ function renderFavorites() {
     });
 }
 
+function renderFavorites() {
+    var container = document.getElementById('offersContainer');
+    var emptyState = document.getElementById('emptyFavorites');
+    if (!container) return;
+    
+    console.log('📋 renderFavorites вызвана');
+    console.log('📋 userFavorites:', userFavorites);
+    console.log('📋 allOffers.length:', allOffers.length);
+    
+    if (userFavorites.length === 0) {
+        container.innerHTML = '';
+        if (emptyState) emptyState.classList.remove('hidden');
+        console.log('⚠️ userFavorites пустой');
+        return;
+    }
+    
+    if (emptyState) emptyState.classList.add('hidden');
+    container.innerHTML = '';
+    
+    var favoriteOfferIds = userFavorites.map(function(f) { return f.offer_id; });
+    console.log('📋 favoriteOfferIds:', favoriteOfferIds);
+    
+    var favoriteOffers = allOffers.filter(function(o) {
+        return favoriteOfferIds.indexOf(o.id) !== -1;
+    });
+    
+    console.log('📋 favoriteOffers найдено:', favoriteOffers.length);
+    console.log('📋 favoriteOffers:', favoriteOffers);
+    
+    if (favoriteOffers.length === 0) {
+        if (emptyState) emptyState.classList.remove('hidden');
+        console.log('⚠️ Не найдено оферов с такими ID');
+        return;
+    }
+    
+    favoriteOffers.forEach(function(offer, idx) {
+        console.log('📋 Обработка офера #' + idx + ':', offer.id, offer.brand_name);
+        
+        var offerCodes = allPromoCodes.filter(function(c) { return c.offer_id === offer.id; });
+        console.log('📋 offerCodes:', offerCodes.length);
+        
+        var activeCodes = offerCodes.filter(function(c) {
+            return !c.expires_at || new Date(c.expires_at) > new Date();
+        });
+        
+        console.log('📋 activeCodes:', activeCodes.length);
+        
+        if (activeCodes.length === 0) {
+            console.log('⚠️ Нет активных кодов для офера', offer.id);
+            return;
+        }
+        
+        var card = document.createElement('div');
+        card.className = 'offer-card';
+        card.innerHTML = '<div><div class="brand-name">' + offer.brand_name + '</div><div class="brand-desc">' + (offer.description || '') + '</div></div><div class="card-actions"><button class="favorite-toggle active" onclick="toggleFavorite(event, ' + offer.id + ')">★</button></div>';
+        card.onclick = function(e) {
+            if (!e.target.classList.contains('favorite-toggle')) openModal(offer, activeCodes);
+        };
+        container.appendChild(card);
+    });
+}
+
 // === ИЗБРАННОЕ ИЗ СПИСКА ===
 window.toggleFavoriteFromList = function(event, offerId) {
     event.stopPropagation();
@@ -1016,4 +1078,5 @@ if (typeof localStorage !== 'undefined') {
     console.log('4. test_key записан:', localStorage.getItem('test_key'));
 }
 }
+
 
