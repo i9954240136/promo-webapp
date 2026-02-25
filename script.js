@@ -26,7 +26,7 @@ var allCategories = [];
 var allOffers = [];
 var allPromoCodes = [];
 
-// === ЛОКАЛИЗАЦИЯ (БЕЗ ЭМОДЗИ) ===
+// === ЛОКАЛИЗАЦИЯ (БЕЗ ЭМОДЗИ В ТЕКСТАХ) ===
 var translations = {
     ru: {
         searchPlaceholder: '🔍 Найти бренд...',
@@ -531,7 +531,7 @@ function renderFavorites() {
         
         var card = document.createElement('div');
         card.className = 'offer-card';
-        card.innerHTML = '<div><div class="brand-name">' + offer.brand_name + '</div><div class="brand-desc">' + (offer.description || '') + '</div></div><div class="card-actions"><button class="favorite-toggle ' + (isFavorite ? 'active' : '') + '" onclick="toggleFavorite(event, ' + offer.id + ')">⭐</button><span>➡️</span></div>';
+        card.innerHTML = '<div><div class="brand-name">' + offer.brand_name + '</div><div class="brand-desc">' + (offer.description || '') + '</div></div><div class="card-actions"><button class="favorite-toggle ' + (isFavorite ? 'active' : '') + '" onclick="toggleFavorite(event, ' + offer.id + ')">' + (isFavorite ? '★' : '☆') + '</button></div>';
         card.onclick = function(e) {
             if (!e.target.classList.contains('favorite-toggle')) {
                 openModal(offer, activeCodes);
@@ -580,7 +580,7 @@ function filterOffers() {
         
         var card = document.createElement('div');
         card.className = 'offer-card';
-        card.innerHTML = '<div><div class="brand-name">' + offer.brand_name + '</div><div class="brand-desc">' + (offer.description || '') + '</div></div><div class="card-actions"><button class="favorite-toggle ' + (isFavorite ? 'active' : '') + '" onclick="toggleFavoriteFromList(event, ' + offer.id + ')">⭐</button><span>➡️</span></div>';
+        card.innerHTML = '<div><div class="brand-name">' + offer.brand_name + '</div><div class="brand-desc">' + (offer.description || '') + '</div></div><div class="card-actions"><button class="favorite-toggle ' + (isFavorite ? 'active' : '') + '" onclick="toggleFavoriteFromList(event, ' + offer.id + ')">' + (isFavorite ? '★' : '☆') + '</button></div>';
         card.onclick = function(e) {
             if (!e.target.classList.contains('favorite-toggle')) {
                 openModal(offer, activeCodes);
