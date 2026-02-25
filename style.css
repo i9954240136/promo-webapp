@@ -251,121 +251,7 @@ body::after {
     padding: 10px !important;
 }
 
-/* Фильтр - Сортировка */
-#sortFilter {
-    width: 100% !important;
-    padding: 14px 18px !important;
-    border: 1px solid rgba(255, 255, 255, 0.1) !important;
-    border-radius: 16px !important;
-    background: rgba(255, 255, 255, 0.05) !important;
-    backdrop-filter: blur(10px) !important;
-    -webkit-backdrop-filter: blur(10px) !important;
-    color: #ffffff !important;
-    font-size: 15px !important;
-    font-weight: 600 !important;
-    cursor: pointer !important;
-    transition: all 0.3s ease !important;
-    appearance: none !important;
-    -webkit-appearance: none !important;
-    -moz-appearance: none !important;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23ffffff' d='M6 9L1 4h10z'/%3E%3C/svg%3E") !important;
-    background-repeat: no-repeat !important;
-    background-position: right 15px center !important;
-    padding-right: 40px !important;
-    box-sizing: border-box !important;
-}
-
-#sortFilter:focus {
-    border-color: rgba(0, 180, 219, 0.5) !important;
-    outline: none !important;
-    background-color: rgba(255, 255, 255, 0.1) !important;
-    box-shadow: 0 0 0 3px rgba(0, 180, 219, 0.1) !important;
-}
-
-#sortFilter option {
-    background: #0a0f14 !important;
-    color: #ffffff !important;
-    font-size: 14px !important;
-    padding: 10px !important;
-}
-
-/* Настройки - Язык */
-#languageSelect {
-    width: 100% !important;
-    padding: 14px 18px !important;
-    border: 1px solid rgba(255, 255, 255, 0.1) !important;
-    border-radius: 16px !important;
-    background: rgba(255, 255, 255, 0.05) !important;
-    backdrop-filter: blur(10px) !important;
-    -webkit-backdrop-filter: blur(10px) !important;
-    color: #ffffff !important;
-    font-size: 15px !important;
-    font-weight: 600 !important;
-    cursor: pointer !important;
-    transition: all 0.3s ease !important;
-    appearance: none !important;
-    -webkit-appearance: none !important;
-    -moz-appearance: none !important;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23ffffff' d='M6 9L1 4h10z'/%3E%3C/svg%3E") !important;
-    background-repeat: no-repeat !important;
-    background-position: right 15px center !important;
-    padding-right: 40px !important;
-    box-sizing: border-box !important;
-}
-
-#languageSelect:focus {
-    border-color: rgba(0, 180, 219, 0.5) !important;
-    outline: none !important;
-    background-color: rgba(255, 255, 255, 0.1) !important;
-    box-shadow: 0 0 0 3px rgba(0, 180, 219, 0.1) !important;
-}
-
-#languageSelect option {
-    background: #0a0f14 !important;
-    color: #ffffff !important;
-    font-size: 14px !important;
-    padding: 10px !important;
-}
-
-/* Настройки - Уведомления */
-#notificationsSelect {
-    width: 100% !important;
-    padding: 14px 18px !important;
-    border: 1px solid rgba(255, 255, 255, 0.1) !important;
-    border-radius: 16px !important;
-    background: rgba(255, 255, 255, 0.05) !important;
-    backdrop-filter: blur(10px) !important;
-    -webkit-backdrop-filter: blur(10px) !important;
-    color: #ffffff !important;
-    font-size: 15px !important;
-    font-weight: 600 !important;
-    cursor: pointer !important;
-    transition: all 0.3s ease !important;
-    appearance: none !important;
-    -webkit-appearance: none !important;
-    -moz-appearance: none !important;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23ffffff' d='M6 9L1 4h10z'/%3E%3C/svg%3E") !important;
-    background-repeat: no-repeat !important;
-    background-position: right 15px center !important;
-    padding-right: 40px !important;
-    box-sizing: border-box !important;
-}
-
-#notificationsSelect:focus {
-    border-color: rgba(0, 180, 219, 0.5) !important;
-    outline: none !important;
-    background-color: rgba(255, 255, 255, 0.1) !important;
-    box-shadow: 0 0 0 3px rgba(0, 180, 219, 0.1) !important;
-}
-
-#notificationsSelect option {
-    background: #0a0f14 !important;
-    color: #ffffff !important;
-    font-size: 14px !important;
-    padding: 10px !important;
-}
-
-/* === КНОПКА ПРИМЕНИТЬ (ДОБАВЛЕНО!) === */
+/* === КНОПКА ПРИМЕНИТЬ === */
 .apply-filters-btn {
     width: 100%;
     padding: 14px;
@@ -613,7 +499,6 @@ body::after {
     display: none;
 }
 
-/* Полноэкранная модалка для офера */
 .modal.offer-modal {
     padding: 10px;
 }
@@ -645,7 +530,6 @@ body::after {
     overflow-y: auto;
 }
 
-/* Модалка категорий */
 .category-modal-content {
     max-height: 80vh;
 }
@@ -698,7 +582,7 @@ body::after {
     font-size: 15px;
 }
 
-/* === STICKY HEADER В МОДАЛКЕ ОФЕРА (УМЕНЬШЕННЫЙ) === */
+/* === STICKY HEADER В МОДАЛКЕ ОФЕРА === */
 .offer-modal-content {
     padding: 0;
     overflow: hidden;
@@ -887,33 +771,14 @@ body::after {
     top: 0;
     width: 60px;
     height: 100%;
-    background: repeating-linear-gradient(
-        90deg,
-        rgba(0, 180, 219, 0.4) 0px,
-        rgba(0, 180, 219, 0.4) 2px,
-        transparent 2px,
-        transparent 5px
-    ),
-    repeating-linear-gradient(
-        0deg,
-        rgba(17, 153, 142, 0.3) 0px,
-        rgba(17, 153, 142, 0.3) 2px,
-        transparent 2px,
-        transparent 5px
-    );
+    background: repeating-linear-gradient(90deg, rgba(0, 180, 219, 0.4) 0px, rgba(0, 180, 219, 0.4) 2px, transparent 2px, transparent 5px), repeating-linear-gradient(0deg, rgba(17, 153, 142, 0.3) 0px, rgba(17, 153, 142, 0.3) 2px, transparent 2px, transparent 5px);
     animation: pixelDissolve 3s ease-in-out infinite;
     pointer-events: none;
 }
 
 @keyframes pixelDissolve {
-    0%, 100% {
-        opacity: 0.3;
-        transform: translateX(0) scale(1);
-    }
-    50% {
-        opacity: 0.7;
-        transform: translateX(8px) scale(1.05);
-    }
+    0%, 100% { opacity: 0.3; transform: translateX(0) scale(1); }
+    50% { opacity: 0.7; transform: translateX(8px) scale(1.05); }
 }
 
 .code-action-btn:hover {
@@ -934,24 +799,7 @@ body::after {
     background: linear-gradient(135deg, rgba(0, 180, 219, 0.5), rgba(17, 153, 142, 0.5));
 }
 
-.barcode-expand-btn::after {
-    content: '';
-    position: absolute;
-    right: -15px;
-    top: 0;
-    width: 60px;
-    height: 100%;
-    background: repeating-linear-gradient(
-        90deg,
-        rgba(0, 180, 219, 0.4) 0px,
-        rgba(0, 180, 219, 0.4) 2px,
-        transparent 2px,
-        transparent 5px
-    );
-    animation: pixelDissolve 3s ease-in-out infinite;
-}
-
-/* === КНОПКИ ДЕЙСТВИЙ В МОДАЛКЕ (УМЕНЬШЕНЫ) === */
+/* === КНОПКИ ДЕЙСТВИЙ В МОДАЛКЕ === */
 .offer-actions {
     display: flex;
     flex-direction: column;
@@ -1050,14 +898,8 @@ body::after {
 }
 
 @keyframes slideDown {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 /* === НАСТРОЙКИ МОДАЛКА === */
@@ -1106,12 +948,10 @@ body::after {
 .modal-content::-webkit-scrollbar {
     width: 8px;
 }
-
 .modal-content::-webkit-scrollbar-track {
     background: rgba(255, 255, 255, 0.05);
     border-radius: 10px;
 }
-
 .modal-content::-webkit-scrollbar-thumb {
     background: linear-gradient(135deg, #00b4db, #11998e);
     border-radius: 10px;
@@ -1129,8 +969,7 @@ body::after {
     border-radius: 16px;
     padding: 18px 24px;
     z-index: 10000;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5),
-                0 0 20px rgba(0, 180, 219, 0.3);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), 0 0 20px rgba(0, 180, 219, 0.3);
     transition: transform 0.3s ease;
     min-width: 280px;
     max-width: 90%;
@@ -1159,56 +998,16 @@ body::after {
 
 /* === АДАПТИВНОСТЬ === */
 @media (max-width: 480px) {
-    body {
-        padding: 8px;
-    }
-    
-    .header-top h1 {
-        font-size: 24px;
-    }
-    
-    .brand-name {
-        font-size: 16px;
-    }
-    
-    .brand-desc {
-        font-size: 13px;
-    }
-    
-    .code-text {
-        font-size: 20px;
-    }
-    
-    .modal-content {
-        padding: 25px 20px;
-    }
-    
-    .modal-header {
-        padding: 10px 15px;
-    }
-    
-    .modal-body {
-        padding: 15px;
-    }
-    
-    #mBrand {
-        font-size: 18px;
-    }
-    
-    .tab-btn {
-        font-size: 14px;
-        padding: 12px 15px;
-    }
-    
-    .action-btn {
-        font-size: 14px;
-        padding: 12px 15px;
-    }
-    
-    .favorite-toggle {
-        width: 32px;
-        height: 32px;
-        font-size: 16px;
-    }
+    body { padding: 8px; }
+    .header-top h1 { font-size: 24px; }
+    .brand-name { font-size: 16px; }
+    .brand-desc { font-size: 13px; }
+    .code-text { font-size: 20px; }
+    .modal-content { padding: 25px 20px; }
+    .modal-header { padding: 10px 15px; }
+    .modal-body { padding: 15px; }
+    #mBrand { font-size: 18px; }
+    .tab-btn { font-size: 14px; padding: 12px 15px; }
+    .action-btn { font-size: 14px; padding: 12px 15px; }
+    .favorite-toggle { width: 32px; height: 32px; font-size: 16px; }
 }
-
