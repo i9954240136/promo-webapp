@@ -26,7 +26,7 @@ var allCategories = [];
 var allOffers = [];
 var allPromoCodes = [];
 
-// === ЛОКАЛИЗАЦИЯ (ОДИН ОБЪЕКТ) ===
+// === ЛОКАЛИЗАЦИЯ ===
 var translations = {
     ru: {
         searchPlaceholder: '🔍 Найти бренд...',
@@ -178,7 +178,7 @@ async function supabaseFetch(table, options) {
     return await response.json();
 }
 
-// === ОБНОВЛЕНИЕ ТЕКСТОВ ИНТЕРФЕЙСА (ОДНА ФУНКЦИЯ) ===
+// === ОБНОВЛЕНИЕ ТЕКСТОВ ИНТЕРФЕЙСА ===
 function updateUITexts() {
     var searchInput = document.getElementById('searchInput');
     if (searchInput) searchInput.placeholder = t.searchPlaceholder;
