@@ -14,30 +14,50 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.0/dist/JsBarcode.all.min.js"></script>
     <link rel="stylesheet" href="style.css?v=101">
+    
+    <!-- === INLINE CSS ДЛЯ SELECT (ПЕРЕОПРЕДЕЛЕНИЕ) === -->
     <style>
-#discountFilter,
-#sortFilter,
-#languageSelect,
-#notificationsSelect {
-    width: 100%;
-    padding: 14px 18px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 16px;
-    background: rgba(255, 255, 255, 0.05);
-    color: #ffffff;
-    font-size: 15px;
-    font-weight: 600;
-    cursor: pointer;
-    appearance: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23ffffff' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 15px center;
-    padding-right: 40px;
-    box-sizing: border-box;
-}
-</style>
+    #discountFilter,
+    #sortFilter,
+    #languageSelect,
+    #notificationsSelect {
+        width: 100% !important;
+        padding: 14px 18px !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        border-radius: 16px !important;
+        background: rgba(255, 255, 255, 0.05) !important;
+        color: #ffffff !important;
+        font-size: 15px !important;
+        font-weight: 600 !important;
+        appearance: none !important;
+        -webkit-appearance: none !important;
+        -moz-appearance: none !important;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23ffffff' d='M6 9L1 4h10z'/%3E%3C/svg%3E") !important;
+        background-repeat: no-repeat !important;
+        background-position: right 15px center !important;
+        padding-right: 40px !important;
+        box-sizing: border-box !important;
+    }
+    
+    #discountFilter:focus,
+    #sortFilter:focus,
+    #languageSelect:focus,
+    #notificationsSelect:focus {
+        border-color: rgba(0, 180, 219, 0.5) !important;
+        outline: none !important;
+        background-color: rgba(255, 255, 255, 0.1) !important;
+    }
+    
+    #discountFilter option,
+    #sortFilter option,
+    #languageSelect option,
+    #notificationsSelect option {
+        background: #0a0f14 !important;
+        color: #ffffff !important;
+        font-size: 14px !important;
+        padding: 10px !important;
+    }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -76,7 +96,7 @@
             <div id="filtersPanel" class="filters-panel hidden">
                 <div class="filter-group">
                     <label>Мин. скидка:</label>
-                    <select id="discountFilter" class="glass-select">
+                    <select id="discountFilter">
                         <option value="0">Любая</option>
                         <option value="500">от 500 ₽</option>
                         <option value="1000">от 1000 ₽</option>
@@ -87,7 +107,7 @@
                 
                 <div class="filter-group">
                     <label>Сортировка:</label>
-                    <select id="sortFilter" class="glass-select">
+                    <select id="sortFilter">
                         <option value="popularity">По популярности</option>
                         <option value="alphabet">По алфавиту</option>
                         <option value="discount">По размеру скидки</option>
@@ -167,7 +187,7 @@
             
             <div class="setting-item">
                 <label>Язык:</label>
-                <select id="languageSelect" class="glass-select" onchange="changeLanguage(this.value)">
+                <select id="languageSelect" onchange="changeLanguage(this.value)">
                     <option value="ru">🇷🇺 Русский</option>
                     <option value="en">🇬🇧 English</option>
                     <option value="de">🇩🇪 Deutsch</option>
@@ -176,7 +196,7 @@
             
             <div class="setting-item">
                 <label>Уведомления:</label>
-                <select id="notificationsSelect" class="glass-select" onchange="changeNotifications(this.value)">
+                <select id="notificationsSelect" onchange="changeNotifications(this.value)">
                     <option value="true">Включены</option>
                     <option value="false">Отключены</option>
                 </select>
@@ -190,8 +210,6 @@
         </div>
     </div>
 
-    <script src="script.js?v=100"></script>
+    <script src="script.js?v=101"></script>
 </body>
 </html>
-
-
