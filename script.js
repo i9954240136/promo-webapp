@@ -26,7 +26,7 @@ var allCategories = [];
 var allOffers = [];
 var allPromoCodes = [];
 
-// === ЛОКАЛИЗАЦИЯ (ОДИН ОБЪЕКТ) ===
+// === ЛОКАЛИЗАЦИЯ ===
 var translations = {
     ru: {
         searchPlaceholder: '🔍 Найти бренд...',
@@ -290,16 +290,26 @@ async function loadData() {
     }
 }
 
-// === ЗАГРУЗКА ИЗБРАННОГО ===
+// === ЗАГРУЗКА ИЗБРАННОГО (ЕСЛИ ЕСТЬ userId) ===
 async function loadUserFavorites() {
+    if (!userId) {
+        console.log('ℹ️ userId не доступен, избранное будет храниться только в памяти');
+        userFavorites = [];
+        return;
+    }
+    
     try {
         var response = await fetch(SUPABASE_URL + '/rest/v1/favorites?user_id=eq.' + userId, { headers: HEADERS });
         if (response.ok) {
             userFavorites = await response.json();
-            console.log('✅ Избранное загружено:', userFavorites.length);
+            console.log('✅ Избранное загружено из БД:', userFavorites.length);
+        } else {
+            console.log('⚠️ Не удалось загрузить избранное из БД');
+            userFavorites = [];
         }
     } catch (error) {
         console.error('❌ Ошибка загрузки избранного:', error);
+        userFavorites = [];
     }
 }
 
@@ -485,7 +495,7 @@ window.switchTab = function(tabName) {
     trackAction('tab_switched', { tab: tabName });
 };
 
-// === ОТРИСОВКА ИЗБРАННОГО ===
+// === ОТРИСОВКА ИЗБРАННОГО (ИЗ ЛОКАЛЬНОГО МАССИВА) ===
 function renderFavorites() {
     var container = document.getElementById('offersContainer');
     var emptyState = document.getElementById('emptyFavorites');
@@ -494,7 +504,7 @@ function renderFavorites() {
         return;
     }
     
-    console.log('📋 renderFavorites вызвана. Избранное:', userFavorites.length);
+    console.log('📋 renderFavorites вызвана. Избранное в памяти:', userFavorites.length);
     
     if (userFavorites.length === 0) {
         container.innerHTML = '';
@@ -505,9 +515,11 @@ function renderFavorites() {
     if (emptyState) emptyState.classList.add('hidden');
     container.innerHTML = '';
     
+    // Берём ID избранных оферов из массива
     var favoriteOfferIds = userFavorites.map(function(f) { return f.offer_id; });
     console.log('ID избранных оферов:', favoriteOfferIds);
     
+    // Фильтруем оферы
     var favoriteOffers = allOffers.filter(function(o) {
         return favoriteOfferIds.indexOf(o.id) !== -1;
     });
@@ -519,6 +531,7 @@ function renderFavorites() {
         return;
     }
     
+    // Отображаем
     favoriteOffers.forEach(function(offer) {
         var offerCodes = allPromoCodes.filter(function(c) { return c.offer_id === offer.id; });
         var activeCodes = offerCodes.filter(function(c) {
@@ -527,11 +540,11 @@ function renderFavorites() {
         
         if (activeCodes.length === 0) return;
         
-        var isFavorite = userFavorites.some(function(f) { return f.offer_id === offer.id; });
+        var isFavorite = true; // Уже отфильтровано
         
         var card = document.createElement('div');
         card.className = 'offer-card';
-        card.innerHTML = '<div><div class="brand-name">' + offer.brand_name + '</div><div class="brand-desc">' + (offer.description || '') + '</div></div><div class="card-actions"><button class="favorite-toggle ' + (isFavorite ? 'active' : '') + '" onclick="toggleFavorite(event, ' + offer.id + ')">' + (isFavorite ? '★' : '☆') + '</button></div>';
+        card.innerHTML = '<div><div class="brand-name">' + offer.brand_name + '</div><div class="brand-desc">' + (offer.description || '') + '</div></div><div class="card-actions"><button class="favorite-toggle active" onclick="toggleFavorite(event, ' + offer.id + ')">★</button></div>';
         card.onclick = function(e) {
             if (!e.target.classList.contains('favorite-toggle')) {
                 openModal(offer, activeCodes);
@@ -696,45 +709,62 @@ window.applyFilters = function() {
     trackAction('filters_applied', { discount: minDiscount, sort: sortBy });
 };
 
-// === ИЗБРАННОЕ: ДОБАВИТЬ/УДАЛИТЬ ===
+// === ИЗБРАННОЕ: ДОБАВИТЬ/УДАЛИТЬ (РАБОТАЕТ С БД И ЛОКАЛЬНО) ===
 window.toggleFavorite = async function(event, offerId) {
     event.stopPropagation();
-    if (!userId) {
-        showCustomNotification('⚠️', 'Войдите в Telegram');
-        return;
-    }
     
     var isFavorite = userFavorites.some(function(f) { return f.offer_id === offerId; });
     
-    try {
-        if (isFavorite) {
-            var fav = userFavorites.find(function(f) { return f.offer_id === offerId; });
-            if (fav) {
-                await fetch(SUPABASE_URL + '/rest/v1/favorites?id=eq.' + fav.id, { method: 'DELETE', headers: HEADERS });
-                userFavorites = userFavorites.filter(function(f) { return f.offer_id !== offerId; });
-                showCustomNotification('⭐', 'Удалено из избранного');
+    if (isFavorite) {
+        // УДАЛИТЬ ИЗ ИЗБРАННОГО
+        userFavorites = userFavorites.filter(function(f) { return f.offer_id !== offerId; });
+        console.log('⭐ Удалено из избранного:', offerId);
+        
+        // Если есть userId - удаляем из БД
+        if (userId) {
+            try {
+                var fav = userFavorites.find(function(f) { return f.offer_id === offerId; });
+                if (fav) {
+                    await fetch(SUPABASE_URL + '/rest/v1/favorites?id=eq.' + fav.id, { 
+                        method: 'DELETE', 
+                        headers: HEADERS 
+                    });
+                }
+            } catch (error) {
+                console.error('❌ Ошибка удаления из БД:', error);
             }
-        } else {
-            await fetch(SUPABASE_URL + '/rest/v1/favorites', {
-                method: 'POST',
-                headers: HEADERS,
-                body: JSON.stringify({ user_id: userId, offer_id: offerId })
-            });
-            userFavorites.push({ user_id: userId, offer_id: offerId });
-            showCustomNotification('⭐', 'Добавлено в избранное');
         }
         
-        if (currentTab === 'favorites') {
-            renderFavorites();
-        } else {
-            filterOffers();
+        showCustomNotification('⭐', 'Удалено из избранного');
+    } else {
+        // ДОБАВИТЬ В ИЗБРАННОЕ
+        userFavorites.push({ user_id: userId, offer_id: offerId });
+        console.log('⭐ Добавлено в избранное:', offerId);
+        
+        // Если есть userId - сохраняем в БД
+        if (userId) {
+            try {
+                await fetch(SUPABASE_URL + '/rest/v1/favorites', {
+                    method: 'POST',
+                    headers: HEADERS,
+                    body: JSON.stringify({ user_id: userId, offer_id: offerId })
+                });
+            } catch (error) {
+                console.error('❌ Ошибка сохранения в БД:', error);
+            }
         }
         
-        trackAction('favorite_toggled', { offer_id: offerId, added: !isFavorite });
-    } catch (error) {
-        console.error('❌ Ошибка избранного:', error);
-        showCustomNotification('❌', 'Ошибка');
+        showCustomNotification('⭐', 'Добавлено в избранное');
     }
+    
+    // Обновляем отображение
+    if (currentTab === 'favorites') {
+        renderFavorites();
+    } else {
+        filterOffers();
+    }
+    
+    trackAction('favorite_toggled', { offer_id: offerId, added: !isFavorite });
 };
 
 // === ИЗБРАННОЕ ИЗ МОДАЛКИ ===
