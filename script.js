@@ -26,7 +26,7 @@ var allCategories = [];
 var allOffers = [];
 var allPromoCodes = [];
 
-// === ЛОКАЛИЗАЦИЯ ===
+// === ЛОКАЛИЗАЦИЯ (ОДИН ОБЪЕКТ) ===
 var translations = {
     ru: {
         searchPlaceholder: '🔍 Найти бренд...',
