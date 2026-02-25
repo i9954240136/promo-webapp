@@ -700,49 +700,33 @@ window.applyFilters = function() {
     trackAction('filters_applied', { discount: minDiscount, sort: sortBy });
 };
 
-// === ИЗБРАННОЕ: ДОБАВИТЬ/УДАЛИТЬ ===
-window.toggleFavorite = async function(event, offerId) {
+// === ИЗБРАННОЕ: ДОБАВИТЬ/УДАЛИТЬ (ТОЛЬКО LOCALSTORAGE) ===
+window.toggleFavorite = function(event, offerId) {
     event.stopPropagation();
     
     var isFavorite = userFavorites.some(function(f) { return f.offer_id === offerId; });
     
     if (isFavorite) {
+        // УДАЛИТЬ
         userFavorites = userFavorites.filter(function(f) { return f.offer_id !== offerId; });
-        console.log('⭐ Удалено из избранного (локально):', offerId);
-        
-        if (userId) {
-            try {
-                await fetch(SUPABASE_URL + '/rest/v1/favorites?user_id=eq.' + userId + '&offer_id=eq.' + offerId, { 
-                    method: 'DELETE', 
-                    headers: HEADERS 
-                });
-                console.log('✅ Удалено из БД');
-            } catch (error) {
-                console.error('❌ Ошибка удаления из БД:', error);
-            }
-        }
-        
+        console.log('⭐ Удалено из избранного:', offerId);
         showCustomNotification('⭐', 'Удалено из избранного');
     } else {
+        // ДОБАВИТЬ
         userFavorites.push({ user_id: userId, offer_id: offerId });
-        console.log('⭐ Добавлено в избранное (локально):', offerId);
-        
-        if (userId) {
-            try {
-                await fetch(SUPABASE_URL + '/rest/v1/favorites', {
-                    method: 'POST',
-                    headers: HEADERS,
-                    body: JSON.stringify({ user_id: userId, offer_id: offerId })
-                });
-                console.log('✅ Сохранено в БД');
-            } catch (error) {
-                console.error('❌ Ошибка сохранения в БД:', error);
-            }
-        }
-        
+        console.log('⭐ Добавлено в избранное:', offerId);
         showCustomNotification('⭐', 'Добавлено в избранное');
     }
     
+    // СОХРАНИТЬ В LOCALSTORAGE
+    try {
+        localStorage.setItem('userFavorites', JSON.stringify(userFavorites));
+        console.log('💾 Сохранено в localStorage');
+    } catch (error) {
+        console.error('❌ Ошибка сохранения:', error);
+    }
+    
+    // Обновить отображение
     if (currentTab === 'favorites') {
         renderFavorites();
     } else {
@@ -750,16 +734,6 @@ window.toggleFavorite = async function(event, offerId) {
     }
     
     trackAction('favorite_toggled', { offer_id: offerId, added: !isFavorite });
-};
-
-// === ИЗБРАННОЕ ИЗ МОДАЛКИ ===
-window.toggleFavoriteFromModal = function() {
-    if (!currentOffer) return;
-    var offerId = currentOffer.offer.id;
-    var isFavorite = userFavorites.some(function(f) { return f.offer_id === offerId; });
-    var event = { stopPropagation: function() {} };
-    toggleFavorite(event, offerId);
-    updateFavoriteButton(isFavorite);
 };
 
 // === ОБНОВЛЕНИЕ КНОПКИ ИЗБРАННОГО ===
@@ -1072,4 +1046,5 @@ if (document.readyState === 'loading') {
     tg.expand();
     loadData();
 }
+
 
