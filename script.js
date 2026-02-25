@@ -290,25 +290,16 @@ async function loadData() {
     }
 }
 
-// === ЗАГРУЗКА ИЗБРАННОГО ===
+// === ЗАГРУЗКА ИЗБРАННОГО (ИЗ LOCALSTORAGE) ===
 async function loadUserFavorites() {
-    if (!userId) {
-        console.log('ℹ️ userId не доступен, избранное будет пустым');
-        userFavorites = [];
-        return;
-    }
-    
     try {
-        console.log('📥 Загрузка избранного для userId:', userId);
-        var response = await fetch(SUPABASE_URL + '/rest/v1/favorites?user_id=eq.' + userId, { headers: HEADERS });
-        console.log('📋 Ответ сервера:', response.status);
-        
-        if (response.ok) {
-            userFavorites = await response.json();
-            console.log('✅ Избранное загружено из БД:', userFavorites.length, 'оферов');
+        var stored = localStorage.getItem('userFavorites');
+        if (stored) {
+            userFavorites = JSON.parse(stored);
+            console.log('✅ Избранное загружено из localStorage:', userFavorites.length);
         } else {
-            console.log('⚠️ Ошибка загрузки:', response.status);
             userFavorites = [];
+            console.log('ℹ️ Избранное пустое');
         }
     } catch (error) {
         console.error('❌ Ошибка загрузки избранного:', error);
@@ -1081,3 +1072,4 @@ if (document.readyState === 'loading') {
     tg.expand();
     loadData();
 }
+
