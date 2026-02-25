@@ -210,17 +210,17 @@ select,
 #discountFilter,
 #sortFilter,
 #languageSelect,
-#notificationsSelect,
-#categoryFilter {
+#notificationsSelect {
     width: 100% !important;
-    padding: 12px 15px !important;
+    padding: 14px 18px !important;
     border: 1px solid rgba(255, 255, 255, 0.1) !important;
-    border-radius: 12px !important;
+    border-radius: 16px !important;
     background: rgba(255, 255, 255, 0.05) !important;
     backdrop-filter: blur(10px) !important;
     -webkit-backdrop-filter: blur(10px) !important;
     color: #ffffff !important;
-    font-size: 14px !important;
+    font-size: 15px !important;
+    font-weight: 600 !important;
     cursor: pointer !important;
     transition: all 0.3s ease !important;
     appearance: none !important;
@@ -230,6 +230,7 @@ select,
     background-repeat: no-repeat !important;
     background-position: right 15px center !important;
     padding-right: 40px !important;
+    box-sizing: border-box !important;
 }
 
 select:focus,
@@ -237,8 +238,7 @@ select:focus,
 #discountFilter:focus,
 #sortFilter:focus,
 #languageSelect:focus,
-#notificationsSelect:focus,
-#categoryFilter:focus {
+#notificationsSelect:focus {
     border-color: rgba(0, 180, 219, 0.5) !important;
     outline: none !important;
     background-color: rgba(255, 255, 255, 0.1) !important;
@@ -250,10 +250,11 @@ select option,
 #discountFilter option,
 #sortFilter option,
 #languageSelect option,
-#notificationsSelect option,
-#categoryFilter option {
+#notificationsSelect option {
     background: #0a0f14 !important;
     color: #ffffff !important;
+    font-size: 14px !important;
+    padding: 10px !important;
 }
 
 .apply-filters-btn {
@@ -1101,4 +1102,5 @@ select option,
         font-size: 16px;
     }
 }
+
 
