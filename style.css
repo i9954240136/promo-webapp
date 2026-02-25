@@ -204,10 +204,11 @@ body::after {
     font-weight: 600;
 }
 
-/* === GLASSMORPHISM SELECT (ОТДЕЛЬНЫЕ СТИЛИ) === */
-
-/* Фильтр - Мин. скидка */
-#discountFilter {
+/* === GLASSMORPHISM SELECT (ИСПРАВЛЕНО) === */
+#discountFilter,
+#sortFilter,
+#languageSelect,
+#notificationsSelect {
     width: 100% !important;
     padding: 14px 18px !important;
     border: 1px solid rgba(255, 255, 255, 0.1) !important;
@@ -230,14 +231,20 @@ body::after {
     box-sizing: border-box !important;
 }
 
-#discountFilter:focus {
+#discountFilter:focus,
+#sortFilter:focus,
+#languageSelect:focus,
+#notificationsSelect:focus {
     border-color: rgba(0, 180, 219, 0.5) !important;
     outline: none !important;
     background-color: rgba(255, 255, 255, 0.1) !important;
     box-shadow: 0 0 0 3px rgba(0, 180, 219, 0.1) !important;
 }
 
-#discountFilter option {
+#discountFilter option,
+#sortFilter option,
+#languageSelect option,
+#notificationsSelect option {
     background: #0a0f14 !important;
     color: #ffffff !important;
     font-size: 14px !important;
@@ -1204,3 +1211,4 @@ body::after {
         font-size: 16px;
     }
 }
+
