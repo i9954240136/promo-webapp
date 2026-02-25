@@ -1,6 +1,9 @@
 /* === GLASSMORPHISM MODERN DARK THEME === */
 
 body {
+    background: #ff0000 !important; /* КРАСНЫЙ ФОН ДЛЯ ТЕСТА */
+    /* ...остальные стили... */
+}
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     background: linear-gradient(135deg, #0a0f14 0%, #101a1f 50%, #152529 100%);
     background-attachment: fixed;
@@ -991,3 +994,4 @@ body::after {
     .action-btn { font-size: 14px; padding: 12px 15px; }
     .favorite-toggle { width: 32px; height: 32px; font-size: 16px; }
 }
+
