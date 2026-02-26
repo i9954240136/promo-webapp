@@ -428,6 +428,7 @@ body::after {
     box-shadow: 0 8px 25px rgba(0, 180, 219, 0.5);
 }
 
+/* === МОДАЛЬНОЕ ОКНО === */
 .modal {
     position: fixed;
     top: 0;
@@ -558,48 +559,6 @@ body::after {
     text-shadow: 0 2px 10px rgba(0, 180, 219, 0.3);
 }
 
-/* === МОДАЛКА НАСТРОЕК === */
-.settings-content .modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-    padding-bottom: 15px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.settings-content .modal-header h3 {
-    margin: 0;
-    font-size: 22px;
-    color: #ffffff;
-}
-
-.settings-content .modal-header .close {
-    position: static !important;  /* Сбросить absolute */
-    width: 36px;
-    height: 36px;
-    font-size: 28px;
-    cursor: pointer;
-    color: rgba(255, 255, 255, 0.7);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    transition: all 0.3s ease;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.settings-content .modal-header .close:hover {
-    background: rgba(255, 255, 255, 0.1);
-    color: #ffffff;
-    transform: rotate(90deg);
-}
-
-/* Убрать старый h3 margin */
-.settings-content h3 {
-    margin-bottom: 0;
-}
 .modal-body {
     padding: 20px;
     overflow-y: auto;
@@ -886,6 +845,7 @@ body::after {
     to { opacity: 1; transform: translateY(0); }
 }
 
+/* === НАСТРОЙКИ МОДАЛКА === */
 .settings-content h3 {
     font-size: 22px;
     margin-bottom: 25px;
@@ -943,6 +903,7 @@ body::after {
     border-radius: 10px;
 }
 
+/* === КАСТОМНЫЕ УВЕДОМЛЕНИЯ === */
 .custom-notification {
     position: fixed;
     top: 20px;
@@ -981,6 +942,7 @@ body::after {
     line-height: 1.4;
 }
 
+/* === АДАПТИВНОСТЬ === */
 @media (max-width: 480px) {
     body { padding: 8px; }
     .header-top h1 { font-size: 24px; }
@@ -996,7 +958,7 @@ body::after {
     .favorite-toggle { width: 32px; height: 32px; font-size: 16px; }
 }
 
-/* === CUSTOM DROPDOWN (FIXED POSITION - ИСПРАВЛЕНО) === */
+/* === CUSTOM DROPDOWN (FIXED POSITION) === */
 
 .custom-select {
     position: relative;
@@ -1049,7 +1011,7 @@ body::after {
 #languageSelectOptions,
 #notificationsSelectOptions {
     position: fixed !important;
-    width: auto !important;  /* ← Ширина будет задана в JS */
+    width: auto !important;
     min-width: 200px;
     background: rgba(10, 15, 20, 0.98);
     backdrop-filter: blur(20px);
@@ -1061,10 +1023,10 @@ body::after {
     max-height: 250px;
     overflow-y: auto;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-    left: 0 !important;  /* ← Сброс */
-    right: auto !important;  /* ← Сброс */
-    margin: 0 !important;  /* ← Сброс */
-    top: 0 !important;  /* ← Будет задано в JS */
+    left: 0 !important;
+    right: auto !important;
+    margin: 0 !important;
+    top: 0 !important;
 }
 
 #discountFilterOptions.show,
@@ -1124,4 +1086,3 @@ body::after {
 #notificationsSelect {
     display: none !important;
 }
-
