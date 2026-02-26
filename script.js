@@ -184,27 +184,11 @@ function updateUITexts() {
         }
     });
     
-    var filterLabels = document.querySelectorAll('.filter-group label');
-    if (filterLabels[0]) filterLabels[0].textContent = t.discount + ':';
-    if (filterLabels[1]) filterLabels[1].textContent = t.sort + ':';
-    
-    var applyBtn = document.querySelector('.apply-filters-btn');
-    if (applyBtn) applyBtn.textContent = t.applyFilters;
-    
-    var settingLabels = document.querySelectorAll('.setting-item label');
-    if (settingLabels[0]) settingLabels[0].textContent = t.language + ':';
-    if (settingLabels[1]) settingLabels[1].textContent = t.notifications + ':';
-    
     var clearBtn = document.querySelector('.clear-history-btn');
     if (clearBtn) clearBtn.textContent = t.clearHistory;
     
     var shareBtn = document.querySelector('.share-btn');
     if (shareBtn) shareBtn.textContent = t.share;
-    
-    var additionalToggle = document.querySelector('.additional-toggle');
-    if (additionalToggle) {
-        additionalToggle.firstChild.textContent = t.additionalConditions + ' ';
-    }
     
     updateSelectedCategoriesText();
 }
@@ -283,7 +267,6 @@ async function loadData() {
 async function loadUserFavorites() {
     try {
         if (typeof localStorage === 'undefined') {
-            console.log('⚠️ localStorage недоступен');
             userFavorites = [];
             return;
         }
@@ -294,7 +277,6 @@ async function loadUserFavorites() {
             console.log('✅ Избранное загружено:', userFavorites.length, 'оферов');
         } else {
             userFavorites = [];
-            console.log('ℹ️ Избранное пустое');
         }
     } catch (error) {
         console.error('❌ Ошибка загрузки избранного:', error);
@@ -327,11 +309,18 @@ async function loadUserSettings() {
                 userLanguage = settings[0].language || 'ru';
                 t = translations[userLanguage];
                 
-                var langSelect = document.getElementById('languageSelect');
-                var notifSelect = document.getElementById('notificationsSelect');
+                var langText = document.getElementById('languageText');
+                var notifText = document.getElementById('notificationsText');
                 
-                if (langSelect) langSelect.value = userLanguage;
-                if (notifSelect) notifSelect.value = settings[0].notifications_enabled !== false ? 'true' : 'false';
+                if (langText) {
+                    if (userLanguage === 'ru') langText.textContent = '🇷🇺 Русский';
+                    else if (userLanguage === 'en') langText.textContent = '🇬🇧 English';
+                    else if (userLanguage === 'de') langText.textContent = '🇩🇪 Deutsch';
+                }
+                
+                if (notifText) {
+                    notifText.textContent = settings[0].notifications_enabled !== false ? 'Включены' : 'Отключены';
+                }
                 
                 updateUITexts();
             }
@@ -626,6 +615,48 @@ window.toggleFilters = function() {
     if (panel) panel.classList.toggle('hidden');
 };
 
+// === МОДАЛКИ ФИЛЬТРОВ (НОВЫЕ ФУНКЦИИ) ===
+
+// Открыть модалку фильтра
+window.openFilterModal = function(type) {
+    var modal = document.getElementById(type + 'Modal');
+    if (modal) modal.classList.remove('hidden');
+};
+
+// Закрыть модалку фильтра
+window.closeFilterModal = function(type) {
+    var modal = document.getElementById(type + 'Modal');
+    if (modal) modal.classList.add('hidden');
+};
+
+// Выбрать опцию
+window.selectFilter = function(type, value, text) {
+    // Обновить текст на кнопке
+    var textElement = document.getElementById(type + 'Text');
+    if (textElement) textElement.textContent = text;
+    
+    // Сохранить значение
+    if (type === 'discount') {
+        document.getElementById('discountFilter').value = value;
+    } else if (type === 'sort') {
+        document.getElementById('sortFilter').value = value;
+    } else if (type === 'language') {
+        document.getElementById('languageSelect').value = value;
+        changeLanguage(value);
+    } else if (type === 'notifications') {
+        document.getElementById('notificationsSelect').value = value;
+        changeNotifications(value);
+    }
+    
+    // Закрыть модалку
+    closeFilterModal(type);
+    
+    // Если это сортировка — применить сразу
+    if (type === 'sort') {
+        applyFilters();
+    }
+};
+
 // === ПРИМЕНЕНИЕ ФИЛЬТРОВ ===
 window.applyFilters = function() {
     var minDiscount = parseInt(document.getElementById('discountFilter').value);
@@ -665,121 +696,6 @@ window.applyFilters = function() {
     document.getElementById('filtersPanel').classList.add('hidden');
     trackAction('filters_applied', { discount: minDiscount, sort: sortBy });
 };
-
-// === CUSTOM DROPDOWN ФУНКЦИИ ===
-var currentOpenDropdown = null;
-
-window.toggleCustomSelect = function(event, name) {
-    if (event) {
-        event.preventDefault();
-        event.stopPropagation();
-    }
-    
-    var options = document.getElementById(name + 'Options');
-    var container = document.getElementById(name + 'Container');
-    var selected = container ? container.querySelector('.custom-select-selected') : null;
-    
-    if (!options || !selected) return;
-    
-    if (currentOpenDropdown === name) {
-        options.classList.remove('show');
-        options.style.top = '';
-        options.style.left = '';
-        options.style.width = '';
-        selected.classList.remove('active');
-        currentOpenDropdown = null;
-        return;
-    }
-    
-    document.querySelectorAll('.custom-select-options').forEach(function(opt) {
-        opt.classList.remove('show');
-        opt.style.top = '';
-        opt.style.left = '';
-        opt.style.width = '';
-    });
-    document.querySelectorAll('.custom-select-selected').forEach(function(sel) {
-        sel.classList.remove('active');
-    });
-    
-    var rect = selected.getBoundingClientRect();
-    var topPosition = rect.bottom + 5;
-    var leftPosition = rect.left;
-    var width = rect.width;
-    
-    var optionsHeight = 250;
-    var spaceBelow = window.innerHeight - rect.bottom;
-    
-    if (spaceBelow < optionsHeight) {
-        topPosition = rect.top - optionsHeight - 5;
-    }
-    
-    options.style.top = topPosition + 'px';
-    options.style.left = leftPosition + 'px';
-    options.style.width = width + 'px';
-    
-    options.classList.add('show');
-    selected.classList.add('active');
-    currentOpenDropdown = name;
-};
-
-window.selectCustomOption = function(name, value, text) {
-    var container = document.getElementById(name + 'Container');
-    var selected = container ? container.querySelector('.custom-select-selected') : null;
-    var textSpan = selected ? selected.querySelector('.custom-select-text') : null;
-    var options = document.getElementById(name + 'Options');
-    
-    if (!selected || !textSpan || !options) return;
-    
-    textSpan.textContent = text;
-    
-    options.querySelectorAll('.custom-select-option').forEach(function(opt) {
-        opt.classList.remove('selected');
-        if (opt.dataset.value === value) {
-            opt.classList.add('selected');
-        }
-    });
-    
-    options.classList.remove('show');
-    options.style.top = '';
-    options.style.left = '';
-    options.style.width = '';
-    selected.classList.remove('active');
-    currentOpenDropdown = null;
-    
-    if (name === 'languageSelect') {
-        changeLanguage(value);
-    } else if (name === 'notificationsSelect') {
-        changeNotifications(value);
-    }
-};
-
-document.addEventListener('click', function(e) {
-    if (!e.target.closest('.custom-select')) {
-        document.querySelectorAll('.custom-select-options').forEach(function(opt) {
-            opt.classList.remove('show');
-            opt.style.top = '';
-            opt.style.left = '';
-            opt.style.width = '';
-        });
-        document.querySelectorAll('.custom-select-selected').forEach(function(sel) {
-            sel.classList.remove('active');
-        });
-        currentOpenDropdown = null;
-    }
-});
-
-window.addEventListener('scroll', function() {
-    document.querySelectorAll('.custom-select-options').forEach(function(opt) {
-        opt.classList.remove('show');
-        opt.style.top = '';
-        opt.style.left = '';
-        opt.style.width = '';
-    });
-    document.querySelectorAll('.custom-select-selected').forEach(function(sel) {
-        sel.classList.remove('active');
-    });
-    currentOpenDropdown = null;
-}, true);
 
 // === ИЗБРАННОЕ: ДОБАВИТЬ/УДАЛИТЬ ===
 window.toggleFavorite = function(event, offerId) {
