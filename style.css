@@ -180,6 +180,19 @@ body::after {
     animation: slideDown 0.3s ease;
 }
 
+/* === ПАНЕЛЬ ФИЛЬТРОВ (z-index) === */
+.filters-panel {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 15px;
+    animation: slideDown 0.3s ease;
+    position: relative;  /* ← ДОБАВИТЬ */
+    z-index: 100;        /* ← ДОБАВИТЬ */
+}
+
 .filters-panel.hidden {
     display: none;
 }
@@ -1097,4 +1110,5 @@ body::after {
 #notificationsSelect {
     display: none !important;
 }
+
 
