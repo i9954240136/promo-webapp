@@ -13,51 +13,7 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.0/dist/JsBarcode.all.min.js"></script>
-    <link rel="stylesheet" href="style.css?v=101">
-    
-    <!-- === INLINE CSS ДЛЯ SELECT (ПЕРЕОПРЕДЕЛЕНИЕ) === -->
-    <style>
-    #discountFilter,
-    #sortFilter,
-    #languageSelect,
-    #notificationsSelect {
-        width: 100% !important;
-        padding: 14px 18px !important;
-        border: 1px solid rgba(255, 255, 255, 0.1) !important;
-        border-radius: 16px !important;
-        background: rgba(255, 255, 255, 0.05) !important;
-        color: #ffffff !important;
-        font-size: 15px !important;
-        font-weight: 600 !important;
-        appearance: none !important;
-        -webkit-appearance: none !important;
-        -moz-appearance: none !important;
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23ffffff' d='M6 9L1 4h10z'/%3E%3C/svg%3E") !important;
-        background-repeat: no-repeat !important;
-        background-position: right 15px center !important;
-        padding-right: 40px !important;
-        box-sizing: border-box !important;
-    }
-    
-    #discountFilter:focus,
-    #sortFilter:focus,
-    #languageSelect:focus,
-    #notificationsSelect:focus {
-        border-color: rgba(0, 180, 219, 0.5) !important;
-        outline: none !important;
-        background-color: rgba(255, 255, 255, 0.1) !important;
-    }
-    
-    #discountFilter option,
-    #sortFilter option,
-    #languageSelect option,
-    #notificationsSelect option {
-        background: #0a0f14 !important;
-        color: #ffffff !important;
-        font-size: 14px !important;
-        padding: 10px !important;
-    }
-    </style>
+    <link rel="stylesheet" href="style.css?v=102">
 </head>
 <body>
     <div class="container">
@@ -94,41 +50,43 @@
             
             <!-- Фильтры (скрыты по умолчанию) -->
             <div id="filtersPanel" class="filters-panel hidden">
+                <!-- Фильтр - Мин. скидка -->
                 <div class="filter-group">
-                   <!-- Фильтр - Мин. скидка -->
-<div class="filter-group">
-    <label>Мин. скидка:</label>
-    <div class="custom-select" id="discountFilterContainer">
-        <div class="custom-select-selected" onclick="toggleCustomSelect('discountFilter')">
-            <span class="custom-select-text">Любая</span>
-            <span class="custom-select-arrow">▼</span>
-        </div>
-        <div class="custom-select-options" id="discountFilterOptions">
-            <div class="custom-select-option" data-value="0">Любая</div>
-            <div class="custom-select-option" data-value="500">от 500 ₽</div>
-            <div class="custom-select-option" data-value="1000">от 1000 ₽</div>
-            <div class="custom-select-option" data-value="3000">от 3000 ₽</div>
-            <div class="custom-select-option" data-value="5000">от 5000 ₽</div>
-        </div>
-    </div>
-</div>
-
-<!-- Фильтр - Сортировка -->
-<div class="filter-group">
-    <label>Сортировка:</label>
-    <div class="custom-select" id="sortFilterContainer">
-        <div class="custom-select-selected" onclick="toggleCustomSelect('sortFilter')">
-            <span class="custom-select-text">По популярности</span>
-            <span class="custom-select-arrow">▼</span>
-        </div>
-        <div class="custom-select-options" id="sortFilterOptions">
-            <div class="custom-select-option" data-value="popularity">По популярности</div>
-            <div class="custom-select-option" data-value="alphabet">По алфавиту</div>
-            <div class="custom-select-option" data-value="discount">По размеру скидки</div>
-            <div class="custom-select-option" data-value="newest">По дате добавления</div>
-        </div>
-    </div>
-</div>
+                    <label>Мин. скидка:</label>
+                    <div class="custom-select" id="discountFilterContainer">
+                        <div class="custom-select-selected" onclick="toggleCustomSelect('discountFilter')">
+                            <span class="custom-select-text">Любая</span>
+                            <span class="custom-select-arrow">▼</span>
+                        </div>
+                        <div class="custom-select-options" id="discountFilterOptions">
+                            <div class="custom-select-option" data-value="0">Любая</div>
+                            <div class="custom-select-option" data-value="500">от 500 ₽</div>
+                            <div class="custom-select-option" data-value="1000">от 1000 ₽</div>
+                            <div class="custom-select-option" data-value="3000">от 3000 ₽</div>
+                            <div class="custom-select-option" data-value="5000">от 5000 ₽</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Фильтр - Сортировка -->
+                <div class="filter-group">
+                    <label>Сортировка:</label>
+                    <div class="custom-select" id="sortFilterContainer">
+                        <div class="custom-select-selected" onclick="toggleCustomSelect('sortFilter')">
+                            <span class="custom-select-text">По популярности</span>
+                            <span class="custom-select-arrow">▼</span>
+                        </div>
+                        <div class="custom-select-options" id="sortFilterOptions">
+                            <div class="custom-select-option" data-value="popularity">По популярности</div>
+                            <div class="custom-select-option" data-value="alphabet">По алфавиту</div>
+                            <div class="custom-select-option" data-value="discount">По размеру скидки</div>
+                            <div class="custom-select-option" data-value="newest">По дате добавления</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="apply-filters-btn" onclick="applyFilters()">Применить</button>
+            </div>
             
             <!-- Недавние поиски -->
             <div id="recentSearches" class="recent-searches hidden"></div>
@@ -197,44 +155,45 @@
             <span class="close" onclick="toggleSettings()">&times;</span>
             <h3>Настройки</h3>
             
+            <!-- Настройки - Язык -->
             <div class="setting-item">
-              <!-- Настройки - Язык -->
-<div class="setting-item">
-    <label>Язык:</label>
-    <div class="custom-select" id="languageSelectContainer">
-        <div class="custom-select-selected" onclick="toggleCustomSelect('languageSelect')">
-            <span class="custom-select-text">🇷🇺 Русский</span>
-            <span class="custom-select-arrow">▼</span>
-        </div>
-        <div class="custom-select-options" id="languageSelectOptions">
-            <div class="custom-select-option" data-value="ru">🇷🇺 Русский</div>
-            <div class="custom-select-option" data-value="en">🇬🇧 English</div>
-            <div class="custom-select-option" data-value="de">🇩🇪 Deutsch</div>
-        </div>
-    </div>
-</div>
-
-<!-- Настройки - Уведомления -->
-<div class="setting-item">
-    <label>Уведомления:</label>
-    <div class="custom-select" id="notificationsSelectContainer">
-        <div class="custom-select-selected" onclick="toggleCustomSelect('notificationsSelect')">
-            <span class="custom-select-text">Включены</span>
-            <span class="custom-select-arrow">▼</span>
-        </div>
-        <div class="custom-select-options" id="notificationsSelectOptions">
-            <div class="custom-select-option" data-value="true">Включены</div>
-            <div class="custom-select-option" data-value="false">Отключены</div>
-        </div>
-    </div>
-</div>
+                <label>Язык:</label>
+                <div class="custom-select" id="languageSelectContainer">
+                    <div class="custom-select-selected" onclick="toggleCustomSelect('languageSelect')">
+                        <span class="custom-select-text">🇷🇺 Русский</span>
+                        <span class="custom-select-arrow">▼</span>
+                    </div>
+                    <div class="custom-select-options" id="languageSelectOptions">
+                        <div class="custom-select-option" data-value="ru">🇷🇺 Русский</div>
+                        <div class="custom-select-option" data-value="en">🇬🇧 English</div>
+                        <div class="custom-select-option" data-value="de">🇩🇪 Deutsch</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Настройки - Уведомления -->
+            <div class="setting-item">
+                <label>Уведомления:</label>
+                <div class="custom-select" id="notificationsSelectContainer">
+                    <div class="custom-select-selected" onclick="toggleCustomSelect('notificationsSelect')">
+                        <span class="custom-select-text">Включены</span>
+                        <span class="custom-select-arrow">▼</span>
+                    </div>
+                    <div class="custom-select-options" id="notificationsSelectOptions">
+                        <div class="custom-select-option" data-value="true">Включены</div>
+                        <div class="custom-select-option" data-value="false">Отключены</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="setting-item">
+                <button class="clear-history-btn" onclick="clearSearchHistory()">
                     Очистить историю поиска
                 </button>
             </div>
         </div>
     </div>
 
-    <script src="script.js?v=101"></script>
+    <script src="script.js?v=102"></script>
 </body>
 </html>
-
