@@ -1010,6 +1010,71 @@ if (userId) {
     console.warn('⚠️ User ID not available');
 }
 
+// === CUSTOM DROPDOWN ФУНКЦИИ ===
+
+// Открыть/закрыть dropdown
+window.toggleCustomSelect = function(name) {
+    var container = document.getElementById(name + 'Container');
+    var selected = container.querySelector('.custom-select-selected');
+    var options = document.getElementById(name + 'Options');
+    
+    // Закрыть все остальные dropdowns
+    document.querySelectorAll('.custom-select-options').forEach(function(opt) {
+        if (opt.id !== name + 'Options') {
+            opt.classList.remove('show');
+            opt.previousElementSibling.classList.remove('active');
+        }
+    });
+    
+    // Переключить текущий
+    options.classList.toggle('show');
+    selected.classList.toggle('active');
+};
+
+// Выбрать опцию
+window.selectCustomOption = function(name, value, text) {
+    var container = document.getElementById(name + 'Container');
+    var selected = container.querySelector('.custom-select-selected');
+    var textSpan = selected.querySelector('.custom-select-text');
+    var options = document.getElementById(name + 'Options');
+    
+    // Обновить текст
+    textSpan.textContent = text;
+    
+    // Обновить выделение
+    options.querySelectorAll('.custom-select-option').forEach(function(opt) {
+        opt.classList.remove('selected');
+        if (opt.dataset.value === value) {
+            opt.classList.add('selected');
+        }
+    });
+    
+    // Закрыть dropdown
+    options.classList.remove('show');
+    selected.classList.remove('active');
+    
+    // Вызвать оригинальную функцию изменения
+    if (name === 'discountFilter' || name === 'sortFilter') {
+        // Для фильтров - ничего не делаем, жмём "Применить"
+    } else if (name === 'languageSelect') {
+        changeLanguage(value);
+    } else if (name === 'notificationsSelect') {
+        changeNotifications(value);
+    }
+    
+    console.log('✅ Custom select:', name, '=', value);
+};
+
+// Закрыть dropdowns при клике вне
+document.addEventListener('click', function(e) {
+    if (!e.target.closest('.custom-select')) {
+        document.querySelectorAll('.custom-select-options').forEach(function(opt) {
+            opt.classList.remove('show');
+            opt.previousElementSibling.classList.remove('active');
+        });
+    }
+});
+
 // === ИНИЦИАЛИЗАЦИЯ ===
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', function() {
@@ -1020,3 +1085,62 @@ if (document.readyState === 'loading') {
     tg.expand();
     loadData();
 }
+
+// === ИНИЦИАЛИЗАЦИЯ CUSTOM DROPDOWNS ===
+function initCustomSelects() {
+    // Добавить обработчики на опции
+    ['discountFilter', 'sortFilter', 'languageSelect', 'notificationsSelect'].forEach(function(name) {
+        var options = document.getElementById(name + 'Options');
+        if (options) {
+            options.querySelectorAll('.custom-select-option').forEach(function(opt) {
+                opt.onclick = function() {
+                    selectCustomOption(name, this.dataset.value, this.textContent);
+                };
+            });
+        }
+    });
+    
+    // Установить текущие значения из старых select
+    setTimeout(function() {
+        var discountFilter = document.getElementById('discountFilter');
+        var sortFilter = document.getElementById('sortFilter');
+        var languageSelect = document.getElementById('languageSelect');
+        var notificationsSelect = document.getElementById('notificationsSelect');
+        
+        if (discountFilter) {
+            var container = document.getElementById('discountFilterContainer');
+            if (container) {
+                container.querySelector('.custom-select-text').textContent = discountFilter.options[discountFilter.selectedIndex].text;
+            }
+        }
+        
+        if (sortFilter) {
+            var container = document.getElementById('sortFilterContainer');
+            if (container) {
+                container.querySelector('.custom-select-text').textContent = sortFilter.options[sortFilter.selectedIndex].text;
+            }
+        }
+        
+        if (languageSelect) {
+            var container = document.getElementById('languageSelectContainer');
+            if (container) {
+                container.querySelector('.custom-select-text').textContent = languageSelect.options[languageSelect.selectedIndex].text;
+            }
+        }
+        
+        if (notificationsSelect) {
+            var container = document.getElementById('notificationsSelectContainer');
+            if (container) {
+                container.querySelector('.custom-select-text').textContent = notificationsSelect.options[notificationsSelect.selectedIndex].text;
+            }
+        }
+    }, 100);
+}
+
+// Вызвать после загрузки данных
+var originalLoadData = loadData;
+loadData = function() {
+    originalLoadData().then(function() {
+        initCustomSelects();
+    });
+};
