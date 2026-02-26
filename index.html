@@ -95,28 +95,40 @@
             <!-- Фильтры (скрыты по умолчанию) -->
             <div id="filtersPanel" class="filters-panel hidden">
                 <div class="filter-group">
-                    <label>Мин. скидка:</label>
-                    <select id="discountFilter">
-                        <option value="0">Любая</option>
-                        <option value="500">от 500 ₽</option>
-                        <option value="1000">от 1000 ₽</option>
-                        <option value="3000">от 3000 ₽</option>
-                        <option value="5000">от 5000 ₽</option>
-                    </select>
-                </div>
-                
-                <div class="filter-group">
-                    <label>Сортировка:</label>
-                    <select id="sortFilter">
-                        <option value="popularity">По популярности</option>
-                        <option value="alphabet">По алфавиту</option>
-                        <option value="discount">По размеру скидки</option>
-                        <option value="newest">По дате добавления</option>
-                    </select>
-                </div>
-                
-                <button class="apply-filters-btn" onclick="applyFilters()">Применить</button>
-            </div>
+                   <!-- Фильтр - Мин. скидка -->
+<div class="filter-group">
+    <label>Мин. скидка:</label>
+    <div class="custom-select" id="discountFilterContainer">
+        <div class="custom-select-selected" onclick="toggleCustomSelect('discountFilter')">
+            <span class="custom-select-text">Любая</span>
+            <span class="custom-select-arrow">▼</span>
+        </div>
+        <div class="custom-select-options" id="discountFilterOptions">
+            <div class="custom-select-option" data-value="0">Любая</div>
+            <div class="custom-select-option" data-value="500">от 500 ₽</div>
+            <div class="custom-select-option" data-value="1000">от 1000 ₽</div>
+            <div class="custom-select-option" data-value="3000">от 3000 ₽</div>
+            <div class="custom-select-option" data-value="5000">от 5000 ₽</div>
+        </div>
+    </div>
+</div>
+
+<!-- Фильтр - Сортировка -->
+<div class="filter-group">
+    <label>Сортировка:</label>
+    <div class="custom-select" id="sortFilterContainer">
+        <div class="custom-select-selected" onclick="toggleCustomSelect('sortFilter')">
+            <span class="custom-select-text">По популярности</span>
+            <span class="custom-select-arrow">▼</span>
+        </div>
+        <div class="custom-select-options" id="sortFilterOptions">
+            <div class="custom-select-option" data-value="popularity">По популярности</div>
+            <div class="custom-select-option" data-value="alphabet">По алфавиту</div>
+            <div class="custom-select-option" data-value="discount">По размеру скидки</div>
+            <div class="custom-select-option" data-value="newest">По дате добавления</div>
+        </div>
+    </div>
+</div>
             
             <!-- Недавние поиски -->
             <div id="recentSearches" class="recent-searches hidden"></div>
@@ -186,24 +198,36 @@
             <h3>Настройки</h3>
             
             <div class="setting-item">
-                <label>Язык:</label>
-                <select id="languageSelect" onchange="changeLanguage(this.value)">
-                    <option value="ru">🇷🇺 Русский</option>
-                    <option value="en">🇬🇧 English</option>
-                    <option value="de">🇩🇪 Deutsch</option>
-                </select>
-            </div>
-            
-            <div class="setting-item">
-                <label>Уведомления:</label>
-                <select id="notificationsSelect" onchange="changeNotifications(this.value)">
-                    <option value="true">Включены</option>
-                    <option value="false">Отключены</option>
-                </select>
-            </div>
-            
-            <div class="setting-item">
-                <button class="clear-history-btn" onclick="clearSearchHistory()">
+              <!-- Настройки - Язык -->
+<div class="setting-item">
+    <label>Язык:</label>
+    <div class="custom-select" id="languageSelectContainer">
+        <div class="custom-select-selected" onclick="toggleCustomSelect('languageSelect')">
+            <span class="custom-select-text">🇷🇺 Русский</span>
+            <span class="custom-select-arrow">▼</span>
+        </div>
+        <div class="custom-select-options" id="languageSelectOptions">
+            <div class="custom-select-option" data-value="ru">🇷🇺 Русский</div>
+            <div class="custom-select-option" data-value="en">🇬🇧 English</div>
+            <div class="custom-select-option" data-value="de">🇩🇪 Deutsch</div>
+        </div>
+    </div>
+</div>
+
+<!-- Настройки - Уведомления -->
+<div class="setting-item">
+    <label>Уведомления:</label>
+    <div class="custom-select" id="notificationsSelectContainer">
+        <div class="custom-select-selected" onclick="toggleCustomSelect('notificationsSelect')">
+            <span class="custom-select-text">Включены</span>
+            <span class="custom-select-arrow">▼</span>
+        </div>
+        <div class="custom-select-options" id="notificationsSelectOptions">
+            <div class="custom-select-option" data-value="true">Включены</div>
+            <div class="custom-select-option" data-value="false">Отключены</div>
+        </div>
+    </div>
+</div>
                     Очистить историю поиска
                 </button>
             </div>
@@ -213,3 +237,4 @@
     <script src="script.js?v=101"></script>
 </body>
 </html>
+
