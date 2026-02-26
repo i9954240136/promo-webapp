@@ -1008,6 +1008,7 @@ body::after {
     position: relative;
     width: 100%;
     font-size: 15px;
+    z-index: 1000;
 }
 
 .custom-select-selected {
@@ -1057,7 +1058,7 @@ body::after {
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 16px;
     padding: 8px;
-    z-index: 99999 !important;  /* ← БЫЛО: 1000 */
+    z-index: 99999 !important;
     display: none;
     max-height: 250px;
     overflow-y: auto;
@@ -1110,5 +1111,3 @@ body::after {
 #notificationsSelect {
     display: none !important;
 }
-
-
