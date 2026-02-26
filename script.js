@@ -1016,21 +1016,20 @@ if (userId) {
 window.toggleCustomSelect = function(name) {
     console.log('🔽 toggleCustomSelect:', name);
     
-    var container = document.getElementById(name + 'Container');
-    var selected = container.querySelector('.custom-select-selected');
-    var options = document.getElementById(name + 'Options');
-    
-    // Проверить, открыт ли уже этот dropdown
-    var isOpen = options.classList.contains('show');
-    
-    // ЗАКРЫТЬ ВСЕ dropdowns
+    // ЗАКРЫТЬ ВСЕ dropdowns сначала
     document.querySelectorAll('.custom-select-options').forEach(function(opt) {
         opt.classList.remove('show');
-        opt.previousElementSibling.classList.remove('active');
+    });
+    document.querySelectorAll('.custom-select-selected').forEach(function(sel) {
+        sel.classList.remove('active');
     });
     
-    // Если был закрыт - открыть текущий
-    if (!isOpen) {
+    // Открыть текущий
+    var options = document.getElementById(name + 'Options');
+    var container = document.getElementById(name + 'Container');
+    var selected = container.querySelector('.custom-select-selected');
+    
+    if (options && selected) {
         options.classList.add('show');
         selected.classList.add('active');
     }
@@ -1062,15 +1061,13 @@ window.selectCustomOption = function(name, value, text) {
     options.classList.remove('show');
     selected.classList.remove('active');
     
-    // Вызвать оригинальную функцию изменения
-    if (name === 'discountFilter' || name === 'sortFilter') {
-        // Для фильтров - ничего не делаем, жмём "Применить"
-        console.log('📋 Фильтр изменён, ждём Применить');
-    } else if (name === 'languageSelect') {
+    // Вызвать функцию изменения
+    if (name === 'languageSelect') {
         changeLanguage(value);
     } else if (name === 'notificationsSelect') {
         changeNotifications(value);
     }
+    // Для фильтров - ждём кнопку "Применить"
 };
 
 // Закрыть dropdowns при клике вне
@@ -1078,17 +1075,11 @@ document.addEventListener('click', function(e) {
     if (!e.target.closest('.custom-select')) {
         document.querySelectorAll('.custom-select-options').forEach(function(opt) {
             opt.classList.remove('show');
-            opt.previousElementSibling.classList.remove('active');
+        });
+        document.querySelectorAll('.custom-select-selected').forEach(function(sel) {
+            sel.classList.remove('active');
         });
     }
-});
-
-// Закрыть dropdowns при скролле
-window.addEventListener('scroll', function() {
-    document.querySelectorAll('.custom-select-options').forEach(function(opt) {
-        opt.classList.remove('show');
-        opt.previousElementSibling.classList.remove('active');
-    });
 });
 
 // === ИНИЦИАЛИЗАЦИЯ ===
@@ -1160,4 +1151,5 @@ loadData = function() {
         initCustomSelects();
     });
 };
+
 
