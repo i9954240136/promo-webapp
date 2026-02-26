@@ -135,6 +135,57 @@ body::after {
     background: rgba(255, 255, 255, 0.1);
 }
 
+/* === КНОПКИ ФИЛЬТРОВ (НОВЫЕ) === */
+.filter-select-btn {
+    width: 100%;
+    padding: 14px 18px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s ease;
+}
+
+.filter-select-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(0, 180, 219, 0.3);
+}
+
+.filter-option {
+    padding: 15px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 15px;
+    color: #ffffff;
+}
+
+.filter-option:hover {
+    background: rgba(0, 180, 219, 0.2);
+}
+
+.filter-option:last-child {
+    border-bottom: none;
+}
+
+.filter-modal-content {
+    max-width: 400px;
+    padding: 20px;
+}
+
+.filter-modal-content h3 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #ffffff;
+}
+
 .category-select-container {
     margin-bottom: 15px;
 }
@@ -956,133 +1007,4 @@ body::after {
     .tab-btn { font-size: 14px; padding: 12px 15px; }
     .action-btn { font-size: 14px; padding: 12px 15px; }
     .favorite-toggle { width: 32px; height: 32px; font-size: 16px; }
-}
-
-/* === CUSTOM DROPDOWN (FIXED POSITION) === */
-
-.custom-select {
-    position: relative;
-    width: 100%;
-    font-size: 15px;
-}
-
-.custom-select-selected {
-    padding: 14px 18px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 16px;
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(10px);
-    color: #ffffff;
-    font-size: 15px;
-    font-weight: 600;
-    cursor: pointer;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    transition: all 0.3s ease;
-    user-select: none;
-    position: relative;
-}
-
-.custom-select-selected:hover {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: rgba(0, 180, 219, 0.3);
-}
-
-.custom-select-selected.active {
-    border-color: rgba(0, 180, 219, 0.5);
-    background: rgba(255, 255, 255, 0.1);
-}
-
-.custom-select-arrow {
-    font-size: 12px;
-    transition: transform 0.3s ease;
-    color: rgba(255, 255, 255, 0.7);
-    pointer-events: none;
-}
-
-.custom-select-selected.active .custom-select-arrow {
-    transform: rotate(180deg);
-}
-
-/* Dropdown options - FIXED POSITION */
-#discountFilterOptions,
-#sortFilterOptions,
-#languageSelectOptions,
-#notificationsSelectOptions {
-    position: fixed !important;
-    width: auto !important;
-    min-width: 200px;
-    background: rgba(10, 15, 20, 0.98);
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 16px;
-    padding: 8px;
-    z-index: 999999 !important;
-    display: none;
-    max-height: 250px;
-    overflow-y: auto;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-    left: 0 !important;
-    right: auto !important;
-    margin: 0 !important;
-    top: 0 !important;
-}
-
-#discountFilterOptions.show,
-#sortFilterOptions.show,
-#languageSelectOptions.show,
-#notificationsSelectOptions.show {
-    display: block;
-    animation: slideDown 0.2s ease;
-}
-
-.custom-select-option {
-    padding: 12px 15px;
-    color: #ffffff;
-    font-size: 14px;
-    cursor: pointer;
-    border-radius: 10px;
-    transition: all 0.2s ease;
-    user-select: none;
-    display: block;
-}
-
-.custom-select-option:hover {
-    background: rgba(0, 180, 219, 0.2);
-}
-
-.custom-select-option.selected {
-    background: linear-gradient(135deg, #00b4db, #11998e);
-}
-
-#discountFilterOptions::-webkit-scrollbar,
-#sortFilterOptions::-webkit-scrollbar,
-#languageSelectOptions::-webkit-scrollbar,
-#notificationsSelectOptions::-webkit-scrollbar {
-    width: 6px;
-}
-
-#discountFilterOptions::-webkit-scrollbar-track,
-#sortFilterOptions::-webkit-scrollbar-track,
-#languageSelectOptions::-webkit-scrollbar-track,
-#notificationsSelectOptions::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 10px;
-}
-
-#discountFilterOptions::-webkit-scrollbar-thumb,
-#sortFilterOptions::-webkit-scrollbar-thumb,
-#languageSelectOptions::-webkit-scrollbar-thumb,
-#notificationsSelectOptions::-webkit-scrollbar-thumb {
-    background: linear-gradient(135deg, #00b4db, #11998e);
-    border-radius: 10px;
-}
-
-/* Скрываем старые select */
-#discountFilter,
-#sortFilter,
-#languageSelect,
-#notificationsSelect {
-    display: none !important;
 }
