@@ -39,6 +39,17 @@ body::after {
     left: -50px;
 }
 
+/* Разрешить overflow для dropdowns */
+.filter-group {
+    overflow: visible !important;
+    position: relative;
+}
+
+.setting-item {
+    overflow: visible !important;
+    position: relative;
+}
+
 .container {
     max-width: 600px;
     margin: 0 auto;
@@ -1003,7 +1014,9 @@ body::after {
     .favorite-toggle { width: 32px; height: 32px; font-size: 16px; }
 }
 
-/* === CUSTOM DROPDOWN (ПОЛНАЯ ПЕРЕЗАПИСЬ) === */
+/* === CUSTOM DROPDOWN (ФИНАЛЬНАЯ ВЕРСИЯ) === */
+
+/* Контейнер dropdown */
 .custom-select {
     position: relative;
     width: 100%;
@@ -1011,6 +1024,7 @@ body::after {
     z-index: 100;
 }
 
+/* Кнопка dropdown */
 .custom-select-selected {
     padding: 14px 18px;
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -1051,7 +1065,8 @@ body::after {
     transform: rotate(180deg);
 }
 
-.custom-select-options {
+/* Выпадающий список - РАЗНЫЕ Z-INDEX */
+#discountFilterOptions {
     position: absolute;
     top: 100%;
     left: 0;
@@ -1062,18 +1077,77 @@ body::after {
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 16px;
     padding: 8px;
-    z-index: 9999;
+    z-index: 99999 !important;
     display: none;
     max-height: 250px;
     overflow-y: auto;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
 }
 
-.custom-select-options.show {
+#sortFilterOptions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    margin-top: 5px;
+    background: rgba(10, 15, 20, 0.98);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 8px;
+    z-index: 99998 !important;
+    display: none;
+    max-height: 250px;
+    overflow-y: auto;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+}
+
+#languageSelectOptions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    margin-top: 5px;
+    background: rgba(10, 15, 20, 0.98);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 8px;
+    z-index: 99997 !important;
+    display: none;
+    max-height: 250px;
+    overflow-y: auto;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+}
+
+#notificationsSelectOptions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    margin-top: 5px;
+    background: rgba(10, 15, 20, 0.98);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 8px;
+    z-index: 99996 !important;
+    display: none;
+    max-height: 250px;
+    overflow-y: auto;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+}
+
+/* Показываем активный dropdown */
+#discountFilterOptions.show,
+#sortFilterOptions.show,
+#languageSelectOptions.show,
+#notificationsSelectOptions.show {
     display: block;
     animation: slideDown 0.2s ease;
 }
 
+/* Опции */
 .custom-select-option {
     padding: 12px 15px;
     color: #ffffff;
@@ -1093,16 +1167,26 @@ body::after {
     background: linear-gradient(135deg, #00b4db, #11998e);
 }
 
-.custom-select-options::-webkit-scrollbar {
+/* Скроллбар */
+#discountFilterOptions::-webkit-scrollbar,
+#sortFilterOptions::-webkit-scrollbar,
+#languageSelectOptions::-webkit-scrollbar,
+#notificationsSelectOptions::-webkit-scrollbar {
     width: 6px;
 }
 
-.custom-select-options::-webkit-scrollbar-track {
+#discountFilterOptions::-webkit-scrollbar-track,
+#sortFilterOptions::-webkit-scrollbar-track,
+#languageSelectOptions::-webkit-scrollbar-track,
+#notificationsSelectOptions::-webkit-scrollbar-track {
     background: rgba(255, 255, 255, 0.05);
     border-radius: 10px;
 }
 
-.custom-select-options::-webkit-scrollbar-thumb {
+#discountFilterOptions::-webkit-scrollbar-thumb,
+#sortFilterOptions::-webkit-scrollbar-thumb,
+#languageSelectOptions::-webkit-scrollbar-thumb,
+#notificationsSelectOptions::-webkit-scrollbar-thumb {
     background: linear-gradient(135deg, #00b4db, #11998e);
     border-radius: 10px;
 }
@@ -1113,4 +1197,13 @@ body::after {
 #languageSelect,
 #notificationsSelect {
     display: none !important;
+}
+
+/* Убираем overflow у родительских контейнеров */
+.filters-panel {
+    overflow: visible !important;
+}
+
+.setting-item {
+    overflow: visible !important;
 }
