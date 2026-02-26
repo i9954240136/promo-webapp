@@ -13,7 +13,7 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.0/dist/JsBarcode.all.min.js"></script>
-    <link rel="stylesheet" href="style.css?v=103">
+    <link rel="stylesheet" href="style.css?v=104">
 </head>
 <body>
     <div class="container">
@@ -53,36 +53,21 @@
                 <!-- Фильтр - Мин. скидка -->
                 <div class="filter-group">
                     <label>Мин. скидка:</label>
-                    <div class="custom-select" id="discountFilterContainer">
-                        <div class="custom-select-selected" onclick="toggleCustomSelect(event, 'discountFilter')">
-                            <span class="custom-select-text">Любая</span>
-                            <span class="custom-select-arrow">▼</span>
-                        </div>
-                        <div class="custom-select-options" id="discountFilterOptions">
-                            <div class="custom-select-option" data-value="0">Любая</div>
-                            <div class="custom-select-option" data-value="500">от 500 ₽</div>
-                            <div class="custom-select-option" data-value="1000">от 1000 ₽</div>
-                            <div class="custom-select-option" data-value="3000">от 3000 ₽</div>
-                            <div class="custom-select-option" data-value="5000">от 5000 ₽</div>
-                        </div>
-                    </div>
+                    <button class="filter-select-btn" onclick="openFilterModal('discount')">
+                        <span id="discountText">Любая</span>
+                        <span class="dropdown-arrow">▼</span>
+                    </button>
+                    <input type="hidden" id="discountFilter" value="0">
                 </div>
                 
                 <!-- Фильтр - Сортировка -->
                 <div class="filter-group">
                     <label>Сортировка:</label>
-                    <div class="custom-select" id="sortFilterContainer">
-                        <div class="custom-select-selected" onclick="toggleCustomSelect(event, 'sortFilter')">
-                            <span class="custom-select-text">По популярности</span>
-                            <span class="custom-select-arrow">▼</span>
-                        </div>
-                        <div class="custom-select-options" id="sortFilterOptions">
-                            <div class="custom-select-option" data-value="popularity">По популярности</div>
-                            <div class="custom-select-option" data-value="alphabet">По алфавиту</div>
-                            <div class="custom-select-option" data-value="discount">По размеру скидки</div>
-                            <div class="custom-select-option" data-value="newest">По дате добавления</div>
-                        </div>
-                    </div>
+                    <button class="filter-select-btn" onclick="openFilterModal('sort')">
+                        <span id="sortText">По популярности</span>
+                        <span class="dropdown-arrow">▼</span>
+                    </button>
+                    <input type="hidden" id="sortFilter" value="popularity">
                 </div>
                 
                 <button class="apply-filters-btn" onclick="applyFilters()">Применить</button>
@@ -115,6 +100,31 @@
                 <!-- Категории будут добавлены через JS -->
             </div>
             <button class="apply-filters-btn" onclick="applyCategorySelection()">Применить</button>
+        </div>
+    </div>
+
+    <!-- Модалка - Мин. скидка -->
+    <div id="discountModal" class="modal hidden">
+        <div class="modal-content filter-modal-content">
+            <span class="close" onclick="closeFilterModal('discount')">&times;</span>
+            <h3>Мин. скидка</h3>
+            <div class="filter-option" onclick="selectFilter('discount', '0', 'Любая')">Любая</div>
+            <div class="filter-option" onclick="selectFilter('discount', '500', 'от 500 ₽')">от 500 ₽</div>
+            <div class="filter-option" onclick="selectFilter('discount', '1000', 'от 1000 ₽')">от 1000 ₽</div>
+            <div class="filter-option" onclick="selectFilter('discount', '3000', 'от 3000 ₽')">от 3000 ₽</div>
+            <div class="filter-option" onclick="selectFilter('discount', '5000', 'от 5000 ₽')">от 5000 ₽</div>
+        </div>
+    </div>
+
+    <!-- Модалка - Сортировка -->
+    <div id="sortModal" class="modal hidden">
+        <div class="modal-content filter-modal-content">
+            <span class="close" onclick="closeFilterModal('sort')">&times;</span>
+            <h3>Сортировка</h3>
+            <div class="filter-option" onclick="selectFilter('sort', 'popularity', 'По популярности')">По популярности</div>
+            <div class="filter-option" onclick="selectFilter('sort', 'alphabet', 'По алфавиту')">По алфавиту</div>
+            <div class="filter-option" onclick="selectFilter('sort', 'discount', 'По размеру скидки')">По размеру скидки</div>
+            <div class="filter-option" onclick="selectFilter('sort', 'newest', 'По дате добавления')">По дате добавления</div>
         </div>
     </div>
 
@@ -160,32 +170,21 @@
             <!-- Настройки - Язык -->
             <div class="setting-item">
                 <label>Язык:</label>
-                <div class="custom-select" id="languageSelectContainer">
-                    <div class="custom-select-selected" onclick="toggleCustomSelect(event, 'languageSelect')">
-                        <span class="custom-select-text">🇷🇺 Русский</span>
-                        <span class="custom-select-arrow">▼</span>
-                    </div>
-                    <div class="custom-select-options" id="languageSelectOptions">
-                        <div class="custom-select-option" data-value="ru">🇷🇺 Русский</div>
-                        <div class="custom-select-option" data-value="en">🇬🇧 English</div>
-                        <div class="custom-select-option" data-value="de">🇩🇪 Deutsch</div>
-                    </div>
-                </div>
+                <button class="filter-select-btn" onclick="openFilterModal('language')">
+                    <span id="languageText">🇷🇺 Русский</span>
+                    <span class="dropdown-arrow">▼</span>
+                </button>
+                <input type="hidden" id="languageSelect" value="ru">
             </div>
             
             <!-- Настройки - Уведомления -->
             <div class="setting-item">
                 <label>Уведомления:</label>
-                <div class="custom-select" id="notificationsSelectContainer">
-                    <div class="custom-select-selected" onclick="toggleCustomSelect(event, 'notificationsSelect')">
-                        <span class="custom-select-text">Включены</span>
-                        <span class="custom-select-arrow">▼</span>
-                    </div>
-                    <div class="custom-select-options" id="notificationsSelectOptions">
-                        <div class="custom-select-option" data-value="true">Включены</div>
-                        <div class="custom-select-option" data-value="false">Отключены</div>
-                    </div>
-                </div>
+                <button class="filter-select-btn" onclick="openFilterModal('notifications')">
+                    <span id="notificationsText">Включены</span>
+                    <span class="dropdown-arrow">▼</span>
+                </button>
+                <input type="hidden" id="notificationsSelect" value="true">
             </div>
             
             <div class="setting-item">
@@ -196,6 +195,27 @@
         </div>
     </div>
 
-    <script src="script.js?v=103"></script>
+    <!-- Модалка - Язык -->
+    <div id="languageModal" class="modal hidden">
+        <div class="modal-content filter-modal-content">
+            <span class="close" onclick="closeFilterModal('language')">&times;</span>
+            <h3>Язык</h3>
+            <div class="filter-option" onclick="selectFilter('language', 'ru', '🇷🇺 Русский')">🇷🇺 Русский</div>
+            <div class="filter-option" onclick="selectFilter('language', 'en', '🇬🇧 English')">🇬🇧 English</div>
+            <div class="filter-option" onclick="selectFilter('language', 'de', '🇩🇪 Deutsch')">🇩🇪 Deutsch</div>
+        </div>
+    </div>
+
+    <!-- Модалка - Уведомления -->
+    <div id="notificationsModal" class="modal hidden">
+        <div class="modal-content filter-modal-content">
+            <span class="close" onclick="closeFilterModal('notifications')">&times;</span>
+            <h3>Уведомления</h3>
+            <div class="filter-option" onclick="selectFilter('notifications', 'true', 'Включены')">Включены</div>
+            <div class="filter-option" onclick="selectFilter('notifications', 'false', 'Отключены')">Отключены</div>
+        </div>
+    </div>
+
+    <script src="script.js?v=104"></script>
 </body>
 </html>
