@@ -289,8 +289,6 @@ async function loadUserFavorites() {
         }
         
         var stored = localStorage.getItem('userFavorites');
-        console.log('🔍 localStorage userFavorites:', stored);
-        
         if (stored && stored !== 'null') {
             userFavorites = JSON.parse(stored);
             console.log('✅ Избранное загружено:', userFavorites.length, 'оферов');
@@ -469,61 +467,40 @@ window.switchTab = function(tabName) {
     trackAction('tab_switched', { tab: tabName });
 };
 
-// === ОТРИСОВКА ИЗБРАННОГО (ИСПРАВЛЕНО) ===
+// === ОТРИСОВКА ИЗБРАННОГО ===
 function renderFavorites() {
     var container = document.getElementById('offersContainer');
     var emptyState = document.getElementById('emptyFavorites');
     if (!container) return;
     
-    console.log('📋 renderFavorites вызвана');
-    console.log('📋 userFavorites:', userFavorites);
-    console.log('📋 allOffers.length:', allOffers.length);
-    
     if (userFavorites.length === 0) {
         container.innerHTML = '';
-        container.classList.add('hidden');
         if (emptyState) emptyState.classList.remove('hidden');
-        console.log('⚠️ userFavorites пустой');
         return;
     }
     
     if (emptyState) emptyState.classList.add('hidden');
-    container.classList.remove('hidden');  // ← ПОКАЗАТЬ КОНТЕЙНЕР!
+    container.classList.remove('hidden');
     container.innerHTML = '';
     
     var favoriteOfferIds = userFavorites.map(function(f) { return f.offer_id; });
-    console.log('📋 favoriteOfferIds:', favoriteOfferIds);
-    
     var favoriteOffers = allOffers.filter(function(o) {
         return favoriteOfferIds.indexOf(o.id) !== -1;
     });
     
-    console.log('📋 favoriteOffers найдено:', favoriteOffers.length);
-    console.log('📋 favoriteOffers:', favoriteOffers);
-    
     if (favoriteOffers.length === 0) {
         container.classList.add('hidden');
         if (emptyState) emptyState.classList.remove('hidden');
-        console.log('⚠️ Не найдено оферов с такими ID');
         return;
     }
     
-    favoriteOffers.forEach(function(offer, idx) {
-        console.log('📋 Обработка офера #' + idx + ':', offer.id, offer.brand_name);
-        
+    favoriteOffers.forEach(function(offer) {
         var offerCodes = allPromoCodes.filter(function(c) { return c.offer_id === offer.id; });
-        console.log('📋 offerCodes:', offerCodes.length);
-        
         var activeCodes = offerCodes.filter(function(c) {
             return !c.expires_at || new Date(c.expires_at) > new Date();
         });
         
-        console.log('📋 activeCodes:', activeCodes.length);
-        
-        if (activeCodes.length === 0) {
-            console.log('⚠️ Нет активных кодов для офера', offer.id);
-            return;
-        }
+        if (activeCodes.length === 0) return;
         
         var card = document.createElement('div');
         card.className = 'offer-card';
@@ -532,7 +509,6 @@ function renderFavorites() {
             if (!e.target.classList.contains('favorite-toggle')) openModal(offer, activeCodes);
         };
         container.appendChild(card);
-        console.log('✅ Карточка добавлена:', offer.brand_name);
     });
 }
 
@@ -690,43 +666,146 @@ window.applyFilters = function() {
     trackAction('filters_applied', { discount: minDiscount, sort: sortBy });
 };
 
+// === CUSTOM DROPDOWN ФУНКЦИИ ===
+var currentOpenDropdown = null;
+
+window.toggleCustomSelect = function(event, name) {
+    if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+    }
+    
+    var options = document.getElementById(name + 'Options');
+    var container = document.getElementById(name + 'Container');
+    var selected = container ? container.querySelector('.custom-select-selected') : null;
+    
+    if (!options || !selected) return;
+    
+    if (currentOpenDropdown === name) {
+        options.classList.remove('show');
+        options.style.top = '';
+        options.style.left = '';
+        options.style.width = '';
+        selected.classList.remove('active');
+        currentOpenDropdown = null;
+        return;
+    }
+    
+    document.querySelectorAll('.custom-select-options').forEach(function(opt) {
+        opt.classList.remove('show');
+        opt.style.top = '';
+        opt.style.left = '';
+        opt.style.width = '';
+    });
+    document.querySelectorAll('.custom-select-selected').forEach(function(sel) {
+        sel.classList.remove('active');
+    });
+    
+    var rect = selected.getBoundingClientRect();
+    var topPosition = rect.bottom + 5;
+    var leftPosition = rect.left;
+    var width = rect.width;
+    
+    var optionsHeight = 250;
+    var spaceBelow = window.innerHeight - rect.bottom;
+    
+    if (spaceBelow < optionsHeight) {
+        topPosition = rect.top - optionsHeight - 5;
+    }
+    
+    options.style.top = topPosition + 'px';
+    options.style.left = leftPosition + 'px';
+    options.style.width = width + 'px';
+    
+    options.classList.add('show');
+    selected.classList.add('active');
+    currentOpenDropdown = name;
+};
+
+window.selectCustomOption = function(name, value, text) {
+    var container = document.getElementById(name + 'Container');
+    var selected = container ? container.querySelector('.custom-select-selected') : null;
+    var textSpan = selected ? selected.querySelector('.custom-select-text') : null;
+    var options = document.getElementById(name + 'Options');
+    
+    if (!selected || !textSpan || !options) return;
+    
+    textSpan.textContent = text;
+    
+    options.querySelectorAll('.custom-select-option').forEach(function(opt) {
+        opt.classList.remove('selected');
+        if (opt.dataset.value === value) {
+            opt.classList.add('selected');
+        }
+    });
+    
+    options.classList.remove('show');
+    options.style.top = '';
+    options.style.left = '';
+    options.style.width = '';
+    selected.classList.remove('active');
+    currentOpenDropdown = null;
+    
+    if (name === 'languageSelect') {
+        changeLanguage(value);
+    } else if (name === 'notificationsSelect') {
+        changeNotifications(value);
+    }
+};
+
+document.addEventListener('click', function(e) {
+    if (!e.target.closest('.custom-select')) {
+        document.querySelectorAll('.custom-select-options').forEach(function(opt) {
+            opt.classList.remove('show');
+            opt.style.top = '';
+            opt.style.left = '';
+            opt.style.width = '';
+        });
+        document.querySelectorAll('.custom-select-selected').forEach(function(sel) {
+            sel.classList.remove('active');
+        });
+        currentOpenDropdown = null;
+    }
+});
+
+window.addEventListener('scroll', function() {
+    document.querySelectorAll('.custom-select-options').forEach(function(opt) {
+        opt.classList.remove('show');
+        opt.style.top = '';
+        opt.style.left = '';
+        opt.style.width = '';
+    });
+    document.querySelectorAll('.custom-select-selected').forEach(function(sel) {
+        sel.classList.remove('active');
+    });
+    currentOpenDropdown = null;
+}, true);
+
 // === ИЗБРАННОЕ: ДОБАВИТЬ/УДАЛИТЬ ===
 window.toggleFavorite = function(event, offerId) {
     event.stopPropagation();
-    
-    console.log('⭐ toggleFavorite вызвана, offerId:', offerId);
-    console.log('⭐ userFavorites до:', userFavorites);
     
     var isFavorite = userFavorites.some(function(f) { return f.offer_id === offerId; });
     
     if (isFavorite) {
         userFavorites = userFavorites.filter(function(f) { return f.offer_id !== offerId; });
-        console.log('⭐ Удалено из избранного:', offerId);
         showCustomNotification('⭐', 'Удалено из избранного');
     } else {
         userFavorites.push({ user_id: userId, offer_id: offerId });
-        console.log('⭐ Добавлено в избранное:', offerId);
         showCustomNotification('⭐', 'Добавлено в избранное');
     }
-    
-    console.log('⭐ userFavorites после:', userFavorites);
     
     try {
         if (typeof localStorage !== 'undefined') {
             localStorage.setItem('userFavorites', JSON.stringify(userFavorites));
-            console.log('💾 Сохранено в localStorage');
-            var check = localStorage.getItem('userFavorites');
-            console.log('💾 Проверка localStorage:', check);
         }
     } catch (error) {
         console.error('❌ Ошибка сохранения:', error);
     }
     
     if (currentTab === 'favorites') {
-        console.log('🔄 Вызов renderFavorites()');
         renderFavorites();
     } else {
-        console.log('🔄 Вызов filterOffers()');
         filterOffers();
     }
     
@@ -1010,146 +1089,6 @@ if (userId) {
     console.warn('⚠️ User ID not available');
 }
 
-// Глобальная переменная
-var currentOpenDropdown = null;
-
-// Открыть/закрыть dropdown
-window.toggleCustomSelect = function(event, name) {
-    if (event) {
-        event.preventDefault();
-        event.stopPropagation();
-    }
-    
-    console.log('🔽 toggleCustomSelect:', name);
-    
-    var options = document.getElementById(name + 'Options');
-    var container = document.getElementById(name + 'Container');
-    var selected = container ? container.querySelector('.custom-select-selected') : null;
-    
-    if (!options || !selected) {
-        console.error('❌ Элементы не найдены:', name);
-        return;
-    }
-    
-    // Если этот dropdown уже открыт - закрыть
-    if (currentOpenDropdown === name) {
-        options.classList.remove('show');
-        options.style.top = '';
-        options.style.left = '';
-        options.style.width = '';
-        selected.classList.remove('active');
-        currentOpenDropdown = null;
-        console.log('🔼 Закрыт:', name);
-        return;
-    }
-    
-    // Закрыть ВСЕ dropdowns
-    document.querySelectorAll('.custom-select-options').forEach(function(opt) {
-        opt.classList.remove('show');
-        opt.style.top = '';
-        opt.style.left = '';
-        opt.style.width = '';
-    });
-    document.querySelectorAll('.custom-select-selected').forEach(function(sel) {
-        sel.classList.remove('active');
-    });
-    
-    // Вычислить позицию с учётом прокрутки
-    var rect = selected.getBoundingClientRect();
-    var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-    var scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
-    
-    var topPosition = rect.bottom + scrollTop + 5;  // +5px отступ
-    var leftPosition = rect.left + scrollLeft;
-    var width = rect.width;
-    
-    // Проверить, не выходит ли за пределы экрана внизу
-    var optionsHeight = 250;  // max-height dropdown
-    var windowHeight = window.innerHeight;
-    var spaceBelow = windowHeight - rect.bottom;
-    
-    // Если места снизу мало - открыть вверх
-    if (spaceBelow < optionsHeight) {
-        topPosition = rect.top + scrollTop - optionsHeight - 5;
-    }
-    
-    // Установить позицию и ширину
-    options.style.top = topPosition + 'px';
-    options.style.left = leftPosition + 'px';
-    options.style.width = width + 'px';
-    
-    // Открыть текущий
-    options.classList.add('show');
-    selected.classList.add('active');
-    currentOpenDropdown = name;
-    
-    console.log('✅ Открыт:', name, 'top:', topPosition, 'left:', leftPosition);
-};
-
-// Выбрать опцию
-window.selectCustomOption = function(name, value, text) {
-    console.log('✅ selectCustomOption:', name, '=', value);
-    
-    var container = document.getElementById(name + 'Container');
-    var selected = container ? container.querySelector('.custom-select-selected') : null;
-    var textSpan = selected ? selected.querySelector('.custom-select-text') : null;
-    var options = document.getElementById(name + 'Options');
-    
-    if (!selected || !textSpan || !options) return;
-    
-    textSpan.textContent = text;
-    
-    options.querySelectorAll('.custom-select-option').forEach(function(opt) {
-        opt.classList.remove('selected');
-        if (opt.dataset.value === value) {
-            opt.classList.add('selected');
-        }
-    });
-    
-    options.classList.remove('show');
-    options.style.top = '';
-    options.style.left = '';
-    options.style.width = '';
-    selected.classList.remove('active');
-    currentOpenDropdown = null;
-    
-    if (name === 'languageSelect') {
-        changeLanguage(value);
-    } else if (name === 'notificationsSelect') {
-        changeNotifications(value);
-    }
-};
-
-// Закрыть при клике вне
-document.addEventListener('click', function(e) {
-    if (!e.target.closest('.custom-select')) {
-        document.querySelectorAll('.custom-select-options').forEach(function(opt) {
-            opt.classList.remove('show');
-            opt.style.top = '';
-            opt.style.left = '';
-            opt.style.width = '';
-        });
-        document.querySelectorAll('.custom-select-selected').forEach(function(sel) {
-            sel.classList.remove('active');
-        });
-        currentOpenDropdown = null;
-    }
-});
-
-// Закрыть при скролле
-window.addEventListener('scroll', function() {
-    document.querySelectorAll('.custom-select-options').forEach(function(opt) {
-        opt.classList.remove('show');
-        opt.style.top = '';
-        opt.style.left = '';
-        opt.style.width = '';
-    });
-    document.querySelectorAll('.custom-select-selected').forEach(function(sel) {
-        sel.classList.remove('active');
-    });
-    currentOpenDropdown = null;
-}, true);
-
 // === ИНИЦИАЛИЗАЦИЯ ===
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', function() {
@@ -1160,69 +1099,3 @@ if (document.readyState === 'loading') {
     tg.expand();
     loadData();
 }
-
-// === ИНИЦИАЛИЗАЦИЯ CUSTOM DROPDOWNS ===
-function initCustomSelects() {
-    // Добавить обработчики на опции
-    ['discountFilter', 'sortFilter', 'languageSelect', 'notificationsSelect'].forEach(function(name) {
-        var options = document.getElementById(name + 'Options');
-        if (options) {
-            options.querySelectorAll('.custom-select-option').forEach(function(opt) {
-                opt.onclick = function() {
-                    selectCustomOption(name, this.dataset.value, this.textContent);
-                };
-            });
-        }
-    });
-    
-    // Установить текущие значения из старых select
-    setTimeout(function() {
-        var discountFilter = document.getElementById('discountFilter');
-        var sortFilter = document.getElementById('sortFilter');
-        var languageSelect = document.getElementById('languageSelect');
-        var notificationsSelect = document.getElementById('notificationsSelect');
-        
-        if (discountFilter) {
-            var container = document.getElementById('discountFilterContainer');
-            if (container) {
-                container.querySelector('.custom-select-text').textContent = discountFilter.options[discountFilter.selectedIndex].text;
-            }
-        }
-        
-        if (sortFilter) {
-            var container = document.getElementById('sortFilterContainer');
-            if (container) {
-                container.querySelector('.custom-select-text').textContent = sortFilter.options[sortFilter.selectedIndex].text;
-            }
-        }
-        
-        if (languageSelect) {
-            var container = document.getElementById('languageSelectContainer');
-            if (container) {
-                container.querySelector('.custom-select-text').textContent = languageSelect.options[languageSelect.selectedIndex].text;
-            }
-        }
-        
-        if (notificationsSelect) {
-            var container = document.getElementById('notificationsSelectContainer');
-            if (container) {
-                container.querySelector('.custom-select-text').textContent = notificationsSelect.options[notificationsSelect.selectedIndex].text;
-            }
-        }
-    }, 100);
-}
-
-// Вызвать после загрузки данных
-var originalLoadData = loadData;
-loadData = function() {
-    originalLoadData().then(function() {
-        initCustomSelects();
-    });
-};
-
-
-
-
-
-
-
