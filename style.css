@@ -1003,28 +1003,12 @@ body::after {
     .favorite-toggle { width: 32px; height: 32px; font-size: 16px; }
 }
 
-/* === CUSTOM DROPDOWN (ОБНОВЛЁННЫЙ) === */
+/* === CUSTOM DROPDOWN (ИСПРАВЛЕННЫЙ) === */
 .custom-select {
     position: relative;
     width: 100%;
     font-size: 15px;
-}
-
-/* Разные z-index для каждого dropdown */
-#discountFilterContainer {
-    z-index: 1000;
-}
-
-#sortFilterContainer {
-    z-index: 999;
-}
-
-#languageSelectContainer {
-    z-index: 998;
-}
-
-#notificationsSelectContainer {
-    z-index: 997;
+    z-index: 100;
 }
 
 .custom-select-selected {
@@ -1077,7 +1061,7 @@ body::after {
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 16px;
     padding: 8px;
-    z-index: 99999 !important;
+    z-index: 1000;
     display: none;
     max-height: 250px;
     overflow-y: auto;
