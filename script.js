@@ -686,10 +686,16 @@ window.applyFilters = function() {
         
         if (activeCodes.length === 0) return;
         
+        // Проверяем, в избранном ли
+        var isFavorite = userFavorites.some(function(f) { return f.offer_id === offer.id; });
+        
+        // Рендерим карточку СО ЗВЕЗДОЙ (как в filterOffers)
         var card = document.createElement('div');
         card.className = 'offer-card';
-        card.innerHTML = '<div><div class="brand-name">' + offer.brand_name + '</div><div class="brand-desc">' + (offer.description || '') + '</div></div><div>➡️</div>';
-        card.onclick = function() { openModal(offer, activeCodes); };
+        card.innerHTML = '<div><div class="brand-name">' + offer.brand_name + '</div><div class="brand-desc">' + (offer.description || '') + '</div></div><div class="card-actions"><button class="favorite-toggle ' + (isFavorite ? 'active' : '') + '" onclick="toggleFavoriteFromList(event, ' + offer.id + ')">' + (isFavorite ? '★' : '☆') + '</button></div>';
+        card.onclick = function(e) {
+            if (!e.target.classList.contains('favorite-toggle')) openModal(offer, activeCodes);
+        };
         container.appendChild(card);
     });
     
@@ -1015,3 +1021,4 @@ if (document.readyState === 'loading') {
     tg.expand();
     loadData();
 }
+
