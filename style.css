@@ -954,13 +954,13 @@ body::after {
     .favorite-toggle { width: 32px; height: 32px; font-size: 16px; }
 }
 
-/* === CUSTOM DROPDOWN (ФИНАЛЬНАЯ ВЕРСИЯ) === */
+/* === CUSTOM DROPDOWN (FIXED POSITION) === */
 
 .custom-select {
     position: relative;
     width: 100%;
     font-size: 15px;
-    z-index: 100;
+    /* УБРАЛИ z-index - создаёт stacking context! */
 }
 
 .custom-select-selected {
@@ -979,7 +979,6 @@ body::after {
     transition: all 0.3s ease;
     user-select: none;
     position: relative;
-    z-index: 10;
 }
 
 .custom-select-selected:hover {
@@ -1003,79 +1002,30 @@ body::after {
     transform: rotate(180deg);
 }
 
-/* Выпадающий список - РАЗНЫЕ Z-INDEX */
-#discountFilterOptions {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    margin-top: 5px;
-    background: rgba(10, 15, 20, 0.98);
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 16px;
-    padding: 8px;
-    z-index: 99999 !important;
-    display: none;
-    max-height: 250px;
-    overflow-y: auto;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-}
-
-#sortFilterOptions {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    margin-top: 5px;
-    background: rgba(10, 15, 20, 0.98);
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 16px;
-    padding: 8px;
-    z-index: 99998 !important;
-    display: none;
-    max-height: 250px;
-    overflow-y: auto;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-}
-
-#languageSelectOptions {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    margin-top: 5px;
-    background: rgba(10, 15, 20, 0.98);
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 16px;
-    padding: 8px;
-    z-index: 99997 !important;
-    display: none;
-    max-height: 250px;
-    overflow-y: auto;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-}
-
+/* ВСЕ dropdowns с ОДИНАКОВЫМ высоким z-index */
+#discountFilterOptions,
+#sortFilterOptions,
+#languageSelectOptions,
 #notificationsSelectOptions {
-    position: absolute;
-    top: 100%;
+    position: fixed !important;  /* ← FIXED вместо absolute! */
     left: 0;
     right: 0;
-    margin-top: 5px;
+    margin: 0 auto;
+    width: calc(100% - 20px);
+    max-width: 560px;
     background: rgba(10, 15, 20, 0.98);
     backdrop-filter: blur(20px);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 16px;
     padding: 8px;
-    z-index: 99996 !important;
+    z-index: 999999 !important;  /* ← ОЧЕНЬ ВЫСОКИЙ */
     display: none;
     max-height: 250px;
     overflow-y: auto;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
 }
 
+/* Показываем активный dropdown */
 #discountFilterOptions.show,
 #sortFilterOptions.show,
 #languageSelectOptions.show,
