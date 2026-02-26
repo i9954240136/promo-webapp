@@ -1054,11 +1054,24 @@ window.toggleCustomSelect = function(event, name) {
         sel.classList.remove('active');
     });
     
-    // Вычислить позицию
+    // Вычислить позицию с учётом прокрутки
     var rect = selected.getBoundingClientRect();
-    var topPosition = rect.bottom + 5;  // 5px отступ снизу
-    var leftPosition = rect.left;  // Позиция слева
-    var width = rect.width;  // Ширина кнопки
+    var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    var scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
+    
+    var topPosition = rect.bottom + scrollTop + 5;  // +5px отступ
+    var leftPosition = rect.left + scrollLeft;
+    var width = rect.width;
+    
+    // Проверить, не выходит ли за пределы экрана внизу
+    var optionsHeight = 250;  // max-height dropdown
+    var windowHeight = window.innerHeight;
+    var spaceBelow = windowHeight - rect.bottom;
+    
+    // Если места снизу мало - открыть вверх
+    if (spaceBelow < optionsHeight) {
+        topPosition = rect.top + scrollTop - optionsHeight - 5;
+    }
     
     // Установить позицию и ширину
     options.style.top = topPosition + 'px';
@@ -1070,7 +1083,7 @@ window.toggleCustomSelect = function(event, name) {
     selected.classList.add('active');
     currentOpenDropdown = name;
     
-    console.log('✅ Открыт:', name, 'top:', topPosition, 'left:', leftPosition, 'width:', width);
+    console.log('✅ Открыт:', name, 'top:', topPosition, 'left:', leftPosition);
 };
 
 // Выбрать опцию
@@ -1206,6 +1219,7 @@ loadData = function() {
         initCustomSelects();
     });
 };
+
 
 
 
