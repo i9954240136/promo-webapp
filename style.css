@@ -1003,7 +1003,7 @@ body::after {
     .favorite-toggle { width: 32px; height: 32px; font-size: 16px; }
 }
 
-/* === CUSTOM DROPDOWN (ИСПРАВЛЕННЫЙ) === */
+/* === CUSTOM DROPDOWN (ПОЛНАЯ ПЕРЕЗАПИСЬ) === */
 .custom-select {
     position: relative;
     width: 100%;
@@ -1053,15 +1053,16 @@ body::after {
 
 .custom-select-options {
     position: absolute;
-    top: calc(100% + 5px);
+    top: 100%;
     left: 0;
     right: 0;
+    margin-top: 5px;
     background: rgba(10, 15, 20, 0.98);
     backdrop-filter: blur(20px);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 16px;
     padding: 8px;
-    z-index: 1000;
+    z-index: 9999;
     display: none;
     max-height: 250px;
     overflow-y: auto;
@@ -1081,16 +1082,15 @@ body::after {
     border-radius: 10px;
     transition: all 0.2s ease;
     user-select: none;
+    display: block;
 }
 
 .custom-select-option:hover {
     background: rgba(0, 180, 219, 0.2);
-    color: #ffffff;
 }
 
 .custom-select-option.selected {
     background: linear-gradient(135deg, #00b4db, #11998e);
-    color: #ffffff;
 }
 
 .custom-select-options::-webkit-scrollbar {
