@@ -1010,41 +1010,67 @@ if (userId) {
     console.warn('⚠️ User ID not available');
 }
 
-// === CUSTOM DROPDOWN ФУНКЦИИ ===
+// === CUSTOM DROPDOWN (ПОЛНАЯ ПЕРЕЗАПИСЬ) ===
+
+// Глобальная переменная для отслеживания открытого dropdown
+var currentOpenDropdown = null;
 
 // Открыть/закрыть dropdown
 window.toggleCustomSelect = function(name) {
     console.log('🔽 toggleCustomSelect:', name);
+    console.log('🔽 currentOpenDropdown:', currentOpenDropdown);
     
-    // ЗАКРЫТЬ ВСЕ dropdowns сначала
-    document.querySelectorAll('.custom-select-options').forEach(function(opt) {
-        opt.classList.remove('show');
-    });
-    document.querySelectorAll('.custom-select-selected').forEach(function(sel) {
-        sel.classList.remove('active');
-    });
-    
-    // Открыть текущий
     var options = document.getElementById(name + 'Options');
     var container = document.getElementById(name + 'Container');
-    var selected = container.querySelector('.custom-select-selected');
+    var selected = container ? container.querySelector('.custom-select-selected') : null;
     
-    if (options && selected) {
-        options.classList.add('show');
-        selected.classList.add('active');
+    if (!options || !selected) {
+        console.error('❌ Элементы не найдены для:', name);
+        return;
     }
     
-    console.log('✅ toggleCustomSelect completed');
+    // Если этот dropdown уже открыт - закрыть его
+    if (currentOpenDropdown === name) {
+        console.log('🔼 Закрываем текущий dropdown');
+        options.classList.remove('show');
+        selected.classList.remove('active');
+        currentOpenDropdown = null;
+        return;
+    }
+    
+    // Закрыть ВСЕ остальные dropdowns
+    if (currentOpenDropdown) {
+        var oldOptions = document.getElementById(currentOpenDropdown + 'Options');
+        var oldContainer = document.getElementById(currentOpenDropdown + 'Container');
+        if (oldOptions) oldOptions.classList.remove('show');
+        if (oldContainer) {
+            var oldSelected = oldContainer.querySelector('.custom-select-selected');
+            if (oldSelected) oldSelected.classList.remove('active');
+        }
+        console.log('🔼 Закрыт предыдущий dropdown:', currentOpenDropdown);
+    }
+    
+    // Открыть текущий
+    options.classList.add('show');
+    selected.classList.add('active');
+    currentOpenDropdown = name;
+    
+    console.log('✅ Открыт dropdown:', name);
 };
 
 // Выбрать опцию
 window.selectCustomOption = function(name, value, text) {
-    console.log('✅ selectCustomOption:', name, '=', value);
+    console.log('✅ selectCustomOption:', name, '=', value, text);
     
     var container = document.getElementById(name + 'Container');
-    var selected = container.querySelector('.custom-select-selected');
-    var textSpan = selected.querySelector('.custom-select-text');
+    var selected = container ? container.querySelector('.custom-select-selected') : null;
+    var textSpan = selected ? selected.querySelector('.custom-select-text') : null;
     var options = document.getElementById(name + 'Options');
+    
+    if (!selected || !textSpan || !options) {
+        console.error('❌ Элементы не найдены для:', name);
+        return;
+    }
     
     // Обновить текст
     textSpan.textContent = text;
@@ -1060,6 +1086,7 @@ window.selectCustomOption = function(name, value, text) {
     // Закрыть dropdown
     options.classList.remove('show');
     selected.classList.remove('active');
+    currentOpenDropdown = null;
     
     // Вызвать функцию изменения
     if (name === 'languageSelect') {
@@ -1068,17 +1095,35 @@ window.selectCustomOption = function(name, value, text) {
         changeNotifications(value);
     }
     // Для фильтров - ждём кнопку "Применить"
+    
+    console.log('✅ selectCustomOption completed');
 };
 
 // Закрыть dropdowns при клике вне
 document.addEventListener('click', function(e) {
     if (!e.target.closest('.custom-select')) {
+        console.log('🔼 Клик вне dropdown - закрываем все');
         document.querySelectorAll('.custom-select-options').forEach(function(opt) {
             opt.classList.remove('show');
         });
         document.querySelectorAll('.custom-select-selected').forEach(function(sel) {
             sel.classList.remove('active');
         });
+        currentOpenDropdown = null;
+    }
+});
+
+// Закрыть dropdowns при скролле
+window.addEventListener('scroll', function() {
+    if (currentOpenDropdown) {
+        console.log('🔼 Скролл - закрываем dropdown');
+        document.querySelectorAll('.custom-select-options').forEach(function(opt) {
+            opt.classList.remove('show');
+        });
+        document.querySelectorAll('.custom-select-selected').forEach(function(sel) {
+            sel.classList.remove('active');
+        });
+        currentOpenDropdown = null;
     }
 });
 
@@ -1151,5 +1196,6 @@ loadData = function() {
         initCustomSelects();
     });
 };
+
 
 
