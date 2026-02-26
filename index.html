@@ -54,7 +54,7 @@
                 <div class="filter-group">
                     <label>Мин. скидка:</label>
                     <div class="custom-select" id="discountFilterContainer">
-                        <div class="custom-select-selected" onclick="toggleCustomSelect('discountFilter')">
+                        <div class="custom-select-selected" onclick="toggleCustomSelect(event, 'discountFilter')">
                             <span class="custom-select-text">Любая</span>
                             <span class="custom-select-arrow">▼</span>
                         </div>
@@ -72,7 +72,7 @@
                 <div class="filter-group">
                     <label>Сортировка:</label>
                     <div class="custom-select" id="sortFilterContainer">
-                        <div class="custom-select-selected" onclick="toggleCustomSelect('sortFilter')">
+                        <div class="custom-select-selected" onclick="toggleCustomSelect(event, 'sortFilter')">
                             <span class="custom-select-text">По популярности</span>
                             <span class="custom-select-arrow">▼</span>
                         </div>
@@ -159,7 +159,7 @@
             <div class="setting-item">
                 <label>Язык:</label>
                 <div class="custom-select" id="languageSelectContainer">
-                    <div class="custom-select-selected" onclick="toggleCustomSelect('languageSelect')">
+                    <div class="custom-select-selected" onclick="toggleCustomSelect(event, 'languageSelect')">
                         <span class="custom-select-text">🇷🇺 Русский</span>
                         <span class="custom-select-arrow">▼</span>
                     </div>
@@ -175,7 +175,7 @@
             <div class="setting-item">
                 <label>Уведомления:</label>
                 <div class="custom-select" id="notificationsSelectContainer">
-                    <div class="custom-select-selected" onclick="toggleCustomSelect('notificationsSelect')">
+                    <div class="custom-select-selected" onclick="toggleCustomSelect(event, 'notificationsSelect')">
                         <span class="custom-select-text">Включены</span>
                         <span class="custom-select-arrow">▼</span>
                     </div>
