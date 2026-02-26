@@ -954,13 +954,12 @@ body::after {
     .favorite-toggle { width: 32px; height: 32px; font-size: 16px; }
 }
 
-/* === CUSTOM DROPDOWN (FIXED POSITION) === */
+/* === CUSTOM DROPDOWN (FIXED POSITION - ИСПРАВЛЕНО) === */
 
 .custom-select {
     position: relative;
     width: 100%;
     font-size: 15px;
-    /* УБРАЛИ z-index - создаёт stacking context! */
 }
 
 .custom-select-selected {
@@ -1002,30 +1001,30 @@ body::after {
     transform: rotate(180deg);
 }
 
-/* ВСЕ dropdowns с ОДИНАКОВЫМ высоким z-index */
+/* Dropdown options - FIXED POSITION */
 #discountFilterOptions,
 #sortFilterOptions,
 #languageSelectOptions,
 #notificationsSelectOptions {
-    position: fixed !important;  /* ← FIXED вместо absolute! */
-    left: 0;
-    right: 0;
-    margin: 0 auto;
-    width: calc(100% - 20px);
-    max-width: 560px;
+    position: fixed !important;
+    width: auto !important;  /* ← Ширина будет задана в JS */
+    min-width: 200px;
     background: rgba(10, 15, 20, 0.98);
     backdrop-filter: blur(20px);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 16px;
     padding: 8px;
-    z-index: 999999 !important;  /* ← ОЧЕНЬ ВЫСОКИЙ */
+    z-index: 999999 !important;
     display: none;
     max-height: 250px;
     overflow-y: auto;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    left: 0 !important;  /* ← Сброс */
+    right: auto !important;  /* ← Сброс */
+    margin: 0 !important;  /* ← Сброс */
+    top: 0 !important;  /* ← Будет задано в JS */
 }
 
-/* Показываем активный dropdown */
 #discountFilterOptions.show,
 #sortFilterOptions.show,
 #languageSelectOptions.show,
