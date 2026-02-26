@@ -1034,7 +1034,9 @@ window.toggleCustomSelect = function(event, name) {
     // Если этот dropdown уже открыт - закрыть
     if (currentOpenDropdown === name) {
         options.classList.remove('show');
-        options.style.top = '';  // Сбросить позицию
+        options.style.top = '';
+        options.style.left = '';
+        options.style.width = '';
         selected.classList.remove('active');
         currentOpenDropdown = null;
         console.log('🔼 Закрыт:', name);
@@ -1044,25 +1046,31 @@ window.toggleCustomSelect = function(event, name) {
     // Закрыть ВСЕ dropdowns
     document.querySelectorAll('.custom-select-options').forEach(function(opt) {
         opt.classList.remove('show');
-        opt.style.top = '';  // Сбросить позицию
+        opt.style.top = '';
+        opt.style.left = '';
+        opt.style.width = '';
     });
     document.querySelectorAll('.custom-select-selected').forEach(function(sel) {
         sel.classList.remove('active');
     });
     
-    // Вычислить позицию для fixed
+    // Вычислить позицию
     var rect = selected.getBoundingClientRect();
-    var topPosition = rect.bottom + 5;  // 5px отступ
+    var topPosition = rect.bottom + 5;  // 5px отступ снизу
+    var leftPosition = rect.left;  // Позиция слева
+    var width = rect.width;  // Ширина кнопки
     
-    // Установить позицию
+    // Установить позицию и ширину
     options.style.top = topPosition + 'px';
+    options.style.left = leftPosition + 'px';
+    options.style.width = width + 'px';
     
     // Открыть текущий
     options.classList.add('show');
     selected.classList.add('active');
     currentOpenDropdown = name;
     
-    console.log('✅ Открыт:', name, 'top:', topPosition);
+    console.log('✅ Открыт:', name, 'top:', topPosition, 'left:', leftPosition, 'width:', width);
 };
 
 // Выбрать опцию
@@ -1087,6 +1095,8 @@ window.selectCustomOption = function(name, value, text) {
     
     options.classList.remove('show');
     options.style.top = '';
+    options.style.left = '';
+    options.style.width = '';
     selected.classList.remove('active');
     currentOpenDropdown = null;
     
@@ -1103,6 +1113,8 @@ document.addEventListener('click', function(e) {
         document.querySelectorAll('.custom-select-options').forEach(function(opt) {
             opt.classList.remove('show');
             opt.style.top = '';
+            opt.style.left = '';
+            opt.style.width = '';
         });
         document.querySelectorAll('.custom-select-selected').forEach(function(sel) {
             sel.classList.remove('active');
@@ -1116,6 +1128,8 @@ window.addEventListener('scroll', function() {
     document.querySelectorAll('.custom-select-options').forEach(function(opt) {
         opt.classList.remove('show');
         opt.style.top = '';
+        opt.style.left = '';
+        opt.style.width = '';
     });
     document.querySelectorAll('.custom-select-selected').forEach(function(sel) {
         sel.classList.remove('active');
@@ -1192,6 +1206,7 @@ loadData = function() {
         initCustomSelects();
     });
 };
+
 
 
 
