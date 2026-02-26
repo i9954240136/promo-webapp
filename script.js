@@ -1014,25 +1014,34 @@ if (userId) {
 
 // Открыть/закрыть dropdown
 window.toggleCustomSelect = function(name) {
+    console.log('🔽 toggleCustomSelect:', name);
+    
     var container = document.getElementById(name + 'Container');
     var selected = container.querySelector('.custom-select-selected');
     var options = document.getElementById(name + 'Options');
     
-    // Закрыть все остальные dropdowns
+    // Проверить, открыт ли уже этот dropdown
+    var isOpen = options.classList.contains('show');
+    
+    // ЗАКРЫТЬ ВСЕ dropdowns
     document.querySelectorAll('.custom-select-options').forEach(function(opt) {
-        if (opt.id !== name + 'Options') {
-            opt.classList.remove('show');
-            opt.previousElementSibling.classList.remove('active');
-        }
+        opt.classList.remove('show');
+        opt.previousElementSibling.classList.remove('active');
     });
     
-    // Переключить текущий
-    options.classList.toggle('show');
-    selected.classList.toggle('active');
+    // Если был закрыт - открыть текущий
+    if (!isOpen) {
+        options.classList.add('show');
+        selected.classList.add('active');
+    }
+    
+    console.log('✅ toggleCustomSelect completed');
 };
 
 // Выбрать опцию
 window.selectCustomOption = function(name, value, text) {
+    console.log('✅ selectCustomOption:', name, '=', value);
+    
     var container = document.getElementById(name + 'Container');
     var selected = container.querySelector('.custom-select-selected');
     var textSpan = selected.querySelector('.custom-select-text');
@@ -1056,13 +1065,12 @@ window.selectCustomOption = function(name, value, text) {
     // Вызвать оригинальную функцию изменения
     if (name === 'discountFilter' || name === 'sortFilter') {
         // Для фильтров - ничего не делаем, жмём "Применить"
+        console.log('📋 Фильтр изменён, ждём Применить');
     } else if (name === 'languageSelect') {
         changeLanguage(value);
     } else if (name === 'notificationsSelect') {
         changeNotifications(value);
     }
-    
-    console.log('✅ Custom select:', name, '=', value);
 };
 
 // Закрыть dropdowns при клике вне
@@ -1073,6 +1081,14 @@ document.addEventListener('click', function(e) {
             opt.previousElementSibling.classList.remove('active');
         });
     }
+});
+
+// Закрыть dropdowns при скролле
+window.addEventListener('scroll', function() {
+    document.querySelectorAll('.custom-select-options').forEach(function(opt) {
+        opt.classList.remove('show');
+        opt.previousElementSibling.classList.remove('active');
+    });
 });
 
 // === ИНИЦИАЛИЗАЦИЯ ===
@@ -1144,3 +1160,4 @@ loadData = function() {
         initCustomSelects();
     });
 };
+
