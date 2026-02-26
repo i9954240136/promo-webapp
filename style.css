@@ -990,3 +990,110 @@ body::after {
     .favorite-toggle { width: 32px; height: 32px; font-size: 16px; }
 }
 
+/* === CUSTOM DROPDOWN (ЗАМЕНА SELECT) === */
+.custom-select {
+    position: relative;
+    width: 100%;
+    font-size: 15px;
+}
+
+.custom-select-selected {
+    padding: 14px 18px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s ease;
+    user-select: none;
+}
+
+.custom-select-selected:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(0, 180, 219, 0.3);
+}
+
+.custom-select-selected.active {
+    border-color: rgba(0, 180, 219, 0.5);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.custom-select-arrow {
+    font-size: 12px;
+    transition: transform 0.3s ease;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.custom-select-selected.active .custom-select-arrow {
+    transform: rotate(180deg);
+}
+
+.custom-select-options {
+    position: absolute;
+    top: calc(100% + 5px);
+    left: 0;
+    right: 0;
+    background: rgba(10, 15, 20, 0.98);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 8px;
+    z-index: 1000;
+    display: none;
+    max-height: 250px;
+    overflow-y: auto;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+}
+
+.custom-select-options.show {
+    display: block;
+    animation: slideDown 0.2s ease;
+}
+
+.custom-select-option {
+    padding: 12px 15px;
+    color: #ffffff;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 10px;
+    transition: all 0.2s ease;
+    user-select: none;
+}
+
+.custom-select-option:hover {
+    background: rgba(0, 180, 219, 0.2);
+    color: #ffffff;
+}
+
+.custom-select-option.selected {
+    background: linear-gradient(135deg, #00b4db, #11998e);
+    color: #ffffff;
+}
+
+.custom-select-options::-webkit-scrollbar {
+    width: 6px;
+}
+
+.custom-select-options::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+}
+
+.custom-select-options::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #00b4db, #11998e);
+    border-radius: 10px;
+}
+
+/* Скрываем старые select */
+#discountFilter,
+#sortFilter,
+#languageSelect,
+#notificationsSelect {
+    display: none !important;
+}
